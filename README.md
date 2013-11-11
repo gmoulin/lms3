@@ -1,7 +1,7 @@
 # LMS3
 work in progress
 
-[b]portfolio project[/b]
+"portfolio project"
 
 ## Technologies:
 * Node
