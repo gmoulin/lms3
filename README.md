@@ -24,3 +24,6 @@ work in progress
 * Grunt for live reload, template precompiling, liting, minifying, ...
 * full domain support (no more port)
 * do not disturb day to day work (apache, php, ...)
+
+## Project updates:
+* Jekyll and github pages
