@@ -27,3 +27,12 @@ work in progress
 
 ## Project updates:
 * Jekyll and github pages
+	git checkout gh-pages
+	run local preview with
+	jekyll serve --watch --detach --baseurl ''
+
+## Installation:
+* require node, npm, bundle, grunt and bower installed
+* clone project
+* run from project root
+	npm install && bower install
