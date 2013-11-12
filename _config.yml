@@ -1,0 +1,2 @@
+exclude: [Gemfile, Gemfile.lock, params.json]
+baseurl: '/lms3'
