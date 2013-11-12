@@ -1,5 +1,5 @@
 # LMS3
-work in progress
+work in progress - non useable at the moment
 
 **portfolio project**
 
@@ -27,6 +27,7 @@ work in progress
 
 ## Project updates:
 * Jekyll and github pages
+
 	git checkout gh-pages
 	run local preview with
 	jekyll serve --watch --detach --baseurl ''
@@ -35,4 +36,9 @@ work in progress
 * require node, npm, bundle, grunt and bower installed
 * clone project
 * run from project root
+
 	npm install && bower install
+* live reload functionnality need a browser plugin (LiveReload for chrome)
+* start node localy
+
+	grunt server
