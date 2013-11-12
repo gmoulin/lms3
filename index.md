@@ -1,6 +1,6 @@
 ---
-layout: hack
-title: Welcome
+layout: default
+title: LMS3 Journal
 ---
 
 LMS stands for Library Management System
