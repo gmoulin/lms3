@@ -1,6 +1,6 @@
 ---
 layout: default
-title: LMS3 Journal
+title: LMS3 project needs
 ---
 
 LMS stands for Library Management System
@@ -27,6 +27,29 @@ For the third version I wanted to test a full javascript environment using **Nod
 * automated checking, minifying, building - grunt (usemin, jslint, templates precompiling, ...)
 * easier debugging - grunt node inspector
 * unused css removing - grunt-uncss
+
+## Deployement needs:
+* on development site (no minify, node debug, automated tests, automated restart, linting, ...)
+* one quality site (minify, automated tests, automated deployment on new quality tag, ...)
+* one self hosted production site (restart on change, automated deployment on new production tag, ...)
+
+## User interface needs:
+* mobile and tablets support (responsive)
+* offline and mobile first approach
+* synchronisation when online
+
+## Functionalities needs:
+* no more images (no real added value)
+* last statistics (last read, last added, next to read/view by saga, ...)
+* link to check if any new chapter (novel, film, episode, ...) is available for a given saga
+* more media categories (TV series)
+* annotation by saga
+* cross category saga
+
+## Data schema needs:
+* factorize data
+* specific data for each media category
+* keep full text search capability
 
 ##Editor:
 * vim with completion, snippets, ... - [gm-vim2](https://github.com/gmoulin/gm-vim2)
