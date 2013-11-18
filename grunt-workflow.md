@@ -13,6 +13,10 @@ title: Grunt workflow
 * [grunt-node-inspector](https://github.com/ChrisWren/grunt-node-inspector)
 
 ## Tests
+* mocha
+
+## Coverage
+* istanbul
 
 ## Managing index.html scripts list
 * [grunt-include-source](https://github.com/jwvdiermen/grunt-include-source)
@@ -39,13 +43,18 @@ title: Grunt workflow
 ## Compile Sass
 * [grunt-contrib-sass](https://github.com/gruntjs/grunt-contrib-sass)
 
+## Dry CSS
+* [grunt-uncss](https://github.com/addyosmani/grunt-uncss)
+
 # Workflow
 
 ## Development
 * clean
 * sass
 * linting
+* dry css
 * automated tests
+* tests coverage
 * html2js
 * includeSource
 * concurrent
