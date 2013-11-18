@@ -7,6 +7,8 @@ LMS stands for Library Management System
 
 For the third version I wanted to test a full javascript environment using **Node**, **Angular** and **Sass**. As the same time I wanted this project to be part of a **public portfolio**.
 
+## [problems and solutions found along the way]({{site.baseurl}}/problems-and-solutions.html)
+
 ## Technologies needs:
 * Javascript on server - Node and Express
 * Database - MongoDB with mongoose
@@ -28,15 +30,19 @@ For the third version I wanted to test a full javascript environment using **Nod
 * easier debugging - grunt node inspector
 * unused css removing - grunt-uncss
 
+* [Grunt workflow]({{site.baseurl}}/grunt-workflow.html)
+
 ## Deployement needs:
 * on development site (no minify, node debug, automated tests, automated restart, linting, ...)
-* one quality site (minify, automated tests, automated deployment on new quality tag, ...)
+* one self hosted quality site (minify, automated tests, automated deployment on new quality tag, ...)
 * one self hosted production site (restart on change, automated deployment on new production tag, ...)
+* environment aware configuration (node, grunt)
 
 ## User interface needs:
 * mobile and tablets support (responsive)
 * offline and mobile first approach
 * synchronisation when online
+* minimal and clean interface
 
 ## Functionalities needs:
 * no more images (no real added value)
@@ -51,5 +57,11 @@ For the third version I wanted to test a full javascript environment using **Nod
 * specific data for each media category
 * keep full text search capability
 
-##Editor:
-* vim with completion, snippets, ... - [gm-vim2](https://github.com/gmoulin/gm-vim2)
+* [mongoDB schema]({{site.baseurl}}/mongodb-schema.html)
+
+## Editor:
+* customized vim with completion, snippets, ... - [gm-vim2](https://github.com/gmoulin/gm-vim2)
+
+## Portfolio needs:
+* simple static site using github jekyll support
+* local preview
