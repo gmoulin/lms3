@@ -1,0 +1,11 @@
+{
+  "name": "lms3-documentation",
+  "version": "0.0.0",
+  "description": "Library Management System",
+  "author": "Guillaume Moulin <gmoulin.dev@gmail.com>",
+  "license": "BSD",
+  "devDependencies": {
+    "grunt-uncss": "~0.1.5",
+    "grunt": "~0.4.1"
+  }
+}

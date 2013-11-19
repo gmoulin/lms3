@@ -12,10 +12,59 @@
 		<link rel="canonical" href="{{ site.baseurl }}{{ page.url | replace:'index.html','' }}" />
 
 		<link rel="shortcut icon" href="/favicon.png">
+		<link href="/assets/css/style.min.css" rel="stylesheet"></link>
 	</head>
 	<body>
-		<div class="">
-			{{ content }}
+		{% include nav.html %}
+
+		<div class="container">
+			<div class="row">
+				<div class="col-md-3">
+					<div class="nav-sidebar hidden-print" role="complementary">
+						<ul class="nav nav-sidenav">
+						</ul>
+					</div>
+				</div>
+				<div class="col-md-9 content" role="main">
+					{{ content }}
+				</div>
+			</div>
 		</div>
+
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+		<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js"></script>
+		<script>
+			jQuery(document).ready(function( $ ){
+				$(document.body).scrollspy({
+					target: '.nav-sidebar',
+					offset: $('.navbar').outerHeight(true) + 10
+				});
+
+				$(window).on('load', function () {
+					$body.scrollspy('refresh')
+				});
+
+				//generate sidenav from content markup
+				var sidenav = "";
+				$('.content').find('h1')
+					.each(function(){
+						var $this = $(this);
+						sidenav += '<li><a href="#'+ this.id +'">'+ $this.text() +'</a>';
+
+						var $sub = $this.find('h3');
+						if( $sub.length ){
+							sidenav += '<ul class="nav">';
+							$sub.each(function(){
+								sidenav += '<li><a href="#'+ this.id +'">'+ $(this).text() +'</a>';
+							});
+							sidenav += '</ul>';
+						}
+
+						sidenav += '</li>';
+					});
+
+				$('.nav-sidenav').html( sidenav );
+			});
+		</script>
 	</body>
 </html>

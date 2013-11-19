@@ -1,0 +1,116 @@
+---
+layout: default
+title: LMS3 Documentation
+---
+
+LMS stands for Library Management System
+
+For the third version I wanted to test a full javascript environment using <a href="http://nodejs.org/">Nodejs</a>, <a href="http://angularjs.org/">Angularjs</a> and <a href="http://sass-lang.com/">Sass</a>. As the same time I wanted this project to be part of a <b>public portfolio</b>.
+
+<a href="{{site.baseurl}}/problems-and-solutions.html">problems and solutions found along the way</a>
+
+<h1 id="technologies-needs">Technologies needs:</h1>
+
+	<h3 id="javascript-backend">Javascript on server</h3>
+	<p>Node and Express</p>
+
+	<h3 id="database">Database</h3>
+	<p>MongoDB with mongoose</p>
+
+	<h3 id="data-cache">Cache capable</h3>
+	<p>Redis</p>
+
+	<h3 id="javascript-frontend">Frontend</h3>
+	<p>Angular</p>
+
+	<h3 id="test-frontend">Frontend unit test</h3>
+	<p>Mocha (to check)</p>
+
+	<h3 id="coverage-frontend">Frontend coverage</h3>
+	<p>Istanbul (to check)</p>
+
+	<h3 id="test-backend">Backend unit test</h3>
+	<p>Mocha (to check)</p>
+
+	<h3 id="coverage-backend">Backend coverage</h3>
+	<p>Istanbul (to check)</p>
+
+<h1 id="environment-needs">Environment needs:</h1>
+	<a href="{{site.baseurl}}/grunt-workflow.html">Grunt workflow</a>
+
+	<h3 id="dependency-management">dependency management</h3>
+	<p>npm and bower</p>
+
+	<h3 id="auto-listing">auto listing</h3>
+	<p>of scripts and stylesheets in html layout - grunt includeSource</p>
+
+	<h3 id="live-reload">live reload</h3>
+	<p>grunt-contrib-watch</p>
+
+	<h3 id="auto-restart">auto restart</h3>
+	<p>grunt nodemon</p>
+
+	<h3 id="auto-compiling">auto compiling</h3>
+	<p>for Sass - grunt</p>
+
+	<h3 id="full-domain">full domain support</h3>
+	<p>for both apache and node - apache proxying for node (not optimal but working)</p>
+
+	<h3 id="build-automation">automated checking, minifying, building</h3>
+	<p>grunt (usemin, jslint, templates precompiling, recess, ...)</p>
+
+	<h3 id="easier-debugging">easier debugging</h3>
+	<p>grunt node inspector</p>
+
+	<h3 id="dry-css">unused css removing</h3>
+	<p>grunt-uncss</p>
+
+
+<h1 id="deployment-needs">Deployement needs:</h1>
+
+	<h3 id="development-site">development site</h3>
+	<p>on minify, node debug, automated tests, automated restart, linting, ...</p>
+
+	<h3 id="quality-site">quality site</h3>
+	<p>one self hosted quality site (minify, automated tests, automated deployment on new quality tag, ...)</p>
+
+	<h3 id="production-site">production site</h3>
+	<p>one self hosted production site (restart on change, automated deployment on new production tag, ...)</p>
+
+	<h3 id="environment-aware">environment aware configuration</h3>
+	<p>node, grunt</p>
+
+<h1 id="ui-needs">User interface needs:</h1>
+
+	<h3 id="devices">Devices</h3>
+	<p>mobile and tablets support (responsive)</p>
+
+	<h3 id="offline-mode">Offline mode<h3>
+	<p>offline and mobile first approach</p>
+	<p>synchronisation when online<p>
+
+	<h3 id="interface">Interface</h3>
+	<p>minimal and clean interface</p>
+
+<h1 id="functionnalities-needs">Functionalities needs:</h1>
+	<p>no more images (no real added value)</p>
+	<p>last statistics (last read, last added, next to read/view by saga, ...)</p>
+	<p>link to check if any new chapter (novel, film, episode, ...) is available for a given saga</p>
+	<p>more media categories (TV series)</p>
+	<p>annotation by saga</p>
+	<p>cross category saga</p>
+
+<h1 id="data-needs">Data schema needs:</h1>
+	<p>factorize data</p>
+	<p>specific data for each media category</p>
+	<p>keep full text search capability</p>
+
+	<a href="{{site.baseurl}}/mongodb-schema.html">mongoDB schema</a>
+
+<h1 id="editor">Editor:</h1>
+	<p>customized vim with completion, snippets, ... - <a href="https://github.com/gmoulin/gm-vim2">gm-vim2</a></p>
+
+<h1 id="portfolio-needs">Portofolio needs:</h1>
+	<p>simple static site using github jekyll support</p>
+	<p>local preview</p>
+	<p>enhanced navigation using <a href="http://getbootstrap.com">Bootstrap</a></p>
