@@ -20,8 +20,15 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-md-3">
-					<div class="nav-sidebar hidden-print" role="complementary">
+					<div class="nav-sidebar hidden-print affix" role="complementary">
 						<ul class="nav nav-sidenav">
+							{% if page.slug == "grunt-workflow" %}
+								{% include sidenav-grunt-workflow.html %}
+							{% elsif page.slug == "problems-and-solutions" %}
+								{% include sidenav-problems-and-solutions.html %}
+							{% else %}
+								{% include sidenav-home.html %}
+							{% endif %}
 						</ul>
 					</div>
 				</div>
@@ -35,35 +42,45 @@
 		<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js"></script>
 		<script>
 			jQuery(document).ready(function( $ ){
-				$(document.body).scrollspy({
-					target: '.nav-sidebar',
-					offset: $('.navbar').outerHeight(true) + 10
-				});
+				var $body = $(document.body),
+					$navbar = $('.navbar'),
+					$navSidebar = $('.nav-sidebar');
 
-				$(window).on('load', function () {
-					$body.scrollspy('refresh')
-				});
-
-				//generate sidenav from content markup
-				var sidenav = "";
-				$('.content').find('h1')
-					.each(function(){
-						var $this = $(this);
-						sidenav += '<li><a href="#'+ this.id +'">'+ $this.text() +'</a>';
-
-						var $sub = $this.find('h3');
-						if( $sub.length ){
-							sidenav += '<ul class="nav">';
-							$sub.each(function(){
-								sidenav += '<li><a href="#'+ this.id +'">'+ $(this).text() +'</a>';
-							});
-							sidenav += '</ul>';
-						}
-
-						sidenav += '</li>';
+				$(window)
+					.on('load', function(){
+						$body.css('padding-top', parseInt($navbar.outerHeight(true), 10) + 10);
+					})
+					.resize(function(){
+						$body.css('padding-top', parseInt($navbar.outerHeight(true), 10) + 10);
 					});
 
-				$('.nav-sidenav').html( sidenav );
+				if( $navSidebar.find('.nav-sidenav').find('li'),length === 0 ){
+					//generate sidenav from content markup
+					var sidenav = "";
+					$('.content').find('h1')
+						.each(function(){
+							var $this = $(this);
+							sidenav += '<li><a href="#'+ this.id +'">'+ $this.text().replace(':', '') +'</a>';
+
+							var $sub = $this.nextUntil('h1', 'h3');
+							if( $sub.length ){
+								sidenav += '<ul class="nav">';
+								$sub.each(function(){
+									sidenav += '<li><a href="#'+ this.id +'">'+ $(this).text() +'</a>';
+								});
+								sidenav += '</ul>';
+							}
+
+							sidenav += '</li>';
+						});
+
+					$navSidebar.find('.nav-sidenav').html( sidenav );
+				}
+
+				$body.scrollspy({
+					target: '.nav-sidebar',
+					offset: $navbar.outerHeight(true) + 10
+				});
 			});
 		</script>
 	</body>
