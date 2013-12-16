@@ -15,45 +15,45 @@ title: LMS3 Documentation
 
 <!-- Technologies needs -->
 <div class="doc-section">
-	<div class="spacer page-header">
+	<div class="page-header">
 		<h1 id="technologies-needs">Technologies needs:</h1>
 	</div>
-	<div class="spacer page-header">
+	<div class="page-header">
 		<h3 id="javascript-backend">Javascript on server</h3>
 	</div>
 	<p>Node and Express</p>
 
-	<div class="spacer page-header">
+	<div class="page-header">
 		<h3 id="database">Database</h3>
 	</div>
 	<p>MongoDB with mongoose</p>
 
-	<div class="spacer page-header">
+	<div class="page-header">
 		<h3 id="data-cache">Cache capable</h3>
 	</div>
 	<p>Redis</p>
 
-	<div class="spacer page-header">
+	<div class="page-header">
 		<h3 id="javascript-frontend">Frontend</h3>
 	</div>
 	<p>Angular</p>
 
-	<div class="spacer page-header">
+	<div class="page-header">
 		<h3 id="test-frontend">Frontend unit test</h3>
 	</div>
 	<p>Mocha (to check)</p>
 
-	<div class="spacer page-header">
+	<div class="page-header">
 		<h3 id="coverage-frontend">Frontend coverage</h3>
 	</div>
 	<p>Istanbul (to check)</p>
 
-	<div class="spacer page-header">
+	<div class="page-header">
 		<h3 id="test-backend">Backend unit test</h3>
 	</div>
 	<p>Mocha (to check)</p>
 
-	<div class="spacer page-header">
+	<div class="page-header">
 		<h3 id="coverage-backend">Backend coverage</h3>
 	</div>
 	<p>Istanbul (to check)</p>
@@ -62,103 +62,116 @@ title: LMS3 Documentation
 
 <!-- Environment needs -->
 <div class="doc-section">
-	<div class="spacer page-header">
+	<div class="page-header">
 		<h1 id="environment-needs">Environment needs:</h1>
 	</div>
 	<a href="{{site.baseurl}}/grunt-workflow.html">Grunt workflow</a>
 
-	<div class="spacer page-header">
+	<div class="page-header">
 		<h3 id="dependency-management">dependency management</h3>
 	</div>
 	<p>npm and bower</p>
 
-	<div class="spacer page-header">
+	<div class="page-header">
 		<h3 id="auto-listing">auto listing</h3>
 	</div>
 	<p>of scripts and stylesheets in html layout - grunt includeSource</p>
 
-	<div class="spacer page-header">
+	<div class="page-header">
 		<h3 id="live-reload">live reload</h3>
 	</div>
 	<p>grunt-contrib-watch</p>
 
-	<div class="spacer page-header">
-		<h3 id="auto-restart">auto restart</h3>
+	<div class="page-header">
+		<h3 id="auto-restart">server auto restart</h3>
 	</div>
 	<p>grunt nodemon</p>
 
-	<div class="spacer page-header">
+	<div class="page-header">
 		<h3 id="auto-compiling">auto compiling</h3>
 	</div>
 	<p>for Sass - grunt</p>
 
-	<div class="spacer page-header">
+	<div class="page-header">
 		<h3 id="full-domain">full domain support</h3>
 	</div>
 	<p>for both apache and node - apache proxying for node (not optimal but working)</p>
 
-	<div class="spacer page-header">
+	<div class="page-header">
 		<h3 id="build-automation">automated checking, minifying, building</h3>
 	</div>
 	<p>grunt (usemin, jslint, templates precompiling, recess, ...)</p>
 
-	<div class="spacer page-header">
+	<div class="page-header">
 		<h3 id="easier-debugging">easier debugging</h3>
 	</div>
 	<p>grunt node inspector</p>
 
-	<div class="spacer page-header">
+	<div class="page-header">
 		<h3 id="dry-css">unused css removing</h3>
 	</div>
 	<p>grunt-uncss</p>
 </div>
 <!--/Environment needs -->
 
-
 <!-- Deployement needs -->
 <div class="doc-section">
-	<div class="spacer page-header">
+	<div class="page-header">
 		<h1 id="deployment-needs">Deployement needs:</h1>
 	</div>
-	<div class="spacer page-header">
+	<div class="page-header">
 		<h3 id="development-site">development site</h3>
 	</div>
-	<p>on minify, node debug, automated tests, automated restart, linting, ...</p>
+	<p>on development computer (node debug, automated tests, automated restart, linting, ...)</p>
 
-	<div class="spacer page-header">
+	<div class="page-header">
 		<h3 id="quality-site">quality site</h3>
 	</div>
 	<p>one self hosted quality site (minify, automated tests, automated deployment on new quality tag, ...)</p>
 
-	<div class="spacer page-header">
+	<div class="page-header">
 		<h3 id="production-site">production site</h3>
 	</div>
 	<p>one self hosted production site (restart on change, automated deployment on new production tag, ...)</p>
 
-	<div class="spacer page-header">
+	<div class="page-header">
 		<h3 id="environment-aware">environment aware configuration</h3>
 	</div>
 	<p>node, grunt</p>
+
+	<div class="page-header">
+		<h3 id="folders-hierarchy">clear folder hierarchy</h3>
+	</div>
+	<p>
+		It is really important to have a clear organisation for files and folder to make development and maintenance easier.
+		<br><br>
+		A client folder for angular files, sass stylesheets, fontend tests files, ...<br>
+		A server folder for node files, backend tests files, ...<br>
+		A public folder for images, compiled templates, scripts and stylesheets, filed mainly by grunt.<br>
+		A bower_components and a node_modules folders for third party components.<br>
+		<br>
+		The public folder will be the publication folder for the 3 environments.
+	</p>
 </div>
 <!--/Deployement needs -->
 
 <!-- User interface needs -->
 <div class="doc-section">
-	<div class="spacer page-header">
+	<div class="page-header">
 		<h1 id="ui-needs">User interface needs:</h1>
 	</div>
-	<div class="spacer page-header">
+	<div class="page-header">
 		<h3 id="devices">Devices</h3>
 	</div>
 	<p>mobile and tablets support (responsive)</p>
 
-	<div class="spacer page-header">
+	<div class="page-header">
 		<h3 id="offline-mode">Offline mode</h3>
 	</div>
 	<p>offline and mobile first approach</p>
 	<p>synchronisation when online</p>
 
-	<div class="spacer page-header">
+	<div class="page-header">
 		<h3 id="interface">Interface</h3>
 	</div>
 	<p>minimal and clean interface</p>
@@ -167,7 +180,7 @@ title: LMS3 Documentation
 
 <!-- Functionalities needs -->
 <div class="doc-section">
-	<div class="spacer page-header">
+	<div class="page-header">
 		<h1 id="functionnalities-needs">Functionalities needs:</h1>
 	</div>
 	<p>no more images (no real added value)</p>
@@ -181,7 +194,7 @@ title: LMS3 Documentation
 
 <!-- Data schema needs -->
 <div class="doc-section">
-	<div class="spacer page-header">
+	<div class="page-header">
 		<h1 id="data-needs">Data schema needs:</h1>
 	</div>
 	<p>factorize data</p>
@@ -194,7 +207,7 @@ title: LMS3 Documentation
 
 <!-- Editor -->
 <div class="doc-section">
-	<div class="spacer page-header">
+	<div class="page-header">
 		<h1 id="editor">Editor:</h1>
 	</div>
 	<p>customized vim with completion, snippets, ... - <a href="https://github.com/gmoulin/gm-vim2">gm-vim2</a></p>
@@ -203,7 +216,7 @@ title: LMS3 Documentation
 
 <!-- Portofolio needs -->
 <div class="doc-section">
-	<div class="spacer page-header">
+	<div class="page-header">
 		<h1 id="portfolio-needs">Portofolio needs:</h1>
 	</div>
 	<p>simple static site using github jekyll support</p>
