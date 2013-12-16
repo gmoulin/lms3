@@ -3,114 +3,211 @@ layout: default
 title: LMS3 Documentation
 ---
 
-LMS stands for Library Management System
+<p>LMS stands for Library Management System</p>
 
-For the third version I wanted to test a full javascript environment using <a href="http://nodejs.org/">Nodejs</a>, <a href="http://angularjs.org/">Angularjs</a> and <a href="http://sass-lang.com/">Sass</a>. As the same time I wanted this project to be part of a <b>public portfolio</b>.
+<p>
+	For the third version I wanted to test a full javascript environment using <a href="http://nodejs.org/">Nodejs</a>, <a href="http://angularjs.org/">Angularjs</a> and <a href="http://sass-lang.com/">Sass</a>. As the same time I wanted this project to be part of a <b>public portfolio</b>.
+</p>
 
-<a href="{{site.baseurl}}/problems-and-solutions.html">problems and solutions found along the way</a>
+<p>
+	<a href="{{site.baseurl}}/problems-and-solutions.html">see problems and solutions found along the way</a>
+</p>
 
-<h1 id="technologies-needs">Technologies needs:</h1>
-
-	<h3 id="javascript-backend">Javascript on server</h3>
+<!-- Technologies needs -->
+<div class="doc-section">
+	<div class="spacer page-header">
+		<h1 id="technologies-needs">Technologies needs:</h1>
+	</div>
+	<div class="spacer page-header">
+		<h3 id="javascript-backend">Javascript on server</h3>
+	</div>
 	<p>Node and Express</p>
 
-	<h3 id="database">Database</h3>
+	<div class="spacer page-header">
+		<h3 id="database">Database</h3>
+	</div>
 	<p>MongoDB with mongoose</p>
 
-	<h3 id="data-cache">Cache capable</h3>
+	<div class="spacer page-header">
+		<h3 id="data-cache">Cache capable</h3>
+	</div>
 	<p>Redis</p>
 
-	<h3 id="javascript-frontend">Frontend</h3>
+	<div class="spacer page-header">
+		<h3 id="javascript-frontend">Frontend</h3>
+	</div>
 	<p>Angular</p>
 
-	<h3 id="test-frontend">Frontend unit test</h3>
+	<div class="spacer page-header">
+		<h3 id="test-frontend">Frontend unit test</h3>
+	</div>
 	<p>Mocha (to check)</p>
 
-	<h3 id="coverage-frontend">Frontend coverage</h3>
+	<div class="spacer page-header">
+		<h3 id="coverage-frontend">Frontend coverage</h3>
+	</div>
 	<p>Istanbul (to check)</p>
 
-	<h3 id="test-backend">Backend unit test</h3>
+	<div class="spacer page-header">
+		<h3 id="test-backend">Backend unit test</h3>
+	</div>
 	<p>Mocha (to check)</p>
 
-	<h3 id="coverage-backend">Backend coverage</h3>
+	<div class="spacer page-header">
+		<h3 id="coverage-backend">Backend coverage</h3>
+	</div>
 	<p>Istanbul (to check)</p>
+</div>
+<!--/Technologies needs -->
 
-<h1 id="environment-needs">Environment needs:</h1>
+<!-- Environment needs -->
+<div class="doc-section">
+	<div class="spacer page-header">
+		<h1 id="environment-needs">Environment needs:</h1>
+	</div>
 	<a href="{{site.baseurl}}/grunt-workflow.html">Grunt workflow</a>
 
-	<h3 id="dependency-management">dependency management</h3>
+	<div class="spacer page-header">
+		<h3 id="dependency-management">dependency management</h3>
+	</div>
 	<p>npm and bower</p>
 
-	<h3 id="auto-listing">auto listing</h3>
+	<div class="spacer page-header">
+		<h3 id="auto-listing">auto listing</h3>
+	</div>
 	<p>of scripts and stylesheets in html layout - grunt includeSource</p>
 
-	<h3 id="live-reload">live reload</h3>
+	<div class="spacer page-header">
+		<h3 id="live-reload">live reload</h3>
+	</div>
 	<p>grunt-contrib-watch</p>
 
-	<h3 id="auto-restart">auto restart</h3>
+	<div class="spacer page-header">
+		<h3 id="auto-restart">auto restart</h3>
+	</div>
 	<p>grunt nodemon</p>
 
-	<h3 id="auto-compiling">auto compiling</h3>
+	<div class="spacer page-header">
+		<h3 id="auto-compiling">auto compiling</h3>
+	</div>
 	<p>for Sass - grunt</p>
 
-	<h3 id="full-domain">full domain support</h3>
+	<div class="spacer page-header">
+		<h3 id="full-domain">full domain support</h3>
+	</div>
 	<p>for both apache and node - apache proxying for node (not optimal but working)</p>
 
-	<h3 id="build-automation">automated checking, minifying, building</h3>
+	<div class="spacer page-header">
+		<h3 id="build-automation">automated checking, minifying, building</h3>
+	</div>
 	<p>grunt (usemin, jslint, templates precompiling, recess, ...)</p>
 
-	<h3 id="easier-debugging">easier debugging</h3>
+	<div class="spacer page-header">
+		<h3 id="easier-debugging">easier debugging</h3>
+	</div>
 	<p>grunt node inspector</p>
 
-	<h3 id="dry-css">unused css removing</h3>
+	<div class="spacer page-header">
+		<h3 id="dry-css">unused css removing</h3>
+	</div>
 	<p>grunt-uncss</p>
+</div>
+<!--/Environment needs -->
 
 
-<h1 id="deployment-needs">Deployement needs:</h1>
-
-	<h3 id="development-site">development site</h3>
+<!-- Deployement needs -->
+<div class="doc-section">
+	<div class="spacer page-header">
+		<h1 id="deployment-needs">Deployement needs:</h1>
+	</div>
+	<div class="spacer page-header">
+		<h3 id="development-site">development site</h3>
+	</div>
 	<p>on minify, node debug, automated tests, automated restart, linting, ...</p>
 
-	<h3 id="quality-site">quality site</h3>
+	<div class="spacer page-header">
+		<h3 id="quality-site">quality site</h3>
+	</div>
 	<p>one self hosted quality site (minify, automated tests, automated deployment on new quality tag, ...)</p>
 
-	<h3 id="production-site">production site</h3>
+	<div class="spacer page-header">
+		<h3 id="production-site">production site</h3>
+	</div>
 	<p>one self hosted production site (restart on change, automated deployment on new production tag, ...)</p>
 
-	<h3 id="environment-aware">environment aware configuration</h3>
+	<div class="spacer page-header">
+		<h3 id="environment-aware">environment aware configuration</h3>
+	</div>
 	<p>node, grunt</p>
+</div>
+<!--/Deployement needs -->
 
-<h1 id="ui-needs">User interface needs:</h1>
-
-	<h3 id="devices">Devices</h3>
+<!-- User interface needs -->
+<div class="doc-section">
+	<div class="spacer page-header">
+		<h1 id="ui-needs">User interface needs:</h1>
+	</div>
+	<div class="spacer page-header">
+		<h3 id="devices">Devices</h3>
+	</div>
 	<p>mobile and tablets support (responsive)</p>
 
-	<h3 id="offline-mode">Offline mode</h3>
+	<div class="spacer page-header">
+		<h3 id="offline-mode">Offline mode</h3>
+	</div>
 	<p>offline and mobile first approach</p>
-	<p>synchronisation when online<p>
+	<p>synchronisation when online</p>
 
-	<h3 id="interface">Interface</h3>
+	<div class="spacer page-header">
+		<h3 id="interface">Interface</h3>
+	</div>
 	<p>minimal and clean interface</p>
+</div>
+<!--/User interface needs -->
 
-<h1 id="functionnalities-needs">Functionalities needs:</h1>
+<!-- Functionalities needs -->
+<div class="doc-section">
+	<div class="spacer page-header">
+		<h1 id="functionnalities-needs">Functionalities needs:</h1>
+	</div>
 	<p>no more images (no real added value)</p>
 	<p>last statistics (last read, last added, next to read/view by saga, ...)</p>
 	<p>link to check if any new chapter (novel, film, episode, ...) is available for a given saga</p>
 	<p>more media categories (TV series)</p>
 	<p>annotation by saga</p>
 	<p>cross category saga</p>
+</div>
+<!--/Functionalities needs -->
 
-<h1 id="data-needs">Data schema needs:</h1>
+<!-- Data schema needs -->
+<div class="doc-section">
+	<div class="spacer page-header">
+		<h1 id="data-needs">Data schema needs:</h1>
+	</div>
 	<p>factorize data</p>
 	<p>specific data for each media category</p>
 	<p>keep full text search capability</p>
 
 	<a href="{{site.baseurl}}/mongodb-schema.html">mongoDB schema</a>
+</div>
+<!--/Data schema needs -->
 
-<h1 id="editor">Editor:</h1>
+<!-- Editor -->
+<div class="doc-section">
+	<div class="spacer page-header">
+		<h1 id="editor">Editor:</h1>
+	</div>
 	<p>customized vim with completion, snippets, ... - <a href="https://github.com/gmoulin/gm-vim2">gm-vim2</a></p>
+</div>
+<!--/Editor -->
 
-<h1 id="portfolio-needs">Portofolio needs:</h1>
+<!-- Portofolio needs -->
+<div class="doc-section">
+	<div class="spacer page-header">
+		<h1 id="portfolio-needs">Portofolio needs:</h1>
+	</div>
 	<p>simple static site using github jekyll support</p>
 	<p>local preview</p>
 	<p>enhanced navigation using <a href="http://getbootstrap.com">Bootstrap</a></p>
+</div>
+<!--/Portofolio needs -->

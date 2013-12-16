@@ -12,7 +12,7 @@
 		<link rel="canonical" href="{{ site.baseurl }}{{ page.url | replace:'index.html','' }}" />
 
 		<link rel="shortcut icon" href="/favicon.png">
-		<link href="/assets/css/style.min.css" rel="stylesheet"></link>
+		<link href="assets/css/style.min.css" rel="stylesheet"></link>
 	</head>
 	<body>
 		{% include nav.html %}
@@ -46,16 +46,34 @@
 					$navbar = $('.navbar'),
 					$navSidebar = $('.nav-sidebar');
 
+				var fixNav = function(){
+					var $fixedNavFix = $('#fixedNavFix').remove(),
+						value = parseInt($navbar.outerHeight(true), 10) + 10,
+						style = document.createElement('style'),
+						css = 'body { padding-top: '+ value +'px; } h1[id], h3[id] { padding-top: '+ value +'px; margin-top: '+ (Math.floor(value / 2) + 5) +'px; }';
+
+					style.id = "fixedNavFix";
+					style.type = 'text/css';
+					if( style.styleSheet ){
+						style.styleSheet.cssText = css;
+					} else {
+						style.appendChild( document.createTextNode(css) );
+					}
+
+					document.head.appendChild( style );
+				};
+
 				$(window)
 					.on('load', function(){
-						$body.css('padding-top', parseInt($navbar.outerHeight(true), 10) + 10);
+						fixNav();
 					})
 					.resize(function(){
-						$body.css('padding-top', parseInt($navbar.outerHeight(true), 10) + 10);
+						fixNav();
 					});
 
-				if( $navSidebar.find('.nav-sidenav').find('li'),length === 0 ){
-					//generate sidenav from content markup
+				if( $navSidebar.find('.nav-sidenav').find('li').length === 0 ){
+					//generate sidenav from content markup if none found
+					//used to generate home page sidenav, then copy paste it in _includes/sidenav-home.html
 					var sidenav = "";
 					$('.content').find('h1')
 						.each(function(){

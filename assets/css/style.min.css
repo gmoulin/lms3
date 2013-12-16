@@ -1,3 +1,37 @@
 @import './bootstrap.css';
 @import './bootstrap-theme.css';
 @import './font-awesome.css';
+
+.nav-sidenav .active > a {
+	font-weight: bold;
+}
+
+.nav-sidenav .nav {
+	margin-left: 10px;
+}
+
+.nav-sidenav .nav li {
+	font-size: 12px;
+}
+
+.doc-section {
+	padding-top: 40px;
+}
+
+h1[id],
+h3[id] {
+	padding-top: 80px;
+	margin-top: -45px;
+}
+
+.nav-sidenav {
+	background-color: #eee;
+}
+
+.nav-sidenav .active > ul {
+	display: block;
+}
+.nav-sidenav .nav {
+	display: none;
+	margin-bottom: 8px;
+}
