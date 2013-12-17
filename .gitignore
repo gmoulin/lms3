@@ -1,2 +1,6 @@
-_site/*
-Gemfile.lock
+node_modules/*
+client/bower_components/*
+builds/*
+public/scripts/*
+public/styles/*
+
