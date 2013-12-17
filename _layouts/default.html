@@ -12,7 +12,11 @@
 		<link rel="canonical" href="{{ site.baseurl }}{{ page.url | replace:'index.html','' }}" />
 
 		<link rel="shortcut icon" href="/favicon.png">
-		<link href="assets/css/style.min.css" rel="stylesheet"></link>
+		<link href="assets/css/pygments.css" rel="stylesheet"></link>
+		<link href="assets/css/bootstrap.css" rel="stylesheet"></link>
+		<link href="assets/css/bootstrap-theme.css" rel="stylesheet"></link>
+		<link href="assets/css/font-awesome.css" rel="stylesheet"></link>
+		<link href="assets/css/styles.css" rel="stylesheet"></link>
 	</head>
 	<body>
 		{% include nav.html %}
@@ -22,13 +26,7 @@
 				<div class="col-md-3">
 					<div class="nav-sidebar hidden-print affix" role="complementary">
 						<ul class="nav nav-sidenav">
-							{% if page.slug == "grunt-workflow" %}
-								{% include sidenav-grunt-workflow.html %}
-							{% elsif page.slug == "problems-and-solutions" %}
-								{% include sidenav-problems-and-solutions.html %}
-							{% else %}
-								{% include sidenav-home.html %}
-							{% endif %}
+							<!-- auto generation using javascript -->
 						</ul>
 					</div>
 				</div>
@@ -43,16 +41,48 @@
 		<script>
 			jQuery(document).ready(function( $ ){
 				var $body = $(document.body),
+					$head = $(document.head),
 					$navbar = $('.navbar'),
 					$navSidebar = $('.nav-sidebar');
 
+				//first generate the sidenav if needed
+				if( $navSidebar.find('.nav-sidenav').find('li').length === 0 ){
+					var sidenav = "",
+						hasSub = false;
+					$('.content').find('.doc-section').each(function(){
+						$(this).find('h1, h3').each(function(){
+							var $anchor = $(this);
+							if( $anchor.is('h3') ){
+								if( !hasSub ){
+									hasSub = true;
+									sidenav += '<ul class="nav">';
+								}
+							} else {
+								if( hasSub ){
+									hasSub = false;
+									sidenav += '</ul>';
+								}
+								if( sidenav.length > 0 ){
+									sidenav += '</li>';
+								}
+							}
+
+							sidenav += '<li><a href="#'+ this.id +'">'+ $anchor.text().replace(':', '') +'</a>';
+							if( $anchor.is('h3') ){
+								sidenav += '</li>';
+							}
+						});
+					});
+
+					$navSidebar.find('.nav-sidenav').html( sidenav );
+				}
+
+				//second manage the navbar + scrollspy gaps
 				var fixNav = function(){
-					var $fixedNavFix = $('#fixedNavFix').remove(),
-						value = parseInt($navbar.outerHeight(true), 10) + 10,
+					var value = parseInt($navbar.outerHeight(true), 10) + 10,
 						style = document.createElement('style'),
 						css = 'body { padding-top: '+ value +'px; } h1[id], h3[id] { padding-top: '+ value +'px; margin-top: '+ (Math.floor(value / 2) + 5) +'px; }';
 
-					style.id = "fixedNavFix";
 					style.type = 'text/css';
 					if( style.styleSheet ){
 						style.styleSheet.cssText = css;
@@ -60,7 +90,16 @@
 						style.appendChild( document.createTextNode(css) );
 					}
 
-					document.head.appendChild( style );
+					$head[0].appendChild( style );
+
+					//remove previous generated styles
+					$head.find('style').filter(':not(:last-child)').remove();
+
+					//refresh the offset value for scrollspy
+					$body.scrollspy({
+						target: '.nav-sidebar',
+						offset: value
+					});
 				};
 
 				$(window)
@@ -70,35 +109,6 @@
 					.resize(function(){
 						fixNav();
 					});
-
-				if( $navSidebar.find('.nav-sidenav').find('li').length === 0 ){
-					//generate sidenav from content markup if none found
-					//used to generate home page sidenav, then copy paste it in _includes/sidenav-home.html
-					var sidenav = "";
-					$('.content').find('h1')
-						.each(function(){
-							var $this = $(this);
-							sidenav += '<li><a href="#'+ this.id +'">'+ $this.text().replace(':', '') +'</a>';
-
-							var $sub = $this.nextUntil('h1', 'h3');
-							if( $sub.length ){
-								sidenav += '<ul class="nav">';
-								$sub.each(function(){
-									sidenav += '<li><a href="#'+ this.id +'">'+ $(this).text() +'</a>';
-								});
-								sidenav += '</ul>';
-							}
-
-							sidenav += '</li>';
-						});
-
-					$navSidebar.find('.nav-sidenav').html( sidenav );
-				}
-
-				$body.scrollspy({
-					target: '.nav-sidebar',
-					offset: $navbar.outerHeight(true) + 10
-				});
 			});
 		</script>
 	</body>

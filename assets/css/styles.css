@@ -1,7 +1,3 @@
-@import './bootstrap.css';
-@import './bootstrap-theme.css';
-@import './font-awesome.css';
-
 .nav-sidenav .active > a {
 	font-weight: bold;
 }
@@ -35,3 +31,6 @@ h3[id] {
 	display: none;
 	margin-bottom: 8px;
 }
+
+/* pygments and bootstrap fix */
+code { background: transparent; }
