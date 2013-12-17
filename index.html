@@ -2,60 +2,45 @@
 layout: default
 title: LMS3 Documentation
 ---
+<div class="intro">
+	<p>LMS stands for Library Management System</p>
 
-<p>LMS stands for Library Management System</p>
+	<p>
+		For the third version I wanted to test a full javascript environment using <a href="http://nodejs.org/">Nodejs</a>, <a href="http://angularjs.org/">Angularjs</a> and <a href="http://sass-lang.com/">Sass</a>. As the same time I wanted this project to be part of a <b>public portfolio</b>.
+	</p>
 
-<p>
-	For the third version I wanted to test a full javascript environment using <a href="http://nodejs.org/">Nodejs</a>, <a href="http://angularjs.org/">Angularjs</a> and <a href="http://sass-lang.com/">Sass</a>. As the same time I wanted this project to be part of a <b>public portfolio</b>.
-</p>
-
-<p>
-	<a href="{{site.baseurl}}/problems-and-solutions.html">see problems and solutions found along the way</a>
-</p>
+	<p>
+		<a href="{{site.baseurl}}/problems-and-solutions.html">see problems and solutions found along the way</a>
+	</p>
+</div>
 
 <!-- Technologies needs -->
 <div class="doc-section">
 	<div class="page-header">
 		<h1 id="technologies-needs">Technologies needs:</h1>
 	</div>
-	<div class="page-header">
-		<h3 id="javascript-backend">Javascript on server</h3>
-	</div>
+	<h3 id="javascript-backend">Javascript on server</h3>
 	<p>Node and Express</p>
 
-	<div class="page-header">
-		<h3 id="database">Database</h3>
-	</div>
+	<h3 id="database">Database</h3>
 	<p>MongoDB with mongoose</p>
 
-	<div class="page-header">
-		<h3 id="data-cache">Cache capable</h3>
-	</div>
+	<h3 id="data-cache">Cache capable</h3>
 	<p>Redis</p>
 
-	<div class="page-header">
-		<h3 id="javascript-frontend">Frontend</h3>
-	</div>
+	<h3 id="javascript-frontend">Frontend</h3>
 	<p>Angular</p>
 
-	<div class="page-header">
-		<h3 id="test-frontend">Frontend unit test</h3>
-	</div>
+	<h3 id="test-frontend">Frontend unit test</h3>
 	<p>Mocha (to check)</p>
 
-	<div class="page-header">
-		<h3 id="coverage-frontend">Frontend coverage</h3>
-	</div>
+	<h3 id="coverage-frontend">Frontend coverage</h3>
 	<p>Istanbul (to check)</p>
 
-	<div class="page-header">
-		<h3 id="test-backend">Backend unit test</h3>
-	</div>
+	<h3 id="test-backend">Backend unit test</h3>
 	<p>Mocha (to check)</p>
 
-	<div class="page-header">
-		<h3 id="coverage-backend">Backend coverage</h3>
-	</div>
+	<h3 id="coverage-backend">Backend coverage</h3>
 	<p>Istanbul (to check)</p>
 </div>
 <!--/Technologies needs -->
@@ -67,49 +52,31 @@ title: LMS3 Documentation
 	</div>
 	<a href="{{site.baseurl}}/grunt-workflow.html">Grunt workflow</a>
 
-	<div class="page-header">
-		<h3 id="dependency-management">dependency management</h3>
-	</div>
+	<h3 id="dependency-management">dependency management</h3>
 	<p>npm and bower</p>
 
-	<div class="page-header">
-		<h3 id="auto-listing">auto listing</h3>
-	</div>
+	<h3 id="auto-listing">auto listing</h3>
 	<p>of scripts and stylesheets in html layout - grunt includeSource</p>
 
-	<div class="page-header">
-		<h3 id="live-reload">live reload</h3>
-	</div>
+	<h3 id="live-reload">live reload</h3>
 	<p>grunt-contrib-watch</p>
 
-	<div class="page-header">
-		<h3 id="auto-restart">server auto restart</h3>
-	</div>
+	<h3 id="auto-restart">server auto restart</h3>
 	<p>grunt nodemon</p>
 
-	<div class="page-header">
-		<h3 id="auto-compiling">auto compiling</h3>
-	</div>
+	<h3 id="auto-compiling">auto compiling</h3>
 	<p>for Sass - grunt</p>
 
-	<div class="page-header">
-		<h3 id="full-domain">full domain support</h3>
-	</div>
+	<h3 id="full-domain">full domain support</h3>
 	<p>for both apache and node - apache proxying for node (not optimal but working)</p>
 
-	<div class="page-header">
-		<h3 id="build-automation">automated checking, minifying, building</h3>
-	</div>
+	<h3 id="build-automation">automated checking, minifying, building</h3>
 	<p>grunt (usemin, jslint, templates precompiling, recess, ...)</p>
 
-	<div class="page-header">
-		<h3 id="easier-debugging">easier debugging</h3>
-	</div>
+	<h3 id="easier-debugging">easier debugging</h3>
 	<p>grunt node inspector</p>
 
-	<div class="page-header">
-		<h3 id="dry-css">unused css removing</h3>
-	</div>
+	<h3 id="dry-css">unused css removing</h3>
 	<p>grunt-uncss</p>
 </div>
 <!--/Environment needs -->
@@ -119,29 +86,19 @@ title: LMS3 Documentation
 	<div class="page-header">
 		<h1 id="deployment-needs">Deployement needs:</h1>
 	</div>
-	<div class="page-header">
-		<h3 id="development-site">development site</h3>
-	</div>
+	<h3 id="development-site">development site</h3>
 	<p>on development computer (node debug, automated tests, automated restart, linting, ...)</p>
 
-	<div class="page-header">
-		<h3 id="quality-site">quality site</h3>
-	</div>
+	<h3 id="quality-site">quality site</h3>
 	<p>one self hosted quality site (minify, automated tests, automated deployment on new quality tag, ...)</p>
 
-	<div class="page-header">
-		<h3 id="production-site">production site</h3>
-	</div>
+	<h3 id="production-site">production site</h3>
 	<p>one self hosted production site (restart on change, automated deployment on new production tag, ...)</p>
 
-	<div class="page-header">
-		<h3 id="environment-aware">environment aware configuration</h3>
-	</div>
+	<h3 id="environment-aware">environment aware configuration</h3>
 	<p>node, grunt</p>
 
-	<div class="page-header">
-		<h3 id="folders-hierarchy">clear folder hierarchy</h3>
-	</div>
+	<h3 id="folders-hierarchy">clear folder hierarchy</h3>
 	<p>
 		It is really important to have a clear organisation for files and folder to make development and maintenance easier.
 		<br><br>
@@ -160,20 +117,14 @@ title: LMS3 Documentation
 	<div class="page-header">
 		<h1 id="ui-needs">User interface needs:</h1>
 	</div>
-	<div class="page-header">
-		<h3 id="devices">Devices</h3>
-	</div>
+	<h3 id="devices">Devices</h3>
 	<p>mobile and tablets support (responsive)</p>
 
-	<div class="page-header">
-		<h3 id="offline-mode">Offline mode</h3>
-	</div>
+	<h3 id="offline-mode">Offline mode</h3>
 	<p>offline and mobile first approach</p>
 	<p>synchronisation when online</p>
 
-	<div class="page-header">
-		<h3 id="interface">Interface</h3>
-	</div>
+	<h3 id="interface">Interface</h3>
 	<p>minimal and clean interface</p>
 </div>
 <!--/User interface needs -->

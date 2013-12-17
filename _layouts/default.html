@@ -42,7 +42,6 @@
 			jQuery(document).ready(function( $ ){
 				var $body = $(document.body),
 					$head = $(document.head),
-					$navbar = $('.navbar'),
 					$navSidebar = $('.nav-sidebar');
 
 				//first generate the sidenav if needed
@@ -77,38 +76,26 @@
 					$navSidebar.find('.nav-sidenav').html( sidenav );
 				}
 
-				//second manage the navbar + scrollspy gaps
-				var fixNav = function(){
-					var value = parseInt($navbar.outerHeight(true), 10) + 10,
-						style = document.createElement('style'),
-						css = 'body { padding-top: '+ value +'px; } h1[id], h3[id] { padding-top: '+ value +'px; margin-top: '+ (Math.floor(value / 2) + 5) +'px; }';
+				//refresh the offset gap for scrollspy
+				$body.scrollspy({
+					target: '.nav-sidebar',
+					offset: 100
+				});
 
-					style.type = 'text/css';
-					if( style.styleSheet ){
-						style.styleSheet.cssText = css;
-					} else {
-						style.appendChild( document.createTextNode(css) );
-					}
+				//smooth scroll on sidebar anchor click
+				$navSidebar
+					.on('click', '.nav-sidenav a', function(e){
+						e.preventDefault();
 
-					$head[0].appendChild( style );
+						var hash = this.hash;
 
-					//remove previous generated styles
-					$head.find('style').filter(':not(:last-child)').remove();
-
-					//refresh the offset value for scrollspy
-					$body.scrollspy({
-						target: '.nav-sidebar',
-						offset: value
-					});
-				};
-
-				$(window)
-					.on('load', function(){
-						fixNav();
+						$('html, body').animate({
+							scrollTop: $(this.hash).offset().top - 85 //manage the top fixed navbar height
+						}, 300, function(){
+							window.location.hash = hash;
+						});
 					})
-					.resize(function(){
-						fixNav();
-					});
+				;
 			});
 		</script>
 	</body>

@@ -2,89 +2,22 @@
 layout: default
 title: Problems and solutions found along the way
 ---
+<div class="intro">
+	<p>
+		You will find listed on this page the main problems I ran into during the different phases of the LMS3 project.<br />
+		By main problems I mean those which took me several trys and some time to fix.<br />
+		Each problem have a description, an analysis and a solution; this to show how I resolved it.<br />
+	</p>
+</div>
 
-<!-- Technologies needs -->
+<!-- Documentation -->
 <div class="doc-section">
 	<div class="page-header">
-		<h1 id="documentation">Documentation :</h1>
+		<h1 id="documentation">Documentation:</h1>
 	</div>
-	<!-- bootstrap scrollspy -->
-	<div class="page-header">
-		<h3 id="bootstrap-scrollspy-gap">Bootstrap 3 scrollspy gap :</h3>
-	</div>
-	<p>
-		There are some gaps if used with a top fixed navbar :<br />
-		<ul>
-			<li>navbar height can change (responsive rules)</li>
-			<li>clicking a sidenav link scroll to anchor, but the anchor will be under the navbar</li>
-		</ul>
-		<br />
-		The solution is in several parts : in the markup and css for anchors, in javascript to manage the navbar and scroll to anchors gap.<br />
-		I gathered it from <a href="http://stackoverflow.com">stackoverflow</a> posts and the <a href="http://getbootstrap.com">getbootstrap</a> documentation source code.<br />
-		<p>
-			First surround the anchors (&lt;h1&gt;, &lt;h3&gt;) in a &lt;div class="page-header"&gt; and surround the main parts (&lt;h1&gt;) in another (&lt;div class="doc-section"&gt;).<br />
-		</p>
-		<p>
-			Second in the css add some generic rules.<br />
-			{% highlight css %}
-.doc-section {
-	padding-top: 40px; /* non folded navbar has a 50px height */
-}
-
-h1[id],
-h3[id] {
-	padding-top: 80px;
-	margin-top: -45px; /* using a negative margin-top is a bit strange, but it is working */
-}
-			{% endhighlight %}
-		</p>
-		<p>
-			Finaly create some style on load and resize events to manage the navbar height.<br />
-			{% highlight javascript %}
-var $body = $(document.body),
-	$head = $(document.head),
-	$navbar = $('.navbar');
-
-var fixNav = function(){
-	var gap = parseInt($navbar.outerHeight(true), 10) + 10,
-		style = document.createElement('style'),
-		css = 'body { padding-top: '+ gap +'px; } h1[id], h3[id] { padding-top: '+ gap +'px; margin-top: '+ (Math.floor(gap / 2) + 5) +'px; }';
-
-	style.type = 'text/css';
-	if( style.styleSheet ){
-		style.styleSheet.cssText = css;
-	} else {
-		style.appendChild( document.createTextNode(css) );
-	}
-
-	$head[0].appendChild( style );
-
-	//remove previous generated styles
-	$head.find('style').filter(':not(:last-child)').remove();
-
-	//refresh the offset value for scrollspy
-	$body.scrollspy({
-		target: '.nav-sidebar',
-		offset: gap
-	});
-};
-
-$(window)
-	.on('load', function(){
-		fixNav();
-	})
-	.resize(function(){
-		fixNav();
-	});
-			{% endhighlight %}
-		</p>
-	</p>
-	<!--/bootstrap scrollspy -->
 
 	<!-- sidenav maintenance -->
-	<div class="page-header">
-		<h3 id="sidenav-maintenance">Sidenav maintenance :</h3>
-	</div>
+	<h3 id="sidenav-maintenance">Sidenav maintenance</h3>
 	<p>
 		Bootstrap sidenav combined with scrollspy is really good for documentation purpose but the maintenance is awfull, time for automation.<br />
 		This solution is not optimal since it occurs on load and force a repaint but the gain in maintenance ease is worth it.<br />
@@ -127,4 +60,5 @@ if( $navSidebar.find('.nav-sidenav').find('li').length === 0 ){
 	</p>
 	<!--/sidenav maintenance -->
 </div>
+<!--/Documentation -->
 
