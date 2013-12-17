@@ -14,19 +14,27 @@ title: Grunt workflow
 		<h1 id="workflow">Workflow:</h1>
 	</div>
 
+	<h3 id="livereload">Livereload</h3>
+	<p>
+		<ol>
+			<li>watch css (not sass), frontend javascript, images, view templates and html files</li>
+			<li>watch sass files (compiled to css with sourcemap)</li>
+			<li>watch backend javascript for node server restart</li>
+		</ol>
+	</p>
+
 	<h3 id="development">Development</h3>
 	<p>
 		<ol>
 			<li>clean generated folders and files or previous builds</li>
 			<li>compile sass into css</li>
 			<li>remove unused css</li>
+			<li>precompile partial html templates to js</li>
 			<li>check js and css files for errors using linters</li>
 			<li>run automated tests</li>
 			<li>run tests coverage</li>
-			<li>precompile partial html templates to js</li>
 			<li>update included stylesheets in layout</li>
 			<li>update included scripts in layout</li>
-			<li>run concurrent tasks</li>
 		</ol>
 	</p>
 </div>
@@ -114,7 +122,7 @@ title: Grunt workflow
 	<h3 id="managing-file-change">Managing file change</h3>
 	<p>
 		Plugins: <a href="https://github.com/gruntjs/grunt-contrib-watch" target="_blank">grunt-contrib-watch</a> and <a href="https://github.com/ChrisWren/grunt-nodemon" target="_blank">grunt-nodemon</a>.<br />
-		Use "livereload" feature by watching css (not sass), front javascript, images, view templates and html files, linked with browser plugin to fire page refresh.<br />
+		Use "livereload" feature by watching css (not sass), frontend javascript, images, view templates and html files, linked with browser plugin to fire page refresh.<br />
 		Also restart node server on backend javascript files modification.<br />
 		The sass files are watched for auto compilation but the "livereload" will occurs only on css files.
 	</p>
