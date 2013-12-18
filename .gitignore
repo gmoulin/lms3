@@ -3,4 +3,5 @@ client/bower_components/*
 builds/*
 public/scripts/*
 public/styles/*
+test-runner.html
 
