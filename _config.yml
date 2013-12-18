@@ -1,4 +1,4 @@
-exclude: [Gemfile, Gemfile.lock, params.json, package.json, Gruntfile.js, node_modules/*]
+exclude: [Gemfile, Gemfile.lock, params.json, package.json]
 baseurl: '/lms3'
 pygments: true
 

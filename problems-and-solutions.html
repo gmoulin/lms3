@@ -59,6 +59,138 @@ if( $navSidebar.find('.nav-sidenav').find('li').length === 0 ){
 		{% endhighlight %}
 	</p>
 	<!--/sidenav maintenance -->
+
+	<!-- livereload support -->
+	<h3 id="livereload-support">Livereload support</h3>
+	<p>
+		Jekyll has a watch feature but no livereload support, clearly need some <a href="https://github.com/gruntjs/grunt-contrib-watch" target="_blank">grunt-contrib-watch</a> love.<br />
+		Easier said than done, as <code>jekyll serve</code> is a process that grunt can not interrupt.<br />
+		So grunt will only rebuild the site and fire the livereload event. Both <code>jekyll serve</code> and watch tasks are living process, so <a href="https://github.com/sindresorhus/grunt-concurrent" target="_blank">grunt-concurrent</a> is needed.<br />
+
+		<br />
+		Now I just need a terminal window, go to project gh_pages directory and run <code>grunt</code>, then open my browser, navigate to http://localhost:4000/ and enable livereload extension.<br />
+
+		<br />
+		No more need to press refresh when I update the documentation.<br />
+
+		<br />
+		Here is the final Gruntfile code.<br />
+
+		{% highlight javascript %}
+'use strict';
+
+var LIVERELOAD_PORT = 35729; //port of chrome livereload extension
+
+module.exports = function( grunt ){
+	// load all grunt tasks using the package.json dependencies list
+	require('matchdep').filterDev('grunt-*').forEach( grunt.loadNpmTasks );
+
+	grunt.initConfig({
+		concurrent: {
+			target: {
+				tasks: ['watch', 'shell:jekyllServe'],
+				options: {
+					logConcurrentOutput: true
+				}
+			}
+		},
+
+		watch: {
+			jekyll: {
+				files: [
+					'_includes/*.html',
+					'_layouts/*.html',
+					'index.html',
+					'grunt-workflow.html',
+					'problems-and-solutions.html'
+				],
+				tasks: ['shell:jekyllBuild'],
+				options: {
+					livereload: LIVERELOAD_PORT,
+					atBegin: true //will run jekyllBuild when watch start
+				}
+			}
+		},
+
+		shell: {
+			options: {
+				stdout: true
+			},
+			jekyllBuild: {
+				command: "jekyll build --baseurl ''" //_config.yml has already a baseurl for github.io, replace it for local preview
+			},
+			jekyllServe: {
+				command: "jekyll serve --baseurl ''"
+			}
+		}
+	});
+
+	grunt.registerTask('default', ['concurrent']);
+};
+		{% endhighlight %}
+	</p>
+	<!--/livereload support -->
 </div>
 <!--/Documentation -->
+
+<!-- Node -->
+<div class="doc-section">
+	<div class="page-header">
+		<h1 id="node">Node:</h1>
+	</div>
+
+	<!-- full domain support -->
+	<h3 id="full-domain-support">Full domain support</h3>
+	<p>
+		Using the apache proxy directive to redirect request to a localhost port.<br />
+		{% highlight apache %}
+<VirtualHost *:80>
+    ServerName  www.lms3.dev
+    ServerAlias lms3.dev
+
+    ProxyRequests off
+    <Proxy *>
+        Order deny,allow
+        Allow from all
+    </Proxy>
+    <Location />
+        ProxyPass http://localhost:3001/
+        ProxyPassReverse http://localhost:3001/
+    </Location>
+</VirtualHost>
+
+<VirtualHost *:80>
+    ServerName  www.lms3.qual
+    ServerAlias lms3.qual
+
+    ProxyRequests off
+    <Proxy *>
+        Order deny,allow
+        Allow from all
+    </Proxy>
+    <Location />
+        ProxyPass http://localhost:3002/
+        ProxyPassReverse http://localhost:3002/
+    </Location>
+</VirtualHost>
+
+<VirtualHost *:80>
+    ServerName  www.lms3.prod
+    ServerAlias lms3.prod
+
+    ProxyRequests off
+    <Proxy *>
+        Order deny,allow
+        Allow from all
+    </Proxy>
+    <Location />
+        ProxyPass http://localhost:3003/
+        ProxyPassReverse http://localhost:3003/
+    </Location>
+</VirtualHost>
+		{% endhighlight %}
+	</p>
+	<!--/full domain support -->
+</div>
+<!--/Node -->
 

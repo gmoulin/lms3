@@ -1,0 +1,2 @@
+Require 'jekyll', 'npm' and 'grunt-cli' installed.
+Run 'npm install' after cloning this branch from the project folder.

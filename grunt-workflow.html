@@ -27,14 +27,50 @@ title: Grunt workflow
 	<p>
 		<ol>
 			<li>clean generated folders and files or previous builds</li>
+			<li>copy components specific scripts and fonts files</li>
 			<li>compile sass into css</li>
 			<li>remove unused css</li>
+			<li>lint css</li>
 			<li>precompile partial html templates to js</li>
-			<li>check js and css files for errors using linters</li>
-			<li>run automated tests</li>
-			<li>run tests coverage</li>
+			<li>lint js</li>
+			<li>update included stylesheets and scripts in layout</li>
+			<li>run concurrent tasks for livereload, node restart, automated tests ...</li>
+		</ol>
+	</p>
+
+	<h3 id="quality">Quality</h3>
+	<p>
+		<ol>
+			<li>clean generated folders and files or previous builds</li>
+			<li>clean quality folder</li>
+			<li>copy components specific javascript and fonts files</li>
+			<li>compile sass into css</li>
+			<li>remove unused css</li>
+			<li>lint css</li>
+			<li>precompile partial html templates to js</li>
+			<li>lint js</li>
 			<li>update included stylesheets in layout</li>
-			<li>update included scripts in layout</li>
+			<li>replace stylesheets and scripts with concatened and minified versions</li>
+			<li>copy build to quality folder</li>
+			<li>run automated tests on quality folder files</li>
+		</ol>
+	</p>
+
+	<h3 id="production">Production</h3>
+	<p>
+		<ol>
+			<li>clean generated folders and files or previous builds</li>
+			<li>clean production folder</li>
+			<li>copy components specific javascript and fonts files</li>
+			<li>compile sass into css</li>
+			<li>remove unused css</li>
+			<li>lint css</li>
+			<li>precompile partial html templates to js</li>
+			<li>lint js</li>
+			<li>update included stylesheets in layout</li>
+			<li>replace stylesheets and scripts with concatened and minified versions</li>
+			<li>copy build to production folder</li>
+			<li>run automated tests on production folder files</li>
 		</ol>
 	</p>
 </div>
@@ -56,7 +92,7 @@ title: Grunt workflow
 
 	<h3 id="node-debug-help">Node debug help</h3>
 	<p>
-		Plugin: <a href="https://github.com/ChrisWren/grunt-node-inspector" target="_blank">grunt-node-inspector</a>
+		Plugin: <a href="https://github.com/ChrisWren/grunt-node-inspector" target="_blank">grunt-node-inspector</a>.<br />
 		Help me debug server side code in the browser.<br />
 	</p>
 
@@ -80,16 +116,20 @@ title: Grunt workflow
 
 	<h3 id="managing-scripts-and-stylesheets">Managing scripts and stylesheets</h3>
 	<p>
-		Plugin: <a href="https://github.com/jwvdiermen/grunt-include-source" target="_blank">grunt-include-source</a>.<br />
+		Plugins: <a href="https://github.com/jwvdiermen/grunt-include-source" target="_blank">grunt-include-source</a> and <a href="https://github.com/gruntjs/grunt-contrib-copy" target="_blank">grunt-contrib-copy</a>.<br />
 		Splitting code between several files is important for any javascript app, but the inclusion of all this files in the layout can quickly become a maintenance nightmare, grunt can automate this task.<br />
 		I tryed and search for a grunt plugin able to add script or stylesheets into an html file at a specific place.<br />
-		Also I needed it to be compatible with a grunt minification plugin.<br />
+		I also needed it to be compatible with a grunt minification plugin, including some cleverness for already minified files (third party libraries like jQuery).<br />
+		The bower components minified files are copied to public folder with <a href="https://github.com/gruntjs/grunt-contrib-copy" target="_blank">grunt-contrib-copy</a>.<br />
 		Order can be managed in the html code.<br />
+
+		<br />
+		For stylesheets the trick is to have one sass file including all the layers (see <a href="http://operatino.github.io/MCSS/en/" target="_blank">MCSS</a>) using sourcemap to match the sass rules while debugging and tweaking the user interface.<br />
 	</p>
 
 	<h3 id="update-html-with-minified-files">Update html with minified files</h3>
 	<p>
-		Plugin: <a href="https://github.com/yeoman/grunt-usemin" target="_blank">grunt-usemin</a>.<br />
+		Plugin: <a href="https://github.com/rubenv/grunt-usemin-uglifynew" target="_blank">grunt-usemin-uglifynew</a>.<br />
 		For quality and production environments I wanted to simply update the scripts and stylesheets references with concatened and minified one.<br />
 		Generaly you have to already get the scripts and stylesheets references in the html for usemin to work, but since I am using <a href="https://github.com/jwvdiermen/grunt-include-source" target="_blank">grunt-include-source</a> the references will be added automaticaly.<br />
 		For this trick to work grunt-include-source must run before useminPrepare, also in the html, usemin comments must surround include-source ones.<br />
@@ -109,12 +149,6 @@ title: Grunt workflow
 	<p>
 		Plugin: <a href="https://github.com/gruntjs/grunt-contrib-clean" target="_blank">grunt-contrib-clean</a>
 		Simple cleaning task to always get an up to date build.<br />
-	</p>
-
-	<h3 id="cleaning-bower-dependencies">Cleaning bower dependencies</h3>
-	<p>
-		Plugin: <a href="https://github.com/KidkArolis/grunt-bower-clean" target="_blank">grunt-bower-clean</a>.<br />
-		Simply remove unused files from bower components.<br />
 	</p>
 
 	<h3 id="managing-file-change">Managing file change</h3>
