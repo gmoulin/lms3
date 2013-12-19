@@ -1,17 +1,23 @@
-'use strict';
-
-var LIVERELOAD_PORT = 35729;
+var LIVERELOAD_PORT = 1337;
 
 module.exports = function( grunt ){
-	// load all grunt tasks using the package.json dependencies list
-	require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
+	'use strict';
 
-	require('time-grunt')(grunt);
+	/* temporary until usemin plugin take into account already minified files */
+	var uglifyNew = require('grunt-usemin-uglifynew');
+
+	// load all grunt tasks using the package.json dependencies list
+	require('matchdep').filterDev('grunt-*').forEach( grunt.loadNpmTasks );
+
+	require('time-grunt')( grunt );
 
 	grunt.initConfig({
+		/**
+		 * dev concurrent process
+		 */
 		concurrent: {
 			dev: {
-				tasks: ['nodemon', 'node-inspector', 'watch'],
+				tasks: ['nodemon:dev', 'node-inspector', 'connect', 'open', 'watch'],
 				options: {
 					logConcurrentOutput: true
 				}
@@ -27,7 +33,16 @@ module.exports = function( grunt ){
 				options: {
 					file: 'server.js',
 					nodeArgs: ['--debug'],
-					ignoredFiles: ['./.git/*', './node_modules/**', './*.json', 'Gruntfile.js', './client/**', './public/**'],
+					ignoredFiles: [
+						'./.git/*',
+						'./.tmp/*',
+						'./.sass-cache/*',
+						'./node_modules/**',
+						'./*.json',
+						'Gruntfile.js',
+						'./client/**',
+						'./public/**'
+					],
 					watchedExtensions: ['js'],
 					watchedFolders: ['server'],
 					delayTime: 1,
@@ -74,8 +89,10 @@ module.exports = function( grunt ){
 		'node-inspector': {
 			custom: {
 				options: {
+					'web-port': 2999,
 					'web-host': 'localhost',
-					'save-live-edit': true
+					'save-live-edit': true,
+					'debug-port': 2998
 				}
 			}
 		},
@@ -86,19 +103,27 @@ module.exports = function( grunt ){
 		 */
 		watch: {
 			index: {
-				files: ['client/views/index.tpl.html', 'client/scripts/**/*.js', 'client/styles/**/*.css'],
+				files: [
+					'client/views/index.tpl.html',
+					'client/scripts/**/*.js',
+					'client/styles/**/*.css'
+				],
 				tasks: ['includeSource']
 			},
 			templates: {
-				files: 'client/partials/**/*.tpl.html',
+				files: ['client/partials/**/*.tpl.html'],
 				tasks: ['html2js']
 			},
 			sass: {
-				files: 'client/sass/**/*.sass',
+				files: ['client/sass/**/*.sass'],
 				tasks: ['sass']
 			},
 			jslinting: {
-				files: ['client/scripts/**/*.js', 'server.js', 'server/**/*.js'],
+				files: [
+					'client/scripts/**/*.js',
+					'server.js',
+					'server/**/*.js'
+				],
 				tasks: ['jshint']
 			},
 			csslinting: {
@@ -107,18 +132,31 @@ module.exports = function( grunt ){
 			},
 			// any file modified in public folder invoke a livereload
 			livereload: {
-				options: { livereload: LIVERELOAD_PORT },
+				options: {
+					livereload: LIVERELOAD_PORT
+				},
 				files: ['public/**/*']
 			},
-			tests: {
-				frontend:{
-					files: ['client/scripts/**/*.js', 'client/tests/**/*.js'],
-					tasks: ['blanket_mocha_server:frontend', 'blanket_mocha:frontend', 'karma:dev:frontend:run']
-				},
-				backend: {
-					files: ['server.js', 'server/**/*.js'],
-					tasks: ['mochaTest']
-				}
+			frontendTests: {
+				files: [
+					'client/scripts/**/*.js',
+					'tests/!(server)/*.js'
+				],
+				tasks: [
+					'blanket_mocha_server:frontend',
+					'blanket_mocha:frontend',
+					'karma:unit:run',
+					'karma:midway:run',
+					'karma:end2end:run'
+				]
+			},
+			backendTests: {
+				files: [
+					'server.js',
+					'server/**/*.js',
+					'tests/server/**/*.js'
+				],
+				tasks: ['mochaTest']
 			}
 		},
 
@@ -130,8 +168,8 @@ module.exports = function( grunt ){
 				indentString: '	'
 			},
 			main: {
-				src: ['client/partials/**/*.tpl.html'],
-				dest: 'public/scripts/templates.js'
+				src: ['client/views/partials/**/*.tpl.html'],
+				dest: 'public/scripts/angular-templates.js'
 			}
 		},
 
@@ -139,27 +177,42 @@ module.exports = function( grunt ){
 		 * sass compilation
 		 */
 		sass: {
-			options: {
-				sourcemap: true,
-				unixNewlines: true,
-				style: 'compact'
-			},
-			files: {
-				'public/styles/styles.css': 'client/sass/main.sass'
+			all: {
+				options: {
+					sourcemap: true,
+					style: 'expanded'
+				},
+				files: {
+					'public/styles/0_layer_foundation.css': 'client/sass/foundation/0_layer_foundation.scss',
+					'public/styles/1_layout_base.css': 'client/sass/base/1_layout_base.scss',
+					'public/styles/2_layout_project.css': 'client/sass/project/2_layout_project.scss',
+					'public/styles/3_layout_cosmetic.css': 'client/sass/cosmetic/3_layout_cosmetic.scss'
+				}
 			}
 		},
 
+		/**
+		 * folders cleaning
+		 */
 		clean: {
-			dev: ['.tmp', 'public/scripts', 'public/styles'],
-			quality: ['.tmp', 'public/scripts', 'public/styles', 'build/quality'],
-			production: ['.tmp', 'public/scripts', 'public/styles', 'build/prod']
+			dev: [
+				'.tmp/*',
+				'client/sass/foundation/libs/*',
+				'public/{scripts,styles,fonts}/*',
+				'public/**/*.html'
+			],
+			quality: ['build/quality/*'],
+			production: ['build/prod/*']
 		},
 
+		/**
+		 * javascript linting
+		 */
 		jshint: {
 			/* see http://www.jshint.com/docs/options/ */
 			options: {
 				'bitwise': true,
-				'camelcase': true,
+				'camelcase': false,
 				'curly': true,
 				'eqeqeq': true,
 				'es3': false,
@@ -180,7 +233,7 @@ module.exports = function( grunt ){
 				'trailing': true,
 				'maxparams': 3,
 				'maxdepth': 3,
-				'maxstatements': 4,
+				'maxstatements': 20,
 				'maxcomplexity': 10,
 				'maxlen': 120,
 				'asi': false,
@@ -189,8 +242,8 @@ module.exports = function( grunt ){
 				'eqnull': false,
 				'esnext': false,
 				'evil': false,
-				'expr': false,
-				'funscope': false,
+				'expr': true,
+				'funcscope': false,
 				'globalstrict': false,
 				'iterator': false,
 				'lastsemic': false,
@@ -207,12 +260,21 @@ module.exports = function( grunt ){
 				'sub': false,
 				'supernew': false,
 				'validthis': false,
-				'globals': {
+				'globals': { /* list known variables to avoid "is not defined" error */
 					'browser': true,
 					'devel': true,
 					'jquery': true,
 					'node': true,
-					'phantom': true
+					'phantom': true,
+					'angular': true,
+					'__dirname': true,
+					'require': true,
+					'process': true,
+					'console': true,
+					'module': true,
+					'describe': true,
+					'done': true,
+					'it': true
 				},
 				'nomen': false,
 				'onevar': true,
@@ -222,6 +284,9 @@ module.exports = function( grunt ){
 			all: ['client/scripts/**/*.js', 'server.js', 'Gruntfile.js', 'server/**/*.js']
 		},
 
+		/**
+		 * stylesheet linting
+		 */
 		csslint: {
 			options: { /* false ignores the rule, 2 make it an error */
 				'important': true,
@@ -260,7 +325,12 @@ module.exports = function( grunt ){
 				'vendor-prefix': true,
 				'zero-units': true
 			},
-			src: ['client/styles/**/*.css']
+			compiled: {
+				src: ['public/styles/{1,2,3}_*.css'] /* do not lint foundation layer */
+			},
+			minified: {
+				src: ['public/styles/styles.min.css']
+			}
 		},
 
 		/**
@@ -269,7 +339,6 @@ module.exports = function( grunt ){
 		 */
 		includeSource: {
 			options: {
-				basePath: 'client',
 				includePath: 'public/'
 			},
 			index: {
@@ -279,6 +348,46 @@ module.exports = function( grunt ){
 			}
 		},
 
+		/**
+		 * modify page title depending on SERVER value
+		 * also remove livereload script on quality and production environment
+		 */
+		preprocess: {
+			options: {
+				inline: true
+			},
+			dev: {
+				options: {
+					context: {
+						LIVERELOAD: true,
+						SERVER: 'developement'
+					}
+				},
+				src: ['public/index.html']
+			},
+			quality: {
+				options: {
+					context: {
+						LIVERELOAD: false,
+						SERVER: 'quality'
+					}
+				},
+				src: ['public/index.html']
+			},
+			production: {
+				options: {
+					context: {
+						LIVERELOAD: false,
+						SERVER: 'production'
+					}
+				},
+				src: ['public/index.html']
+			}
+		},
+
+		/**
+		 * parse the layout for concatenation and minification of stylesheets
+		 */
 		useminPrepare: {
 			html: 'public/index.html',
 			options: {
@@ -297,76 +406,206 @@ module.exports = function( grunt ){
 			html: 'public/index.html'
 		},
 
+		/**
+		 * copy specific files for easier use
+		 * - bower_components javascript, stylesheets and fonts
+		 * - quality or production builds
+		 */
 		copy: {
-			components: { /* only for js files */
-				jquery: {
-					dest: 'public/scripts',
-					src: ['client/bower_components/jquery/*.min.js']
-				},
-				angular: {
-					dest: 'public/scripts',
-					src: ['client/bower_components/angular/*.min.js']
-				},
-				bootstrap: {
-					dest: 'public/scripts',
-					src: [
-						'client/bower_components/bootstrap/js/collapse.js',
-						'client/bower_components/bootstrap/js/dropdown.js'
-					]
-				}
+			components: {
+				files: [
+					/* rename js files with version */
+					{
+						expand: true,
+						flatten: true,
+						filter: 'isFile',
+						dest: 'public/scripts/libs/',
+						src: ['client/bower_components/jquery/jquery.min.js'],
+						rename: function( dest ){
+							var pkg = grunt.file.readJSON('client/bower_components/jquery/bower.json');
+							return dest +'jquery-'+ pkg.version +'.min.js';
+						}
+					},
+					{
+						expand: true,
+						flatten: true,
+						filter: 'isFile',
+						dest: 'public/scripts/libs/',
+						src: ['client/bower_components/angular/angular.min.js'],
+						rename: function( dest ){
+							var pkg = grunt.file.readJSON('client/bower_components/angular/bower.json');
+							return dest +'angular-'+ pkg.version +'.min.js';
+						}
+					},
+					{
+						expand: true,
+						flatten: true,
+						filter: 'isFile',
+						dest: 'public/scripts/libs/',
+						src: ['client/bower_components/angular/angular.min.js.map']
+					},
+					{
+						expand: true,
+						flatten: true,
+						filter: 'isFile',
+						dest: 'public/scripts/libs/',
+						src: ['client/bower_components/bootstrap/js/collapse.js'],
+						rename: function( dest ){
+							var pkg = grunt.file.readJSON('client/bower_components/bootstrap/bower.json');
+							return dest +'bootstrap-'+ pkg.version +'-collapse.js';
+						}
+					},
+					{
+						expand: true,
+						flatten: true,
+						filter: 'isFile',
+						dest: 'public/scripts/libs/',
+						src: ['client/bower_components/bootstrap/js/dropdown.js'],
+						rename: function( dest ){
+							var pkg = grunt.file.readJSON('client/bower_components/bootstrap/bower.json');
+							return dest +'bootstrap-'+ pkg.version +'-dropdown.js';
+						}
+					},
+					/* css files rename them to _xxx.scss format for inclusion */
+					{
+						expand: true,
+						flatten: true,
+						filter: 'isFile',
+						dest: 'client/sass/foundation/libs/',
+						src: ['client/bower_components/normalize-css/normalize.css'],
+						rename: function( dest ){
+							return dest +'_normalize.scss';
+						}
+					},
+					{
+						expand: true,
+						flatten: true,
+						filter: 'isFile',
+						dest: 'client/sass/foundation/libs/',
+						src: ['client/bower_components/angular/angular-csp.css'],
+						rename: function( dest ){
+							return dest +'_angular-csp.scss';
+						}
+					},
+					{
+						expand: true,
+						flatten: true,
+						filter: 'isFile',
+						dest: 'client/sass/foundation/libs/',
+						src: ['client/bower_components/bootstrap/dist/css/bootstrap.css'],
+						rename: function( dest ){
+							return dest +'_bootstrap.scss';
+						}
+					},
+					{
+						expand: true,
+						flatten: true,
+						filter: 'isFile',
+						dest: 'client/sass/foundation/libs/',
+						src: ['client/bower_components/bootstrap/dist/css/bootstrap-theme.css'],
+						rename: function( dest ){
+							return dest +'_bootstrap-theme.scss';
+						}
+					},
+					{
+						expand: true,
+						flatten: true,
+						filter: 'isFile',
+						dest: 'client/sass/foundation/libs/',
+						src: ['client/bower_components/font-awesome/css/font-awesome.css'],
+						rename: function( dest ){
+							return dest +'_font-awesome.scss';
+						}
+					}
+				]
 			},
 			fonts: {
-				dest: 'public/fonts',
+				expand: true,
+				flatten: true,
+				filter: 'isFile',
+				dest: 'public/fonts/',
 				src: ['client/bower_components/font-awesome/fonts/*']
 			},
 			quality: {
 				expand: true,
 				src: ['public/**', 'server/!(tests)', 'server.js'],
-				dest: 'build/quality'
+				dest: 'build/quality/'
 			},
 			production: {
 				expand: true,
 				src: ['public/**', 'server/!(tests)', 'server.js'],
-				dest: 'build/production'
+				dest: 'build/production/'
 			}
 		},
 
+		/**
+		 * remove unused css rules after parsing html
+		 */
 		uncss: {
+			options: {
+				compress: true
+			},
 			all: {
 				files: {
-					'public/styles/styles.css': ['client/views/**/*.tpl.html']
+					'public/styles/styles.min.css': ['client/views/**/*.tpl.html']
 				}
 			}
 		},
 
-		//frontend tests in PhantomJS with coverage and threshold
+		/**
+		 * for before and after uncss size comparison
+		 */
+		compare_size: {
+			files: [
+				'public/styles/styles.css',
+				'public/styles/styles.min.css'
+			]
+		},
+
+		/**
+		 * frontend tests in PhantomJS with coverage and threshold
+		 */
 		blanket_mocha_server: {
 			frontend: {
 				options: {
-					port: 3001,
+					port: 5001,
 					htmlFile: 'test-runner.html',
-					sutFiles: ['client/scripts/**/*.js'],
-					testFiles: ['client/tests/**/*.spec.js'],
+					sutFiles: [
+						'public/scripts/libs/jquery-*.min.js',
+						'public/scripts/libs/!(jquery).js',
+						'client/bower_components/angular-mocks/angular-mocks.js',
+						'client/scripts/**/*.js'
+					],
+					testFiles: ['tests/**/**/*.js'],
 					blanketOptions: {
-						'data-cover-only': '//client\/scripts\//'
-					}
+						'data-cover-only': '//client\/scripts\//*.js'
+					},
+					assertionLibs: [
+						'node_modules/expect.js/expect.js',
+						'node_modules/superagent/superagent.js'
+					],
+					assertionsSetupScript: ''
 				}
 			}
 		},
 
-		//frontend tests in PhantomJS with coverage and threshold
+		/**
+		 * frontend tests in PhantomJS with coverage and threshold
+		 */
 		blanket_mocha: {
 			frontend: {
 				options: {
-					urls: ['http://localhost:3001/test-runner.html'],
-					reporter: 'spec',
+					urls: ['http://localhost:5001/test-runner.html'],
+					reporter: 'Spec', // with a capital leading S
 					threshold: 80,
 					growl: true
 				}
 			}
 		},
 
-		//backend tests in PhantomJS with coverage
+		/**
+		 * backend tests in PhantomJS with coverage
+		 */
 		mochaTest: {
 			backend: {
 				options: {
@@ -375,15 +614,15 @@ module.exports = function( grunt ){
 					require: 'coverage/blanket',
 					clearRequireCache: true
 				},
-				src: ['server/tests/**/*.js']
+				src: ['tests/server/**/*.js']
 			},
 			'html-cov': {
 				options: {
 					reporter: 'html-cov',
 					quiet: true,
-					captureFile: 'coverage.html'
+					captureFile: 'coverage/coverage-server.html'
 				},
-				src: ['server/tests/**/*.js']
+				src: ['tests/server/**/*.js']
 			},
 			// The travis-cov reporter will fail the tests if the
 			// coverage falls below the threshold configured in package.json
@@ -391,72 +630,121 @@ module.exports = function( grunt ){
 				options: {
 					reporter: 'travis-cov'
 				},
-				src: ['server/tests/**/*.js']
+				src: ['tests/server/**/*.js']
 			}
 		},
 
-		//frontend tests in real browser
+		/**
+		 * frontend tests in real browser
+		 */
 		karma: {
-			options: {
-				frameworks: ['mocha'],
-				runnerPort: 9999,
-				background: true,
-				reporters: ['spec', 'growl']
+			unit: {
+				configFile: 'tests/karma-unit.conf.js'
 			},
+			midway: {
+				configFile: 'tests/karma-midway.conf.js'
+			},
+			'end2end': {
+				configFile: 'tests/karma-end2end.conf.js'
+			}
+		},
+
+		/**
+		 * start web servers
+		 * called by concurrent task
+		 */
+		connect: {
+			coverage: {
+				options: {
+					base: 'coverage/',
+					port: 5004,
+					keepalive: true
+				}
+			},
+			test_midway: {
+				options: {
+					port: 5002,
+					keepalive: true
+				}
+			},
+			'test_end2end': {
+				options: {
+					port: 5003,
+					keepalive: true
+				}
+			}
+		},
+
+		/**
+		 * open urls in default browser
+		 * called by concurrent task
+		 */
+		open: {
 			dev: {
-				files: ['client/test/**/*.js'],
-				browsers: ['Chrome', 'Firefox']
+				path: 'http://lms3.dev/'
 			},
-			continuous: {
-				singleRun: true,
-				files: ['client/test/**/*.js'],
-				browsers: ['Chrome', 'Firefox']
+			test_midway: {
+				path: 'http://localhost:5002'
+			},
+			'test_end2end': {
+				path: 'http://localhost:5003'
+			},
+			coverage: {
+				path: 'http://localhost:5004'
 			}
 		}
 	});
 
 	grunt.registerTask('dev', [
-		'clean:dev',
-		'copy:components',
-		'copy:fonts',
-		'sass',
-		'uncss',
-		'csslint',
-		'html2js',
-		'jshint',
-		'includeSource',
-		'concurrent'
+		  'clean:dev'
+		, 'copy:components'
+		, 'copy:fonts'
+		, 'sass'
+		, 'csslint:compiled'
+		, 'html2js'
+		, 'jshint'
+		, 'includeSource'
+		, 'preprocess:dev'
+		, 'concurrent'
 	]);
 
+	grunt.registerTask('default', ['dev']);
+
 	grunt.registerTask('quality', [
-		'clean:dev',
-		'clean:quality',
-		'copy:components',
-		'copy:fonts',
-		'sass',
-		'uncss',
-		'csslint',
-		'html2js',
-		'jshint',
-		'includeSource',
-		'useminPrepare',
-		'usemin',
-		'copy:quality'
+		  'clean:dev'
+		, 'clean:quality'
+		, 'copy:components'
+		, 'copy:fonts'
+		, 'sass'
+		, 'csslint:compiled'
+		, 'uncss'
+		, 'csslint:minified'
+		, 'compare_size'
+		, 'html2js'
+		, 'jshint'
+		, 'includeSource'
+		, 'preprocess:dev'
+		, 'useminPrepare'
+		, 'usemin'
+		, 'copy:quality'
 	]);
 
 	grunt.registerTask('production', [
-		'clean:dev',
-		'clean:production',
-		'copy:components',
-		'copy:fonts',
-		'sass',
-		'uncss',
-		'csslint',
-		'html2js',
-		'jshint',
-		'includeSource',
-		'useminPrepare',
-		'usemin',
-		'copy:production'
+		  'clean:dev'
+		, 'clean:production'
+		, 'copy:components'
+		, 'copy:fonts'
+		, 'sass'
+		, 'csslint:compiled'
+		, 'uncss'
+		, 'csslint:minified'
+		, 'compare_size'
+		, 'html2js'
+		, 'jshint'
+		, 'includeSource'
+		, 'preprocess:dev'
+		, 'useminPrepare'
+		, 'usemin'
+		, 'copy:production'
 	]);
 };

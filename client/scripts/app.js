@@ -1,8 +1,8 @@
-'use strict';
-
 angular
 	.module('LMS3', [])
 	.config(function( $routeProvider, $locationProvider ){
+		'use strict';
+
 		$routeProvider
 			.when('/', {
 				templateUrl: 'partials/main',

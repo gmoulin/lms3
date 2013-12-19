@@ -24,14 +24,17 @@ app
 ;
 
 app.configure(process.env.ENV || 'development', function(){
+	'use strict';
 	app.use( express.errorHandler() );
 });
 
 //routes
 app.get('/', function(req, res){
+	'use strict';
 	res.sendfile( path.join(__dirname, 'public', 'index.html') );
 });
 
 http.createServer( app ).listen(app.get('port'), function(){
+	'use strict';
 	console.log('Express server listening on port ' + app.get('port'));
 });

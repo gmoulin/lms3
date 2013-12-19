@@ -1,17 +1,32 @@
 <!DOCTYPE html>
-<html ng-app="lms" ng-controller="lmsCtrl">
+<html ng-app="LMS3" ng-controller="MainCtrl">
 	<head>
-		<title ng-bind="pageTitle"></title>
+		<title ng-bind="pageTitle">LMS3 - developement</title>
 
-		
+		<!-- build:css styles/styles.min.css -->
+		<link href="public/styles/0_layer_foundation.css" rel="stylesheet" type="text/css" />
+<link href="public/styles/1_layout_base.css" rel="stylesheet" type="text/css" />
+<link href="public/styles/2_layout_project.css" rel="stylesheet" type="text/css" />
+<link href="public/styles/3_layout_cosmetic.css" rel="stylesheet" type="text/css" />
+		<!-- endbuild -->
 	</head>
 	<body>
-		yop
+		<!-- Add your site or application content here -->
+		<div class="container" ng-view=""></div>
+
 
 		<br>
 		livereloaded 2
 
-		
+		<!-- build:js scripts/main.min.js -->
+		<script src="public/scripts/libs/angular-1.2.5.min.js"></script>
+		<script src="public/scripts/libs/jquery-2.0.3.min.js"></script>
+		<script src="public/scripts/libs/bootstrap-3.0.3-collapse.js"></script>
+<script src="public/scripts/libs/bootstrap-3.0.3-dropdown.js"></script>
+		<script src="public/scripts/angular-templates.js"></script>
+		<!-- endbuild -->
+
+			<script src="//localhost:1337/livereload.js"></script>
 	</body>
 </html>
 

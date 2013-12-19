@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html ng-app="LMS3" ng-controller="MainCtrl">
 	<head>
-		<title ng-bind="pageTitle"></title>
+		<title ng-bind="pageTitle">LMS3<!-- @if SERVER!='production' --> - <!-- @echo SERVER --><!-- @endif --></title>
 
-        <!-- build:css styles/main.min.css -->
-		<!-- include: "type": "css", "files": "public/styles/**/*.css" -->
+		<!-- build:css styles/styles.min.css -->
+		<!-- include: "type": "css", "files": "public/styles/*.css" -->
 		<!-- endbuild -->
 	</head>
 	<body>
@@ -15,9 +15,16 @@
 		<br>
 		livereloaded 2
 
-        <!-- build:js scripts/main.min.js -->
-		<!-- include: "type": "js", "files": "public/scripts/**/*.js" -->
+		<!-- build:js scripts/main.min.js -->
+		<!-- include: "type": "js", "files": "public/scripts/libs/angular-*.js" -->
+		<!-- include: "type": "js", "files": "public/scripts/libs/jquery-*.js" -->
+		<!-- include: "type": "js", "files": "public/scripts/libs/bootstrap-*.js" -->
+		<!-- include: "type": "js", "files": "public/scripts/*.js" -->
 		<!-- endbuild -->
+
+		<!-- @if LIVERELOAD=true -->
+			<script src="//localhost:1337/livereload.js"></script>
+		<!-- @endif -->
 	</body>
 </html>
 
