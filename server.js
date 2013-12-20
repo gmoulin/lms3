@@ -20,7 +20,7 @@ app
 	.use( express.bodyParser() )
 	.use( express.methodOverride() )
 	.use( app.router )
-	.use( express['static']( path.join(__dirname, 'public') ) )
+	.use( express.static( path.join(__dirname, 'public') ) )
 ;
 
 app.configure(process.env.ENV || 'development', function(){

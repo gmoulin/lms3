@@ -66,14 +66,12 @@
     "matchdep": "~0.3.0",
     "time-grunt": "~0.2.5",
     "blanket": "~1.1.5",
-    "travis-cov": "~0.2.4",
+    "travis-cov": "git+https://github.com/alex-seville/travis-cov.git",
     "expect.js": "~0.2.0",
     "superagent": "~0.15.7",
     "grunt-compare-size": "~0.4.0-rc.3",
     "grunt-preprocess": "~4.0.0",
-    "ng-midway-tester": "~2.0.5",
-    "grunt-open": "~0.2.2",
-    "grunt-connect": "~0.2.0"
+    "ng-midway-tester": "~2.0.5"
   },
   "dependencies": {
     "bower": "~1.2.8",

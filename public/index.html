@@ -1,32 +1,31 @@
 <!DOCTYPE html>
-<html ng-app="LMS3" ng-controller="MainCtrl">
+<html ng-app="lms">
 	<head>
 		<title ng-bind="pageTitle">LMS3 - developement</title>
 
 		<!-- build:css styles/styles.min.css -->
-		<link href="public/styles/0_layer_foundation.css" rel="stylesheet" type="text/css" />
-<link href="public/styles/1_layout_base.css" rel="stylesheet" type="text/css" />
-<link href="public/styles/2_layout_project.css" rel="stylesheet" type="text/css" />
-<link href="public/styles/3_layout_cosmetic.css" rel="stylesheet" type="text/css" />
+		<link href="styles/0_layer_foundation.css" rel="stylesheet" type="text/css" />
+<link href="styles/1_layout_base.css" rel="stylesheet" type="text/css" />
+<link href="styles/2_layout_project.css" rel="stylesheet" type="text/css" />
+<link href="styles/3_layout_cosmetic.css" rel="stylesheet" type="text/css" />
 		<!-- endbuild -->
 	</head>
 	<body>
-		<!-- Add your site or application content here -->
-		<div class="container" ng-view=""></div>
-
-
-		<br>
-		livereloaded 2
+		<section ng-view></section>
 
 		<!-- build:js scripts/main.min.js -->
-		<script src="public/scripts/libs/angular-1.2.5.min.js"></script>
-		<script src="public/scripts/libs/jquery-2.0.3.min.js"></script>
-		<script src="public/scripts/libs/bootstrap-3.0.3-collapse.js"></script>
-<script src="public/scripts/libs/bootstrap-3.0.3-dropdown.js"></script>
-		<script src="public/scripts/angular-templates.js"></script>
+		<script src="scripts/libs/angular-1.2.6.min.js"></script>
+<script src="scripts/libs/angular-route-1.2.6.min.js"></script>
+		<script src="scripts/libs/jquery-2.0.3.min.js"></script>
+		<script src="scripts/libs/bootstrap-3.0.3-collapse.js"></script>
+<script src="scripts/libs/bootstrap-3.0.3-dropdown.js"></script>
+		<script src="scripts/config/routes.js"></script>
+<script src="scripts/controllers/homeController.js"></script>
+		<script src="scripts/angular-templates.js"></script>
+		<script src="scripts/lms.js"></script>
 		<!-- endbuild -->
 
-			<script src="//localhost:1337/livereload.js"></script>
+			<script src="//localhost:5555/livereload.js"></script>
 	</body>
 </html>
 

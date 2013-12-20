@@ -1,29 +1,26 @@
 <!DOCTYPE html>
-<html ng-app="LMS3" ng-controller="MainCtrl">
+<html ng-app="lms">
 	<head>
 		<title ng-bind="pageTitle">LMS3<!-- @if SERVER!='production' --> - <!-- @echo SERVER --><!-- @endif --></title>
 
 		<!-- build:css styles/styles.min.css -->
-		<!-- include: "type": "css", "files": "public/styles/*.css" -->
+		<!-- include: "type": "css", "files": "styles/*.css" -->
 		<!-- endbuild -->
 	</head>
 	<body>
-		<!-- Add your site or application content here -->
-		<div class="container" ng-view=""></div>
-
-
-		<br>
-		livereloaded 2
+		<section ng-view></section>
 
 		<!-- build:js scripts/main.min.js -->
-		<!-- include: "type": "js", "files": "public/scripts/libs/angular-*.js" -->
-		<!-- include: "type": "js", "files": "public/scripts/libs/jquery-*.js" -->
-		<!-- include: "type": "js", "files": "public/scripts/libs/bootstrap-*.js" -->
-		<!-- include: "type": "js", "files": "public/scripts/*.js" -->
+		<!-- include: "type": "js", "files": "scripts/libs/angular-*.js" -->
+		<!-- include: "type": "js", "files": "scripts/libs/jquery-*.js" -->
+		<!-- include: "type": "js", "files": "scripts/libs/bootstrap-*.js" -->
+		<!-- include: "type": "js", "files": "scripts/!(libs)/*.js" -->
+		<!-- include: "type": "js", "files": "scripts/angular-templates.js" -->
+		<!-- include: "type": "js", "files": "scripts/lms.js" -->
 		<!-- endbuild -->
 
 		<!-- @if LIVERELOAD=true -->
-			<script src="//localhost:1337/livereload.js"></script>
+			<script src="//localhost:5555/livereload.js"></script>
 		<!-- @endif -->
 	</body>
 </html>

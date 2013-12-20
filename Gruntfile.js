@@ -1,4 +1,4 @@
-var LIVERELOAD_PORT = 1337;
+var LIVERELOAD_PORT = 5555;
 
 module.exports = function( grunt ){
 	'use strict';
@@ -17,7 +17,7 @@ module.exports = function( grunt ){
 		 */
 		concurrent: {
 			dev: {
-				tasks: ['nodemon:dev', 'node-inspector', 'connect', 'open', 'watch'],
+				tasks: ['nodemon:dev', 'node-inspector', 'watch'],
 				options: {
 					logConcurrentOutput: true
 				}
@@ -32,7 +32,7 @@ module.exports = function( grunt ){
 			dev: {
 				options: {
 					file: 'server.js',
-					nodeArgs: ['--debug'],
+					nodeArgs: ['--debug'], //same debug port as node-inspector
 					ignoredFiles: [
 						'./.git/*',
 						'./.tmp/*',
@@ -92,7 +92,7 @@ module.exports = function( grunt ){
 					'web-port': 2999,
 					'web-host': 'localhost',
 					'save-live-edit': true,
-					'debug-port': 2998
+					'debug-port': 3001
 				}
 			}
 		},
@@ -102,13 +102,16 @@ module.exports = function( grunt ){
 		 * called by concurrent task
 		 */
 		watch: {
+			options: {
+				livereload: false
+			},
 			index: {
 				files: [
 					'client/views/index.tpl.html',
 					'client/scripts/**/*.js',
 					'client/styles/**/*.css'
 				],
-				tasks: ['includeSource']
+				tasks: ['includeSource', 'preprocess:dev']
 			},
 			templates: {
 				files: ['client/partials/**/*.tpl.html'],
@@ -125,6 +128,10 @@ module.exports = function( grunt ){
 					'server/**/*.js'
 				],
 				tasks: ['jshint']
+			},
+			copy_scripts: {
+				files: ['client/scripts/**/*.js'],
+				tasks: ['copy:scripts']
 			},
 			csslinting: {
 				files: ['client/styles/**/*.css'],
@@ -229,7 +236,7 @@ module.exports = function( grunt ){
 				'quotmark': true,
 				'undef': true,
 				'unused': true,
-				'strict': true,
+				'strict': false,
 				'trailing': true,
 				'maxparams': 3,
 				'maxdepth': 3,
@@ -244,7 +251,7 @@ module.exports = function( grunt ){
 				'evil': false,
 				'expr': true,
 				'funcscope': false,
-				'globalstrict': false,
+				'globalstrict': true,
 				'iterator': false,
 				'lastsemic': false,
 				'laxbreak': false,
@@ -338,12 +345,12 @@ module.exports = function( grunt ){
 		 * with all stylesheets and scripts
 		 */
 		includeSource: {
-			options: {
-				includePath: 'public/'
-			},
 			index: {
+				options: {
+					basePath: 'public/'
+				},
 				files: {
-					'public/index.html': 'client/views/index.tpl.html'
+					'.tmp/client/index.html': 'client/views/index.tpl.html'
 				}
 			}
 		},
@@ -353,9 +360,6 @@ module.exports = function( grunt ){
 		 * also remove livereload script on quality and production environment
 		 */
 		preprocess: {
-			options: {
-				inline: true
-			},
 			dev: {
 				options: {
 					context: {
@@ -363,7 +367,8 @@ module.exports = function( grunt ){
 						SERVER: 'developement'
 					}
 				},
-				src: ['public/index.html']
+				src: '.tmp/client/index.html',
+				dest: 'public/index.html',
 			},
 			quality: {
 				options: {
@@ -372,7 +377,8 @@ module.exports = function( grunt ){
 						SERVER: 'quality'
 					}
 				},
-				src: ['public/index.html']
+				src: '.tmp/client/index.html',
+				dest: 'public/index.html',
 			},
 			production: {
 				options: {
@@ -381,7 +387,8 @@ module.exports = function( grunt ){
 						SERVER: 'production'
 					}
 				},
-				src: ['public/index.html']
+				src: '.tmp/client/index.html',
+				dest: 'public/index.html',
 			}
 		},
 
@@ -443,6 +450,24 @@ module.exports = function( grunt ){
 						filter: 'isFile',
 						dest: 'public/scripts/libs/',
 						src: ['client/bower_components/angular/angular.min.js.map']
+					},
+					{
+						expand: true,
+						flatten: true,
+						filter: 'isFile',
+						dest: 'public/scripts/libs/',
+						src: ['client/bower_components/angular-route/angular-route.min.js'],
+						rename: function( dest ){
+							var pkg = grunt.file.readJSON('client/bower_components/angular-route/bower.json');
+							return dest +'angular-route-'+ pkg.version +'.min.js';
+						}
+					},
+					{
+						expand: true,
+						flatten: true,
+						filter: 'isFile',
+						dest: 'public/scripts/libs/',
+						src: ['client/bower_components/angular-route/angular-route.min.js.map']
 					},
 					{
 						expand: true,
@@ -525,6 +550,12 @@ module.exports = function( grunt ){
 				filter: 'isFile',
 				dest: 'public/fonts/',
 				src: ['client/bower_components/font-awesome/fonts/*']
+			},
+			scripts: {
+				expand: true,
+				cwd: 'client/scripts/',
+				src: ['*.js', '**/*.js'],
+				dest: 'public/scripts/'
 			},
 			quality: {
 				expand: true,
@@ -647,62 +678,18 @@ module.exports = function( grunt ){
 			'end2end': {
 				configFile: 'tests/karma-end2end.conf.js'
 			}
-		},
-
-		/**
-		 * start web servers
-		 * called by concurrent task
-		 */
-		connect: {
-			coverage: {
-				options: {
-					base: 'coverage/',
-					port: 5004,
-					keepalive: true
-				}
-			},
-			test_midway: {
-				options: {
-					port: 5002,
-					keepalive: true
-				}
-			},
-			'test_end2end': {
-				options: {
-					port: 5003,
-					keepalive: true
-				}
-			}
-		},
-
-		/**
-		 * open urls in default browser
-		 * called by concurrent task
-		 */
-		open: {
-			dev: {
-				path: 'http://lms3.dev/'
-			},
-			test_midway: {
-				path: 'http://localhost:5002'
-			},
-			'test_end2end': {
-				path: 'http://localhost:5003'
-			},
-			coverage: {
-				path: 'http://localhost:5004'
-			}
 		}
 	});
 
 	grunt.registerTask('dev', [
-		  'clean:dev'
+		'clean:dev'
 		, 'copy:components'
 		, 'copy:fonts'
 		, 'sass'
 		, 'csslint:compiled'
 		, 'html2js'
 		, 'jshint'
+		, 'copy:scripts'
 		, 'includeSource'
 		, 'preprocess:dev'
 		, 'concurrent'
@@ -711,7 +698,7 @@ module.exports = function( grunt ){
 	grunt.registerTask('default', ['dev']);
 
 	grunt.registerTask('quality', [
-		  'clean:dev'
+		'clean:dev'
 		, 'clean:quality'
 		, 'copy:components'
 		, 'copy:fonts'
@@ -722,6 +709,7 @@ module.exports = function( grunt ){
 		, 'compare_size'
 		, 'html2js'
 		, 'jshint'
+		, 'copy:scripts'
 		, 'includeSource'
 		, 'preprocess:dev'
 		, 'useminPrepare'
@@ -730,7 +718,7 @@ module.exports = function( grunt ){
 	]);
 
 	grunt.registerTask('production', [
-		  'clean:dev'
+		'clean:dev'
 		, 'clean:production'
 		, 'copy:components'
 		, 'copy:fonts'
@@ -741,6 +729,7 @@ module.exports = function( grunt ){
 		, 'compare_size'
 		, 'html2js'
 		, 'jshint'
+		, 'copy:scripts'
 		, 'includeSource'
 		, 'preprocess:dev'
 		, 'useminPrepare'
