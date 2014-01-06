@@ -4,10 +4,10 @@ angular
 	.module('lms.controllers', [])
 	.controller('homeController', ['$scope', function( $scope ){
 		$scope.parts = [
-			'Books',
-			'Movies',
-			'Music',
-			'Alcohols'
+			'Books'
+			, 'Movies'
+			, 'Musics'
+			, 'Wines and Spirits'
 		];
 	}])
 ;

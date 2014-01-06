@@ -17,7 +17,7 @@ module.exports = function( grunt ){
 		 */
 		concurrent: {
 			dev: {
-				tasks: ['nodemon:dev', 'node-inspector', 'watch'],
+				tasks: ['nodemon:dev', 'node-inspector', 'blanket_mocha_server:continuous', 'watch'],
 				options: {
 					logConcurrentOutput: true
 				}
@@ -138,7 +138,7 @@ module.exports = function( grunt ){
 				tasks: ['csslint']
 			},
 			// any file modified in public folder invoke a livereload
-			livereload: {
+			live: {
 				options: {
 					livereload: LIVERELOAD_PORT
 				},
@@ -146,22 +146,23 @@ module.exports = function( grunt ){
 			},
 			frontendTests: {
 				files: [
-					'client/scripts/**/*.js',
-					'tests/!(server)/*.js'
+					'client/scripts/**/*.js'
+					, 'tests/*.js'
+					, 'tests/!(server)/**/*.js'
 				],
 				tasks: [
-					'blanket_mocha_server:frontend',
-					'blanket_mocha:frontend',
-					'karma:unit:run',
-					'karma:midway:run',
-					'karma:end2end:run'
+					'blanket_mocha_server:runner'
+					, 'blanket_mocha'
+					, 'karma:unit:run'
+					, 'karma:midway:run'
+					, 'karma:end2end:run'
 				]
 			},
 			backendTests: {
 				files: [
-					'server.js',
-					'server/**/*.js',
-					'tests/server/**/*.js'
+					'server.js'
+					, 'server/**/*.js'
+					, 'tests/server/**/*.js'
 				],
 				tasks: ['mochaTest']
 			}
@@ -362,7 +363,7 @@ module.exports = function( grunt ){
 		preprocess: {
 			dev: {
 				options: {
-					context: {
+					context: { //variables for template parsing
 						LIVERELOAD: true,
 						SERVER: 'developement'
 					}
@@ -372,7 +373,7 @@ module.exports = function( grunt ){
 			},
 			quality: {
 				options: {
-					context: {
+					context: { //variables for template parsing
 						LIVERELOAD: false,
 						SERVER: 'quality'
 					}
@@ -382,7 +383,7 @@ module.exports = function( grunt ){
 			},
 			production: {
 				options: {
-					context: {
+					context: { //variables for template parsing
 						LIVERELOAD: false,
 						SERVER: 'production'
 					}
@@ -559,12 +560,12 @@ module.exports = function( grunt ){
 			},
 			quality: {
 				expand: true,
-				src: ['public/**', 'server/!(tests)', 'server.js'],
+				src: ['public/**', 'server/**', 'server.js'],
 				dest: 'build/quality/'
 			},
 			production: {
 				expand: true,
-				src: ['public/**', 'server/!(tests)', 'server.js'],
+				src: ['public/**', 'server/**', 'server.js'],
 				dest: 'build/production/'
 			}
 		},
@@ -597,25 +598,34 @@ module.exports = function( grunt ){
 		 * frontend tests in PhantomJS with coverage and threshold
 		 */
 		blanket_mocha_server: {
-			frontend: {
+			options: {
+				htmlFile: 'test-runner.html',
+				sutFiles: [
+					'public/scripts/libs/jquery-*.min.js'
+					, 'public/scripts/libs/!(jquery).js'
+					, 'client/bower_components/angular-mocks/angular-mocks.js'
+					, 'client/scripts/**/*.js'
+				],
+				testFiles: ['tests/unit/**/*.js'],
+				blanketOptions: {
+					'data-cover-only': '//client\\/scripts\\/*.js/'
+				},
+				assertionLibs: [
+					'node_modules/expect.js/expect.js'
+					, 'node_modules/superagent/superagent.js'
+				],
+				assertionsSetupScript: ''
+			},
+			runner: {
 				options: {
+					server: false
+				}
+			},
+			continuous: {
+				options: {
+					server: true,
 					port: 5001,
-					htmlFile: 'test-runner.html',
-					sutFiles: [
-						'public/scripts/libs/jquery-*.min.js',
-						'public/scripts/libs/!(jquery).js',
-						'client/bower_components/angular-mocks/angular-mocks.js',
-						'client/scripts/**/*.js'
-					],
-					testFiles: ['tests/**/**/*.js'],
-					blanketOptions: {
-						'data-cover-only': '//client\/scripts\//*.js'
-					},
-					assertionLibs: [
-						'node_modules/expect.js/expect.js',
-						'node_modules/superagent/superagent.js'
-					],
-					assertionsSetupScript: ''
+					keepalive: true //for easier debugging
 				}
 			}
 		},

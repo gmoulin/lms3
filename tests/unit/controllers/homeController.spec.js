@@ -1,25 +1,18 @@
 'use strict';
 
 describe('Unit: homeController', function(){
-	var $scope
-		, hCtrl
-	;
+	beforeEach( module('lms.controllers') );
 
-	beforeEach(function(){
-		module('lms.controllers');
-	});
+	describe('homeController', function(){
 
-	beforeEach( inject(function( $rootScope, $controller ){
-		$scope = $rootScope.new();
+		it('should have parts populated', inject(function( $rootScope, $controller ){
+			var scope = $rootScope.$new()
+				, ctrl = $controller('homeController', {$scope: scope})
+			;
 
-		hCtrl = $controller('homeController', {
-			$scope: $scope
-		});
-	}) );
-
-	it('should have parts populated', function(){
-		expect( $scope ).to.have.property('parts');
-		expect( $scope.parts ).to.be.an('array');
-		expect( $scope.parts ).not.to.be.empty();
+			expect( scope ).to.have.property('parts');
+			expect( scope.parts ).to.be.an('array');
+			expect( scope.parts ).not.to.be.empty();
+		}) );
 	});
 });

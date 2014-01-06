@@ -4,7 +4,7 @@ describe('Unit: routes', function(){
 	var mod;
 
 	before(function(){
-		mod = module('lms.routes');
+		mod = angular.module('lms.routes');
 	});
 
 	it('should exists', function(){
@@ -22,8 +22,8 @@ describe('Unit: routes', function(){
 			deps = mod.value('lms.routes').requires;
 		});
 
-		it('should have ngRoutes as a dependency', function(){
-			expect( hasModule('ngRoutes') ).to.equal( true );
+		it('should have ngRoute as a dependency', function(){
+			expect( hasModule('ngRoute') ).to.equal( true );
 		});
 
 		it('should have 1 dependency', function(){

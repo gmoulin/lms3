@@ -1,6 +1,6 @@
 'use strict';
 
-describe("Integration: lms module", function(){
+describe("Unit: lms module", function(){
 	var mod;
 
 	before(function(){
