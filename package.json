@@ -9,6 +9,7 @@
     "grunt-contrib-watch": "~0.5.3",
     "matchdep": "~0.3.0",
     "grunt-shell": "~0.6.1",
-    "grunt-concurrent": "~0.4.2"
+    "grunt-concurrent": "~0.4.2",
+    "grunt-open": "~0.2.2"
   }
 }

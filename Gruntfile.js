@@ -9,7 +9,7 @@ module.exports = function( grunt ){
 	grunt.initConfig({
 		concurrent: {
 			target: {
-				tasks: ['watch', 'shell:jekyllServe'],
+				tasks: ['watch', 'shell:jekyllServe', 'open'],
 				options: {
 					logConcurrentOutput: true
 				}
@@ -42,6 +42,12 @@ module.exports = function( grunt ){
 			},
 			jekyllServe: {
 				command: "jekyll serve --baseurl ''" //_config.yml has already a baseurl for github.io, replace it for local preview
+			}
+		},
+
+		open: {
+			jekyll: {
+				path: 'http://localhost:4000'
 			}
 		}
 	});
