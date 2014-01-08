@@ -24,6 +24,16 @@ title: Grunt workflow
 		</ol>
 	</p>
 
+	<h3 id="end2end_tests">End to end tests</h3>
+	<p>
+		<ol>
+			<li>specific grunt task to launch protractor, run the tests and report back</li>
+		</ol>
+		<p>
+			Protractor launches browsers to run the integration tests, on my machine the launched browser get the focus and so I can not continue coding, so I moved it in a specific task. I will run it only when needed.<br />
+		</p>
+	</p>
+
 	<h3 id="development">Development</h3>
 	<p>
 		<ol>
@@ -108,10 +118,13 @@ title: Grunt workflow
 			<li><a href="https://github.com/karma-runner/grunt-karma" target="_blank">grunt-karma</a>, run tests in real browsers</li>
 			<li><a href="https://github.com/karma-runner/karma-coverage" target="_blank">karma-coverage</a> to get code coverage of karma tests</li>
 			<li><a href="https://github.com/karma-runner/karma-mocha" target="_blank">karma-mocha</a> to run mocha tests in karma runner</li>
+			<li><a href="https://github.com/angular/protractor" target="_blank">Protractor</a> for end to end tests</a></li>
+			<li><a href="https://github.com/teerapap/grunt-protractor-runner" target="_blank">grunt-protractor-runner</a></li>
 		</ul>
 		<br />
 		Automated tests are mandatory to avoid regressions and bugs between versions. As my work session on this project can be several days apart it was paramout to have this kind of tests.<br />
 		I wanted to be able to test the client and server side code with the same framework (mocha), get code coverage and have a way to run the tests in real browsers.<br />
+		For end to end tests Protractor is used as it manages real browser using a Selenium web driver, but I think <a href="https://github.com/jquery/testswarm" target="_blank">testswarm</a> is more suited for the task as it supports mobiles and tablets. Problem is it does not fit well in a grunt workflow.<br />
 	</p>
 
 	<h3 id="managing-scripts-and-stylesheets">Managing scripts and stylesheets</h3>
