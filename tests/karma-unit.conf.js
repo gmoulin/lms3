@@ -8,11 +8,15 @@ module.exports = function( config ){
 		'client/bower_components/angular-mocks/angular-mocks.js',
 
 		//mocha stuff
-		'test/mocha.conf.js',
+		'tests/mocha.conf.js',
 
 		//test files
-		'test/unit/**/*.js'
+		'tests/unit/**/*.js'
 	]);
+
+	conf.port = 5004;
+
+	config.frameworks = ['mocha', 'chai'];
 
 	config.set( conf );
 };

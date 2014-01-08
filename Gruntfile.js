@@ -114,11 +114,11 @@ module.exports = function( grunt ){
 				tasks: ['includeSource', 'preprocess:dev']
 			},
 			templates: {
-				files: ['client/partials/**/*.tpl.html'],
+				files: ['client/views/partials/**/*.tpl.html'],
 				tasks: ['html2js']
 			},
 			sass: {
-				files: ['client/sass/**/*.sass'],
+				files: ['client/sass/**/*.scss'],
 				tasks: ['sass']
 			},
 			jslinting: {
@@ -147,15 +147,14 @@ module.exports = function( grunt ){
 			frontendTests: {
 				files: [
 					'client/scripts/**/*.js'
-					, 'tests/*.js'
-					, 'tests/!(server)/**/*.js'
+					, 'tests/unit/**/*.js'
+					, 'tests/integration/**/*.js'
 				],
 				tasks: [
 					'blanket_mocha_server:runner'
 					, 'blanket_mocha'
 					, 'karma:unit:run'
-					, 'karma:midway:run'
-					, 'karma:end2end:run'
+					//, 'protractor:end2end'
 				]
 			},
 			backendTests: {
@@ -205,7 +204,7 @@ module.exports = function( grunt ){
 		clean: {
 			dev: [
 				'.tmp/*',
-				'client/sass/foundation/libs/*',
+				'client/sass/**/libs/*',
 				'public/{scripts,styles,fonts}/*',
 				'public/**/*.html'
 			],
@@ -298,7 +297,7 @@ module.exports = function( grunt ){
 		csslint: {
 			options: { /* false ignores the rule, 2 make it an error */
 				'important': true,
-				'adjoining-classes': true,
+				'adjoining-classes': false,
 				'known-properties': true,
 				'box-sizing': true,
 				'box-model': true,
@@ -334,7 +333,7 @@ module.exports = function( grunt ){
 				'zero-units': true
 			},
 			compiled: {
-				src: ['public/styles/{1,2,3}_*.css'] /* do not lint foundation layer */
+				src: ['public/styles/{2,3}_*.css'] /* do not lint foundation and base layers */
 			},
 			minified: {
 				src: ['public/styles/styles.min.css']
@@ -475,6 +474,24 @@ module.exports = function( grunt ){
 						flatten: true,
 						filter: 'isFile',
 						dest: 'public/scripts/libs/',
+						src: ['client/bower_components/angular-sanitize/angular-sanitize.min.js'],
+						rename: function( dest ){
+							var pkg = grunt.file.readJSON('client/bower_components/angular-sanitize/bower.json');
+							return dest +'angular-sanitize-'+ pkg.version +'.min.js';
+						}
+					},
+					{
+						expand: true,
+						flatten: true,
+						filter: 'isFile',
+						dest: 'public/scripts/libs/',
+						src: ['client/bower_components/angular-sanitize/angular-sanitize.min.js.map']
+					},
+					{
+						expand: true,
+						flatten: true,
+						filter: 'isFile',
+						dest: 'public/scripts/libs/',
 						src: ['client/bower_components/bootstrap/js/collapse.js'],
 						rename: function( dest ){
 							var pkg = grunt.file.readJSON('client/bower_components/bootstrap/bower.json');
@@ -517,7 +534,7 @@ module.exports = function( grunt ){
 						expand: true,
 						flatten: true,
 						filter: 'isFile',
-						dest: 'client/sass/foundation/libs/',
+						dest: 'client/sass/base/libs/',
 						src: ['client/bower_components/bootstrap/dist/css/bootstrap.css'],
 						rename: function( dest ){
 							return dest +'_bootstrap.scss';
@@ -527,7 +544,7 @@ module.exports = function( grunt ){
 						expand: true,
 						flatten: true,
 						filter: 'isFile',
-						dest: 'client/sass/foundation/libs/',
+						dest: 'client/sass/base/libs/',
 						src: ['client/bower_components/bootstrap/dist/css/bootstrap-theme.css'],
 						rename: function( dest ){
 							return dest +'_bootstrap-theme.scss';
@@ -537,7 +554,7 @@ module.exports = function( grunt ){
 						expand: true,
 						flatten: true,
 						filter: 'isFile',
-						dest: 'client/sass/foundation/libs/',
+						dest: 'client/sass/base/libs/',
 						src: ['client/bower_components/font-awesome/css/font-awesome.css'],
 						rename: function( dest ){
 							return dest +'_font-awesome.scss';
@@ -608,13 +625,8 @@ module.exports = function( grunt ){
 				],
 				testFiles: ['tests/unit/**/*.js'],
 				blanketOptions: {
-					'data-cover-only': '//client\\/scripts\\/*.js/'
-				},
-				assertionLibs: [
-					'node_modules/expect.js/expect.js'
-					, 'node_modules/superagent/superagent.js'
-				],
-				assertionsSetupScript: ''
+					'data-cover-only': '//client\\/scripts\\//'
+				}
 			},
 			runner: {
 				options: {
@@ -681,12 +693,18 @@ module.exports = function( grunt ){
 		karma: {
 			unit: {
 				configFile: 'tests/karma-unit.conf.js'
+			}
+		},
+
+		protractor: {
+			options: {
+				keepAlive: true,
+				noColor: false
 			},
-			midway: {
-				configFile: 'tests/karma-midway.conf.js'
-			},
-			'end2end': {
-				configFile: 'tests/karma-end2end.conf.js'
+			end2end: {
+				options: {
+					configFile: 'tests/protractor-end2end.conf.js'
+				}
 			}
 		}
 	});
@@ -706,6 +724,8 @@ module.exports = function( grunt ){
 	]);
 
 	grunt.registerTask('default', ['dev']);
+
+	grunt.registerTask('end2end', ['protractor:end2end']);
 
 	grunt.registerTask('quality', [
 		'clean:dev'

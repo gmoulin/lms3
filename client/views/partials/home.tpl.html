@@ -1,6 +1,12 @@
-<div class="container" ng-controller="homeController">
-	<ul>
-		<li ng-repeat="part in parts">{{ part }}</li>
-	</ul>
+<div class="container home" ng-controller="homeController">
+	<div class="row" ng-repeat="group in groups">
+		<div class="col-lg-6 text-center part-link" ng-repeat="part in group">
+			<h1>
+				<a href="#/{{part|lowercase|urlify}}"
+					title="open {{part}} page"
+					class="btn btn-primary btn-lg"
+				>{{ part }}</a>
+			</h1>
+		</div>
+	</div>
 </div>
-

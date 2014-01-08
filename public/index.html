@@ -2,6 +2,7 @@
 <html ng-app="lms">
 	<head>
 		<title ng-bind="pageTitle">LMS3 - developement</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 		<!-- build:css styles/styles.min.css -->
 		<link href="styles/0_layer_foundation.css" rel="stylesheet" type="text/css" />
@@ -14,13 +15,15 @@
 		<section ng-view></section>
 
 		<!-- build:js scripts/main.min.js -->
-		<script src="scripts/libs/angular-1.2.6.min.js"></script>
-<script src="scripts/libs/angular-route-1.2.6.min.js"></script>
+		<script src="scripts/libs/angular-1.2.7.min.js"></script>
+<script src="scripts/libs/angular-route-1.2.7.min.js"></script>
+<script src="scripts/libs/angular-sanitize-1.2.7.min.js"></script>
 		<script src="scripts/libs/jquery-2.0.3.min.js"></script>
 		<script src="scripts/libs/bootstrap-3.0.3-collapse.js"></script>
 <script src="scripts/libs/bootstrap-3.0.3-dropdown.js"></script>
 		<script src="scripts/config/routes.js"></script>
 <script src="scripts/controllers/homeController.js"></script>
+<script src="scripts/filters/filters.js"></script>
 		<script src="scripts/angular-templates.js"></script>
 		<script src="scripts/lms.js"></script>
 		<!-- endbuild -->

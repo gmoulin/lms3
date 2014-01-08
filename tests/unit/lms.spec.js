@@ -8,7 +8,7 @@ describe("Unit: lms module", function(){
 	});
 
 	it('should exists', function(){
-		expect( mod ).not.to.equal( null );
+		expect( mod ).to.not.equal( null );
 	});
 
 	describe('dependencies', function(){
@@ -23,23 +23,27 @@ describe("Unit: lms module", function(){
 		});
 
 		it('should have ngRoute as a dependency', function(){
-			expect( hasModule('ngRoute') ).to.equal( true );
+			expect( hasModule('ngRoute') ).to.be.true;
 		});
 
 		it('should have templates-main as a dependency', function(){
-			expect( hasModule('templates-main') ).to.equal( true );
+			expect( hasModule('templates-main') ).to.be.true;
 		});
 
 		it('should have lms.routes as a dependency', function(){
-			expect( hasModule('lms.routes') ).to.equal( true );
+			expect( hasModule('lms.routes') ).to.be.true;
 		});
 
 		it('should have lms.controllers as a dependency', function(){
-			expect( hasModule('lms.controllers') ).to.equal( true );
+			expect( hasModule('lms.controllers') ).to.be.true;
 		});
 
-		it('should have 4 dependencies', function(){
-			expect( deps ).to.have.length( 4 );
+		it('should have lms.filters as a dependency', function(){
+			expect( hasModule('lms.filters') ).to.be.true;
+		});
+
+		it('should have 5 dependencies', function(){
+			expect( deps ).to.have.length( 5 );
 		});
 	});
 });

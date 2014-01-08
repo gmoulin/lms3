@@ -1,45 +1,33 @@
 'use strict';
 
-describe("Integration: lms module", function(){
-	var mod;
+// Use the external Chai As Promised to deal with resolving promises in expectations.
+var chai = require('chai');
+var chaiAsPromised = require('chai-as-promised');
+chai.use( chaiAsPromised );
+var expect = chai.expect;
+var fs = require('fs'); //for screenshots
 
-	before(function(){
-		mod = angular.module('lms');
-	});
+// abstract writing screen shot to a file
+var writeScreenShot = function( data, filename ){
+	var stream = fs.createWriteStream( filename );
+	stream.write( buf = new Buffer(data, 'base64') );
+	stream.end();
+};
 
-	it('should exists', function(){
-		expect( mod ).not.to.equal( null );
-	});
-
-	describe('dependencies', function(){
-		var deps
-			, hasModule = function( m ){
-				return deps.indexOf( m ) >= 0;
-			}
-		;
-
-		before(function(){
-			deps = mod.value('lms').requires;
+describe("Integration: lms", function(){
+	describe('home', function(){
+		beforeEach(function(){
+			browser.get('/');
 		});
 
-		it('should have ngRoute as a dependency', function(){
-			expect( hasModule('ngRoute') ).to.equal( true );
+		it('should display the home when / is accessed', function(){
+			expect( element.all( by.css('.container .part-link') ).count() ).to.eventually.eql( 4 );
+			expect( element( by.css('.container .part-link:first-child h1') ).getText() ).to.eventually.eql('Books');
 		});
 
-		it('should have templates-main as a dependency', function(){
-			expect( hasModule('templates-main') ).to.equal( true );
-		});
-
-		it('should have lms.routes as a dependency', function(){
-			expect( hasModule('lms.routes') ).to.equal( true );
-		});
-
-		it('should have lms.controllers as a dependency', function(){
-			expect( hasModule('lms.controllers') ).to.equal( true );
-		});
-
-		it('should have 4 dependencies', function(){
-			expect( deps ).to.have.length( 4 );
+		// within a test:
+		browser.takeScreenshot().then(function( png ){
+			writeScreenShot(png, 'exception.png');
 		});
 	});
 });

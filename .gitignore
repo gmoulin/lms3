@@ -10,4 +10,5 @@ coverage/*
 .sass-cache/*
 .sizecache.json
 .nodemonignore
+.npm-debug.log
 

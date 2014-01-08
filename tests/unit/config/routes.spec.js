@@ -8,7 +8,7 @@ describe('Unit: routes', function(){
 	});
 
 	it('should exists', function(){
-		expect( mod ).not.to.equal( null );
+		expect( mod ).to.not.equal( null );
 	});
 
 	describe('dependencies', function(){
@@ -23,7 +23,7 @@ describe('Unit: routes', function(){
 		});
 
 		it('should have ngRoute as a dependency', function(){
-			expect( hasModule('ngRoute') ).to.equal( true );
+			expect( hasModule('ngRoute') ).to.be.true;
 		});
 
 		it('should have 1 dependency', function(){
@@ -36,8 +36,8 @@ describe('Unit: routes', function(){
 			module('lms.routes');
 
 			inject(function( $route ){
-				expect( $route.routes['/'].controller ).to.be.equal('homeController');
-				expect( $route.routes['/'].templateUrl ).to.be.equal('../client/views/partials/home.tpl.html');
+				expect( $route.routes['/'].controller ).to.equal('homeController');
+				expect( $route.routes['/'].templateUrl ).to.equal('../client/views/partials/home.tpl.html');
 
 			});
 		});
