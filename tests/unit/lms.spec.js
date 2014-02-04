@@ -26,6 +26,14 @@ describe("Unit: lms module", function(){
 			expect( hasModule('ngRoute') ).to.be.true;
 		});
 
+		it('should have ngResource as a dependency', function(){
+			expect( hasModule('ngResource') ).to.be.true;
+		});
+
+		it('should have ngSanitize as a dependency', function(){
+			expect( hasModule('ngSanitize') ).to.be.true;
+		});
+
 		it('should have templates-main as a dependency', function(){
 			expect( hasModule('templates-main') ).to.be.true;
 		});
@@ -42,8 +50,30 @@ describe("Unit: lms module", function(){
 			expect( hasModule('lms.filters') ).to.be.true;
 		});
 
-		it('should have 5 dependencies', function(){
-			expect( deps ).to.have.length( 5 );
+		it('should have lms.directives as a dependency', function(){
+			expect( hasModule('lms.directives') ).to.be.true;
+		});
+
+		it('should have lms.services as a dependency', function(){
+			expect( hasModule('lms.services') ).to.be.true;
+		});
+
+		it('should have 6 dependencies', function(){
+			expect( deps ).to.have.length( 9 );
+		});
+	});
+
+	describe('mapping', function(){
+		it('should map routes to controllers and templates', function(){
+			module('lms');
+
+			inject(function( $route ){
+				expect( $route.routes['/home'].controller ).to.equal('home');
+				expect( $route.routes['/home'].templateUrl ).to.equal('../client/views/partials/home.tpl.html');
+
+				expect( $route.routes['/books'].controller ).to.equal('books');
+				expect( $route.routes['/books'].templateUrl ).to.equal('../client/views/partials/books.tpl.html');
+			});
 		});
 	});
 });

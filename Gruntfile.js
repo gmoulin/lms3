@@ -9,7 +9,7 @@ module.exports = function( grunt ){
 	// load all grunt tasks using the package.json dependencies list
 	require('matchdep').filterDev('grunt-*').forEach( grunt.loadNpmTasks );
 
-	require('time-grunt')( grunt );
+	//require('time-grunt')( grunt );
 
 	grunt.initConfig({
 		/**
@@ -105,37 +105,49 @@ module.exports = function( grunt ){
 			options: {
 				livereload: false
 			},
-			index: {
+			tpl: {
 				files: [
-					'client/views/index.tpl.html',
-					'client/scripts/**/*.js',
-					'client/styles/**/*.css'
+					'client/views/**/!(index).tpl.html'
 				],
-				tasks: ['includeSource', 'preprocess:dev']
-			},
-			templates: {
-				files: ['client/views/partials/**/*.tpl.html'],
 				tasks: ['html2js']
 			},
-			sass: {
-				files: ['client/sass/**/*.scss'],
-				tasks: ['sass']
+			layout: {
+				files: ['client/views/index.tpl.html'],
+				tasks: ['includeSource', 'preprocess:dev']
 			},
 			jslinting: {
 				files: [
-					'client/scripts/**/*.js',
+					'client/js/**/*.js',
 					'server.js',
-					'server/**/*.js'
+					'server/**/*.js',
+					'tests/**/*.js',
+					'Gruntfile.js'
 				],
 				tasks: ['jshint']
 			},
+			sass_foundation: {
+				files: ['sass/foundation/*.scss'],
+				tasks: ['sass:foundation']
+			},
+			sass_base: {
+				files: ['sass/base/*.scss'],
+				tasks: ['sass:base']
+			},
+			sass_project: {
+				files: ['sass/project/*.scss'],
+				tasks: ['sass:project']
+			},
+			sass_cosmetic: {
+				files: ['sass/cosmetic/*.scss'],
+				tasks: ['sass:cosmetic']
+			},
 			copy_scripts: {
-				files: ['client/scripts/**/*.js'],
-				tasks: ['copy:scripts']
+				files: ['client/js/**/*.js'],
+				tasks: ['copy:scripts', 'includeSource', 'preprocess:dev']
 			},
 			csslinting: {
-				files: ['client/styles/**/*.css'],
-				tasks: ['csslint']
+				files: ['public/css/**/*.css'],
+				tasks: ['csslint', 'includeSource', 'preprocess:dev']
 			},
 			// any file modified in public folder invoke a livereload
 			live: {
@@ -146,7 +158,7 @@ module.exports = function( grunt ){
 			},
 			frontendTests: {
 				files: [
-					'client/scripts/**/*.js'
+					'client/js/**/*.js'
 					, 'tests/unit/**/*.js'
 					, 'tests/integration/**/*.js'
 				],
@@ -176,7 +188,7 @@ module.exports = function( grunt ){
 			},
 			main: {
 				src: ['client/views/partials/**/*.tpl.html'],
-				dest: 'public/scripts/angular-templates.js'
+				dest: 'public/js/angular-templates.js'
 			}
 		},
 
@@ -190,10 +202,10 @@ module.exports = function( grunt ){
 					style: 'expanded'
 				},
 				files: {
-					'public/styles/0_layer_foundation.css': 'client/sass/foundation/0_layer_foundation.scss',
-					'public/styles/1_layout_base.css': 'client/sass/base/1_layout_base.scss',
-					'public/styles/2_layout_project.css': 'client/sass/project/2_layout_project.scss',
-					'public/styles/3_layout_cosmetic.css': 'client/sass/cosmetic/3_layout_cosmetic.scss'
+					'public/css/0_layer_foundation.css': 'client/sass/foundation/0_layer_foundation.scss',
+					'public/css/1_layout_base.css': 'client/sass/base/1_layout_base.scss',
+					'public/css/2_layout_project.css': 'client/sass/project/2_layout_project.scss',
+					'public/css/3_layout_cosmetic.css': 'client/sass/cosmetic/3_layout_cosmetic.scss'
 				}
 			}
 		},
@@ -205,7 +217,7 @@ module.exports = function( grunt ){
 			dev: [
 				'.tmp/*',
 				'client/sass/**/libs/*',
-				'public/{scripts,styles,fonts}/*',
+				'public/{js,css,fonts}/*',
 				'public/**/*.html'
 			],
 			quality: ['build/quality/*'],
@@ -270,7 +282,6 @@ module.exports = function( grunt ){
 				'globals': { /* list known variables to avoid "is not defined" error */
 					'browser': true,
 					'devel': true,
-					'jquery': true,
 					'node': true,
 					'phantom': true,
 					'angular': true,
@@ -281,14 +292,15 @@ module.exports = function( grunt ){
 					'module': true,
 					'describe': true,
 					'done': true,
-					'it': true
+					'it': true,
+					'exports': true
 				},
 				'nomen': false,
 				'onevar': true,
 				'passfail': false,
 				'white': false
 			},
-			all: ['client/scripts/**/*.js', 'server.js', 'Gruntfile.js', 'server/**/*.js']
+			all: ['client/js/**/*.js', 'server.js', 'Gruntfile.js', 'server/**/*.js']
 		},
 
 		/**
@@ -333,10 +345,7 @@ module.exports = function( grunt ){
 				'zero-units': true
 			},
 			compiled: {
-				src: ['public/styles/{2,3}_*.css'] /* do not lint foundation and base layers */
-			},
-			minified: {
-				src: ['public/styles/styles.min.css']
+				src: ['public/css/{2,3}_*.css'] /* do not lint foundation and base layers */
 			}
 		},
 
@@ -426,96 +435,53 @@ module.exports = function( grunt ){
 						expand: true,
 						flatten: true,
 						filter: 'isFile',
-						dest: 'public/scripts/libs/',
-						src: ['client/bower_components/jquery/jquery.min.js'],
-						rename: function( dest ){
-							var pkg = grunt.file.readJSON('client/bower_components/jquery/bower.json');
-							return dest +'jquery-'+ pkg.version +'.min.js';
-						}
+						dest: 'public/js/libs/',
+						src: [
+							'bower_components/angular/angular.js',
+							'bower_components/angular/angular.min.js',
+							'bower_components/angular/angular.min.js.map'
+						]
 					},
 					{
 						expand: true,
 						flatten: true,
 						filter: 'isFile',
-						dest: 'public/scripts/libs/',
-						src: ['client/bower_components/angular/angular.min.js'],
-						rename: function( dest ){
-							var pkg = grunt.file.readJSON('client/bower_components/angular/bower.json');
-							return dest +'angular-'+ pkg.version +'.min.js';
-						}
+						dest: 'public/js/libs/',
+						src: [
+							'bower_components/angular-route/angular-route.js',
+							'bower_components/angular-route/angular-route.min.js',
+							'bower_components/angular-route/angular-route.min.js.map'
+						]
 					},
 					{
 						expand: true,
 						flatten: true,
 						filter: 'isFile',
-						dest: 'public/scripts/libs/',
-						src: ['client/bower_components/angular/angular.min.js.map']
+						dest: 'public/js/libs/',
+						src: [
+							'bower_components/angular-sanitize/angular-sanitize.js',
+							'bower_components/angular-sanitize/angular-sanitize.min.js',
+							'bower_components/angular-sanitize/angular-sanitize.min.js.map'
+						]
 					},
 					{
 						expand: true,
 						flatten: true,
 						filter: 'isFile',
-						dest: 'public/scripts/libs/',
-						src: ['client/bower_components/angular-route/angular-route.min.js'],
-						rename: function( dest ){
-							var pkg = grunt.file.readJSON('client/bower_components/angular-route/bower.json');
-							return dest +'angular-route-'+ pkg.version +'.min.js';
-						}
+						dest: 'public/js/libs/',
+						src: [
+							'bower_components/angular-resource/angular-resource.js',
+							'bower_components/angular-resource/angular-resource.min.js',
+							'bower_components/angular-resource/angular-resource.min.js.map'
+						]
 					},
-					{
-						expand: true,
-						flatten: true,
-						filter: 'isFile',
-						dest: 'public/scripts/libs/',
-						src: ['client/bower_components/angular-route/angular-route.min.js.map']
-					},
-					{
-						expand: true,
-						flatten: true,
-						filter: 'isFile',
-						dest: 'public/scripts/libs/',
-						src: ['client/bower_components/angular-sanitize/angular-sanitize.min.js'],
-						rename: function( dest ){
-							var pkg = grunt.file.readJSON('client/bower_components/angular-sanitize/bower.json');
-							return dest +'angular-sanitize-'+ pkg.version +'.min.js';
-						}
-					},
-					{
-						expand: true,
-						flatten: true,
-						filter: 'isFile',
-						dest: 'public/scripts/libs/',
-						src: ['client/bower_components/angular-sanitize/angular-sanitize.min.js.map']
-					},
-					{
-						expand: true,
-						flatten: true,
-						filter: 'isFile',
-						dest: 'public/scripts/libs/',
-						src: ['client/bower_components/bootstrap/js/collapse.js'],
-						rename: function( dest ){
-							var pkg = grunt.file.readJSON('client/bower_components/bootstrap/bower.json');
-							return dest +'bootstrap-'+ pkg.version +'-collapse.js';
-						}
-					},
-					{
-						expand: true,
-						flatten: true,
-						filter: 'isFile',
-						dest: 'public/scripts/libs/',
-						src: ['client/bower_components/bootstrap/js/dropdown.js'],
-						rename: function( dest ){
-							var pkg = grunt.file.readJSON('client/bower_components/bootstrap/bower.json');
-							return dest +'bootstrap-'+ pkg.version +'-dropdown.js';
-						}
-					},
-					/* css files rename them to _xxx.scss format for inclusion */
+					/* css files rename them to _xxx.scss format for sass import */
 					{
 						expand: true,
 						flatten: true,
 						filter: 'isFile',
 						dest: 'client/sass/foundation/libs/',
-						src: ['client/bower_components/normalize-css/normalize.css'],
+						src: ['bower_components/normalize-css/normalize.css'],
 						rename: function( dest ){
 							return dest +'_normalize.scss';
 						}
@@ -525,7 +491,7 @@ module.exports = function( grunt ){
 						flatten: true,
 						filter: 'isFile',
 						dest: 'client/sass/foundation/libs/',
-						src: ['client/bower_components/angular/angular-csp.css'],
+						src: ['bower_components/angular/angular-csp.css'],
 						rename: function( dest ){
 							return dest +'_angular-csp.scss';
 						}
@@ -535,7 +501,7 @@ module.exports = function( grunt ){
 						flatten: true,
 						filter: 'isFile',
 						dest: 'client/sass/base/libs/',
-						src: ['client/bower_components/bootstrap/dist/css/bootstrap.css'],
+						src: ['bower_components/bootstrap/dist/css/bootstrap.css'],
 						rename: function( dest ){
 							return dest +'_bootstrap.scss';
 						}
@@ -545,7 +511,7 @@ module.exports = function( grunt ){
 						flatten: true,
 						filter: 'isFile',
 						dest: 'client/sass/base/libs/',
-						src: ['client/bower_components/bootstrap/dist/css/bootstrap-theme.css'],
+						src: ['bower_components/bootstrap/dist/css/bootstrap-theme.css'],
 						rename: function( dest ){
 							return dest +'_bootstrap-theme.scss';
 						}
@@ -555,7 +521,7 @@ module.exports = function( grunt ){
 						flatten: true,
 						filter: 'isFile',
 						dest: 'client/sass/base/libs/',
-						src: ['client/bower_components/font-awesome/css/font-awesome.css'],
+						src: ['bower_components/font-awesome/css/font-awesome.css'],
 						rename: function( dest ){
 							return dest +'_font-awesome.scss';
 						}
@@ -567,13 +533,13 @@ module.exports = function( grunt ){
 				flatten: true,
 				filter: 'isFile',
 				dest: 'public/fonts/',
-				src: ['client/bower_components/font-awesome/fonts/*']
+				src: ['bower_components/font-awesome/fonts/*']
 			},
 			scripts: {
 				expand: true,
-				cwd: 'client/scripts/',
+				cwd: 'client/js/',
 				src: ['*.js', '**/*.js'],
-				dest: 'public/scripts/'
+				dest: 'public/js/'
 			},
 			quality: {
 				expand: true,
@@ -596,7 +562,7 @@ module.exports = function( grunt ){
 			},
 			all: {
 				files: {
-					'public/styles/styles.min.css': ['client/views/**/*.tpl.html']
+					'public/css/styles.min.css': ['client/views/**/*.tpl.html']
 				}
 			}
 		},
@@ -606,8 +572,8 @@ module.exports = function( grunt ){
 		 */
 		compare_size: {
 			files: [
-				'public/styles/styles.css',
-				'public/styles/styles.min.css'
+				'public/css/styles.css',
+				'public/css/styles.min.css'
 			]
 		},
 
@@ -618,14 +584,20 @@ module.exports = function( grunt ){
 			options: {
 				htmlFile: 'test-runner.html',
 				sutFiles: [
-					'public/scripts/libs/jquery-*.min.js'
-					, 'public/scripts/libs/!(jquery).js'
-					, 'client/bower_components/angular-mocks/angular-mocks.js'
-					, 'client/scripts/**/*.js'
+					'public/js/libs/angular.js'
+					, 'bower_components/angular-mocks/angular-mocks.js'
+					, 'public/js/libs/angular-route.js'
+					, 'public/js/libs/angular-sanitize.js'
+					, 'public/js/libs/angular-resource.js'
+					, 'client/js/lms-modules.js'
+					, 'client/js/lms-routes.js'
+					, 'public/js/angular-templates.js'
+					, 'client/js/!(libs)/*.js'
+					, 'client/js/lms.js'
 				],
 				testFiles: ['tests/unit/**/*.js'],
 				blanketOptions: {
-					'data-cover-only': '//client\\/scripts\\//'
+					'data-cover-only': '//client\\/js\\//'
 				}
 			},
 			runner: {
@@ -714,7 +686,7 @@ module.exports = function( grunt ){
 		, 'copy:components'
 		, 'copy:fonts'
 		, 'sass'
-		, 'csslint:compiled'
+		, 'csslint'
 		, 'html2js'
 		, 'jshint'
 		, 'copy:scripts'
@@ -733,9 +705,7 @@ module.exports = function( grunt ){
 		, 'copy:components'
 		, 'copy:fonts'
 		, 'sass'
-		, 'csslint:compiled'
-		, 'uncss'
-		, 'csslint:minified'
+		, 'csslint'
 		, 'compare_size'
 		, 'html2js'
 		, 'jshint'
@@ -743,7 +713,11 @@ module.exports = function( grunt ){
 		, 'includeSource'
 		, 'preprocess:dev'
 		, 'useminPrepare'
+		, 'uglify'
+		, 'concat'
+		, 'cssmin'
 		, 'usemin'
+		, 'uncss'
 		, 'copy:quality'
 	]);
 
@@ -753,9 +727,8 @@ module.exports = function( grunt ){
 		, 'copy:components'
 		, 'copy:fonts'
 		, 'sass'
-		, 'csslint:compiled'
+		, 'csslint'
 		, 'uncss'
-		, 'csslint:minified'
 		, 'compare_size'
 		, 'html2js'
 		, 'jshint'

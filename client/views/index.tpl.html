@@ -3,21 +3,41 @@
 	<head>
 		<title ng-bind="pageTitle">LMS3<!-- @if SERVER!='production' --> - <!-- @echo SERVER --><!-- @endif --></title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-		<!-- build:css styles/styles.min.css -->
-		<!-- include: "type": "css", "files": "styles/*.css" -->
+		<!-- build:css css/styles.min.css -->
+		<!-- include: "type": "css", "files": "css/*.css" -->
 		<!-- endbuild -->
+
+		<script>
+			document.write('<base href="'+ document.location.protocol +'//'+ document.location.host +'/" />');
+		</script>
 	</head>
 	<body>
 		<section ng-view></section>
 
-		<!-- build:js scripts/main.min.js -->
-		<!-- include: "type": "js", "files": "scripts/libs/angular-*.js" -->
-		<!-- include: "type": "js", "files": "scripts/libs/jquery-*.js" -->
-		<!-- include: "type": "js", "files": "scripts/libs/bootstrap-*.js" -->
-		<!-- include: "type": "js", "files": "scripts/!(libs)/*.js" -->
-		<!-- include: "type": "js", "files": "scripts/angular-templates.js" -->
-		<!-- include: "type": "js", "files": "scripts/lms.js" -->
+		<!-- @if SERVER=='developement' -->
+			<!-- include: "type": "js", "files": "js/libs/angular.js" -->
+			<!-- include: "type": "js", "files": "js/libs/angular-sanitize.js" -->
+			<!-- include: "type": "js", "files": "js/libs/angular-route.js" -->
+			<!-- include: "type": "js", "files": "js/libs/angular-resource.js" -->
+		<!-- @endif -->
+		<!-- @if SERVER!='developement' -->
+			<!-- build:js scripts/libs.min.js -->
+			<!-- include: "type": "js", "files": "js/libs/angular.min.js" -->
+			<!-- include: "type": "js", "files": "js/libs/angular-sanitize.min.js" -->
+			<!-- include: "type": "js", "files": "js/libs/angular-route.min.js" -->
+			<!-- include: "type": "js", "files": "js/libs/angular-resource.min.js" -->
+			<!-- endbuild -->
+		<!-- @endif -->
+
+		<!-- build:js scripts/optimized.min.js -->
+		<!-- include: "type": "js", "files": "js/angular-templates.js" -->
+		<!-- include: "type": "js", "files": "js/lms-modules.js" -->
+		<!-- include: "type": "js", "files": "js/lms-routes.js" -->
+		<!-- include: "type": "js", "files": "js/!(libs)/*.js" -->
+		<!-- include: "type": "js", "files": "js/lms.js" -->
 		<!-- endbuild -->
 
 		<!-- @if LIVERELOAD=true -->

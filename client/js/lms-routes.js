@@ -1,19 +1,22 @@
 'use strict';
 
 angular
-	.module('lms.routes', ['ngRoute'])
+	.module('lms.routes', [])
 	.config([
 		'$routeProvider',
 		'$locationProvider',
 		function( $routeProvider, $locationProvider ){
 			$routeProvider
-				.when('/', {
+				.when('/home', {
 					templateUrl: '../client/views/partials/home.tpl.html',
-					controller: 'homeController'
+					controller: 'home'
 				})
 				.otherwise({
-					redirectTo: '/'
-				});
+					redirectTo: '/home'
+				})
+			;
+
+			// other routes are in respective controllers
 
 			$locationProvider.html5Mode( true );
 		}

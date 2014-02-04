@@ -3,29 +3,36 @@
 	<head>
 		<title ng-bind="pageTitle">LMS3 - developement</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-		<!-- build:css styles/styles.min.css -->
-		<link href="styles/0_layer_foundation.css" rel="stylesheet" type="text/css" />
-<link href="styles/1_layout_base.css" rel="stylesheet" type="text/css" />
-<link href="styles/2_layout_project.css" rel="stylesheet" type="text/css" />
-<link href="styles/3_layout_cosmetic.css" rel="stylesheet" type="text/css" />
+		<!-- build:css css/styles.min.css -->
+		<link href="css/0_layer_foundation.css" rel="stylesheet" type="text/css" />
+<link href="css/1_layout_base.css" rel="stylesheet" type="text/css" />
+<link href="css/2_layout_project.css" rel="stylesheet" type="text/css" />
+<link href="css/3_layout_cosmetic.css" rel="stylesheet" type="text/css" />
 		<!-- endbuild -->
+
+		<script>
+			document.write('<base href="'+ document.location.protocol +'//'+ document.location.host +'/" />');
+		</script>
 	</head>
 	<body>
 		<section ng-view></section>
 
-		<!-- build:js scripts/main.min.js -->
-		<script src="scripts/libs/angular-1.2.7.min.js"></script>
-<script src="scripts/libs/angular-route-1.2.7.min.js"></script>
-<script src="scripts/libs/angular-sanitize-1.2.7.min.js"></script>
-		<script src="scripts/libs/jquery-2.0.3.min.js"></script>
-		<script src="scripts/libs/bootstrap-3.0.3-collapse.js"></script>
-<script src="scripts/libs/bootstrap-3.0.3-dropdown.js"></script>
-		<script src="scripts/config/routes.js"></script>
-<script src="scripts/controllers/homeController.js"></script>
-<script src="scripts/filters/filters.js"></script>
-		<script src="scripts/angular-templates.js"></script>
-		<script src="scripts/lms.js"></script>
+			<script src="js/libs/angular.js"></script>
+			<script src="js/libs/angular-sanitize.js"></script>
+			<script src="js/libs/angular-route.js"></script>
+			<script src="js/libs/angular-resource.js"></script>
+		<!-- build:js scripts/optimized.min.js -->
+		<script src="js/angular-templates.js"></script>
+		<script src="js/lms-modules.js"></script>
+		<script src="js/lms-routes.js"></script>
+		<script src="js/controllers/books.js"></script>
+<script src="js/controllers/home.js"></script>
+<script src="js/filters/filters.js"></script>
+<script src="js/services/crud.js"></script>
+		<script src="js/lms.js"></script>
 		<!-- endbuild -->
 
 			<script src="//localhost:5555/livereload.js"></script>

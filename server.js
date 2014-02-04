@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Module dependencies.
  */
@@ -7,6 +9,9 @@ var express = require('express')
 	, path = require('path')
 	//, media = require('./server/media')
 ;
+
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost/lms');
 
 var app = express();
 
@@ -24,17 +29,30 @@ app
 ;
 
 app.configure(process.env.ENV || 'development', function(){
-	'use strict';
 	app.use( express.errorHandler() );
 });
 
-//routes
-app.get('/', function(req, res){
-	'use strict';
+// angular routes
+var ngIndex = function(req, res){
 	res.sendfile( path.join(__dirname, 'public', 'index.html') );
-});
+};
+
+app.get('/', ngIndex);
+app.get('/home', ngIndex);
+app.get('/books', ngIndex);
+app.get('/movies', ngIndex);
+app.get('/music', ngIndex);
+
+// rest
+var items = require('./server/routes/items.js')
+	, types = ['books', 'movies']
+;
+
+app.get('/rest/:itemType('+ types.join('|') +')', items.findAll);
+app.get('/rest/:itemType('+ types.join('|') +')/:id(\\d+)', items.find);
+app.get('/rest/:itemType('+ types.join('|') +')/:id(\\d+)/:op', items.actionById);
+app.get('/rest/:itemType('+ types.join('|') +')/:op', items.actionAll);
 
 http.createServer( app ).listen(app.get('port'), function(){
-	'use strict';
 	console.log('Express server listening on port ' + app.get('port'));
 });

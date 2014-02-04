@@ -1,13 +1,15 @@
 'use strict';
 
-describe('Unit: homeController', function(){
+describe('Unit: home controller', function(){
 	beforeEach(function(){
 		module('lms.controllers');
+		module('lms.filters');
 	});
 
 	it('should have parts and groups populated', inject(function( $controller, $rootScope, groupFilter ){
 		var scope = $rootScope.$new()
-			, ctrl = $controller('homeController', {$scope: scope, groupFilter: groupFilter});
+			, ctrl = $controller('home', {$scope: scope, groupFilter: groupFilter})
+		;
 
 		expect( scope ).to.have.ownProperty('parts');
 		expect( scope.parts ).to.be.an('array');
