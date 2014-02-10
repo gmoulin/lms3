@@ -7,13 +7,6 @@ describe('crud service', function(){
 
 	beforeEach( inject(function( $injector ){
 		$httpBackend = $injector.get('$httpBackend');
-
-		$httpBackend
-			.whenGET('/rest/books/all')
-			.respond([
-				{id: 1}, {id: 2}
-			])
-		;
 	}) );
 
 	afterEach(function() {
@@ -23,7 +16,9 @@ describe('crud service', function(){
 
 	describe('books', function(){
 		it('should get all books', inject(function(crud){
-			$httpBackend.expectGET('/rest/books/all')
+			$httpBackend.whenGET('/rest/books').respond([ {id: 1}, {id: 2} ]);
+
+			$httpBackend.expectGET('/rest/books');
 
 			var result = crud.books();
 

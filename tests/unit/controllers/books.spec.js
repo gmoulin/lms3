@@ -10,13 +10,6 @@ describe('Unit: books controller', function(){
 
 	beforeEach( inject(function( $injector ){
 		$httpBackend = $injector.get('$httpBackend');
-
-		$httpBackend
-			.whenGET('/rest/books/all')
-			.respond([
-				{id: 1}, {id: 2}
-			])
-		;
 	}) );
 
 	afterEach(function() {
@@ -26,7 +19,9 @@ describe('Unit: books controller', function(){
 
 	describe('books', function(){
 		it('should get all books', inject(function( $controller, $rootScope, crud ){
-			$httpBackend.expectGET('/rest/books/all')
+			$httpBackend.whenGET('/rest/books').respond([ {id: 1}, {id: 2} ]);
+
+			$httpBackend.expectGET('/rest/books');
 
 			var scope = $rootScope.$new()
 				, ctrl = $controller('books', {$scope: scope, crud: crud})
