@@ -194,3 +194,107 @@ module.exports = function( grunt ){
 </div>
 <!--/Node -->
 
+<!-- Angular unit test -->
+<div class="doc-section">
+	<div class="page-header">
+		<h1 id="angular-unit-test">Angular Unit Test:</h1>
+	</div>
+	<!-- controller with filter -->
+	<h3 id="controller-with-filter">Controller with filter</h3>
+	<p>
+		My home controller is using a filter, I had some problems finding the correct way to test it.<br />
+		{% highlight javascript %}
+angular
+	.module('lms.controllers')
+	.controller('home', [
+		'$scope',
+		'groupFilter',
+		function( $scope, groupFilter ){
+			//...
+		}
+	])
+;
+		{% endhighlight %}
+		<br />
+		First both modules need to be mocked for the correct variables name to be available, using <code>module</code> function from angular-mock.<br />
+		{% highlight javascript %}
+beforeEach(function(){
+	module('lms.controllers');
+	module('lms.filters');
+});
+		{% endhighlight %}
+		<br />
+		Then the filter will be passed to the test using the <code>inject</code> function.<br />
+		The controller also need the filter (per definition).<br />
+		{% highlight javascript %}
+it('should have parts and groups populated', inject(function( $controller, $rootScope, groupFilter ){
+	var scope = $rootScope.$new()
+		, ctrl = $controller('home', {$scope: scope, groupFilter: groupFilter})
+	;
+
+	//expect ...
+}) );
+		{% endhighlight %}
+	</p>
+	<!--/controller with filter -->
+
+	<!-- controller using ajax -->
+	<h3 id="controller-using-ajax">Controller using ajax</h3>
+	<p>
+		My book controller is using my CRUD service, I had some problems finding the correct way to test it.<br />
+		{% highlight javascript %}
+angular
+	.module('lms.controllers')
+	.controller('books', [
+		'$scope',
+		'crud',
+		function( $scope, crud ){
+			//...
+		}
+	])
+;
+		{% endhighlight %}
+		<br />
+		First both modules need to be mocked for the correct variables name to be available, using <code>module</code> function from angular-mock.<br />
+		{% highlight javascript %}
+beforeEach(function(){
+	module('lms.controllers');
+	module('lms.services');
+});
+		{% endhighlight %}
+		<br />
+		Second the ajax mock need to be initialized and checked for each tests.<br />
+		{% highlight javascript %}
+beforeEach( inject(function( $injector ){
+	$httpBackend = $injector.get('$httpBackend');
+}) );
+
+afterEach(function() {
+	$httpBackend.verifyNoOutstandingExpectation();
+	$httpBackend.verifyNoOutstandingRequest();
+});
+		{% endhighlight %}
+		<br />
+		Then the service will be passed to the test using the <code>inject</code> function.<br />
+		The controller also need the service (per definition).<br />
+		The ajax mock is setted and warn of a forecoming request.<br />
+		The <code>$httpBackend.flush()</code> is needed for the controller to receive the response.</br >
+		{% highlight javascript %}
+it('should get all books', inject(function( $controller, $rootScope, crud ){
+	$httpBackend.whenGET('/rest/books').respond([ {id: 1}, {id: 2} ]);
+
+	$httpBackend.expectGET('/rest/books');
+
+	var scope = $rootScope.$new()
+		, ctrl = $controller('books', {$scope: scope, crud: crud})
+	;
+
+	$httpBackend.flush();
+
+	//expect ...
+}) );
+		{% endhighlight %}
+	</p>
+	<!--/controller using ajax -->
+</div>
+<!--/Angular unit test -->
