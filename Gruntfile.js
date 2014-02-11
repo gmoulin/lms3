@@ -120,7 +120,7 @@ module.exports = function( grunt ){
 					'client/js/**/*.js',
 					'server.js',
 					'server/**/*.js',
-					'tests/**/*.js',
+					'tests/**/**/*.js',
 					'Gruntfile.js'
 				],
 				tasks: ['jshint']
