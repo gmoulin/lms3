@@ -142,10 +142,11 @@ title: Grunt workflow
 
 	<h3 id="update-html-with-minified-files">Update html with minified files</h3>
 	<p>
-		Plugin: <a href="https://github.com/rubenv/grunt-usemin-uglifynew" target="_blank">grunt-usemin-uglifynew</a>.<br />
+		Plugin: <a href="https://github.com/rubenv/grunt-uglify" target="_blank">grunt-uglify</a>.<br />
 		For quality and production environments I wanted to simply update the scripts and stylesheets references with concatened and minified one.<br />
 		Generaly you have to already get the scripts and stylesheets references in the html for usemin to work, but since I am using <a href="https://github.com/jwvdiermen/grunt-include-source" target="_blank">grunt-include-source</a> the references will be added automaticaly.<br />
 		For this trick to work grunt-include-source must run before useminPrepare, also in the html, usemin comments must surround include-source ones.<br />
+		To minify the javascript, the uglify task is done separatly, to fine tune options depending on scripts (mangle part especially).
 		{% highlight html %}
 <!-- build:js js/app.js -->
 <!-- include: "type": "js", "files": "public/scripts/**/*.js" -->

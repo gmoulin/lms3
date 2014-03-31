@@ -22,7 +22,9 @@ module.exports = function( grunt ){
 					'_includes/*.html',
 					'_layouts/*.html',
 					'index.html',
+					'diary.html',
 					'grunt-workflow.html',
+					'gulp-workflow.html',
 					'problems-and-solutions.html'
 				],
 				tasks: ['shell:jekyllBuild'],

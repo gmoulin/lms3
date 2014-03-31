@@ -11,8 +11,14 @@
 		</div>
 		<nav class="collapse navbar-collapse" role="navigation">
 			<ul class="nav navbar-nav">
+				<li{% if page.slug == "diary" %} class="active"{% endif %}>
+					<a href="diary.html">Diary</a>
+				</li>
 				<li{% if page.slug == "grunt-worflow" %} class="active"{% endif %}>
 					<a href="grunt-workflow.html">Grunt workflow</a>
+				</li>
+				<li{% if page.slug == "gulp-worflow" %} class="active"{% endif %}>
+					<a href="gulp-workflow.html">Gulp workflow</a>
 				</li>
 				<li{% if page.slug == "problems-and-solutions" %} class="active"{% endif %}>
 					<a href="problems-and-solutions.html">Problems and solutions</a>

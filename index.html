@@ -50,22 +50,22 @@ title: LMS3 Documentation
 	<div class="page-header">
 		<h1 id="environment-needs">Environment needs:</h1>
 	</div>
-	<a href="{{site.baseurl}}/grunt-workflow.html">Grunt workflow</a>
+	<a href="{{site.baseurl}}/grunt-workflow.html">Grunt workflow</a> - <a href="{{site.baseurl}}/gulp-workflow.html">Gulp workflow</a>
 
 	<h3 id="dependency-management">dependency management</h3>
 	<p>npm and bower</p>
 
 	<h3 id="auto-listing">auto listing</h3>
-	<p>of scripts and stylesheets in html layout - grunt</p>
+	<p>of scripts and stylesheets in html layout - grunt / gulp</p>
 
 	<h3 id="live-reload">live reload</h3>
-	<p>grunt-contrib-watch</p>
+	<p>grunt-contrib-watch (gulp clone)</p>
 
 	<h3 id="auto-restart">server auto restart</h3>
-	<p>grunt nodemon</p>
+	<p>grunt nodemon (gulp clone)</p>
 
 	<h3 id="auto-compiling">auto compiling</h3>
-	<p>for Sass with sourcemap - grunt</p>
+	<p>for Sass with sourcemap - grunt / gulp</p>
 
 	<h3 id="in-browser-sass-modification">In browser sass modification</h3>
 	<p>using sourcemap and local file save from Chrome Dev Tool</p>
@@ -74,13 +74,13 @@ title: LMS3 Documentation
 	<p>for both apache and node - apache proxying for node (not optimal but working)</p>
 
 	<h3 id="build-automation">automated checking, minifying, building</h3>
-	<p>grunt (usemin, jslint, templates precompiling, recess, ...)</p>
+	<p>grunt / gulp (usemin, jslint, templates precompiling, recess, ...)</p>
 
 	<h3 id="easier-debugging">easier debugging</h3>
-	<p>grunt node inspector</p>
+	<p>grunt node inspector (gulp clone)</p>
 
 	<h3 id="dry-css">unused css removing</h3>
-	<p>grunt-uncss</p>
+	<p>grunt-uncss (gulp clone)</p>
 </div>
 <!--/Environment needs -->
 
@@ -99,7 +99,7 @@ title: LMS3 Documentation
 	<p>one self hosted production site (restart on change, automated deployment on new production tag, ...)</p>
 
 	<h3 id="environment-aware">environment aware configuration</h3>
-	<p>node, grunt</p>
+	<p>node, grunt / gulp</p>
 
 	<h3 id="folders-hierarchy">clear folder hierarchy</h3>
 	<p>
@@ -107,7 +107,7 @@ title: LMS3 Documentation
 		<br><br>
 		A client folder for angular files, sass stylesheets, fontend tests files, ...<br>
 		A server folder for node files, backend tests files, ...<br>
-		A public folder for images, compiled templates, scripts and stylesheets, filed mainly by grunt.<br>
+		A public folder for images, compiled templates, scripts and stylesheets, filed mainly by grunt / gulp.<br>
 		A bower_components and a node_modules folders for third party components.<br>
 		<br>
 		The public folder will be the publication folder for the 3 environments.
