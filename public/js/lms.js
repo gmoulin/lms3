@@ -4,7 +4,7 @@ angular.module('lms', [
 		'ngSanitize' //angular-sanitize
 		, 'ngRoute' //angular-route
 		, 'ngResource' //angular-resource
-		, 'templates-main'
+		, 'lms.templates'
 		, 'lms.routes'
 		, 'lms.filters'
 		, 'lms.controllers'

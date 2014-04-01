@@ -34,8 +34,8 @@ describe("Unit: lms module", function(){
 			expect( hasModule('ngSanitize') ).to.be.true;
 		});
 
-		it('should have templates-main as a dependency', function(){
-			expect( hasModule('templates-main') ).to.be.true;
+		it('should have lms.templates as a dependency', function(){
+			expect( hasModule('lms.templates') ).to.be.true;
 		});
 
 		it('should have lms.routes as a dependency', function(){
@@ -69,10 +69,10 @@ describe("Unit: lms module", function(){
 
 			inject(function( $route ){
 				expect( $route.routes['/home'].controller ).to.equal('home');
-				expect( $route.routes['/home'].templateUrl ).to.equal('../client/views/partials/home.tpl.html');
+				expect( $route.routes['/home'].templateUrl ).to.equal('partials/home.tpl.html');
 
-				expect( $route.routes['/books'].controller ).to.equal('books');
-				expect( $route.routes['/books'].templateUrl ).to.equal('../client/views/partials/books.tpl.html');
+				expect( $route.routes['/:category'].controller ).to.equal('list');
+				expect( $route.routes['/:category'].templateUrl ).to.equal('partials/list.tpl.html');
 			});
 		});
 	});

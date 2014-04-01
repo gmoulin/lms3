@@ -6,9 +6,8 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-		<!-- build:css css/styles.min.css -->
-		<!-- include: "type": "css", "files": "css/*.css" -->
-		<!-- endbuild -->
+		<!-- inject:css -->
+		<!-- endinject -->
 
 		<script>
 			document.write('<base href="'+ document.location.protocol +'//'+ document.location.host +'/" />');
@@ -17,28 +16,8 @@
 	<body>
 		<section ng-view></section>
 
-		<!-- @if SERVER=='developement' -->
-			<!-- include: "type": "js", "files": "js/libs/angular.js" -->
-			<!-- include: "type": "js", "files": "js/libs/angular-sanitize.js" -->
-			<!-- include: "type": "js", "files": "js/libs/angular-route.js" -->
-			<!-- include: "type": "js", "files": "js/libs/angular-resource.js" -->
-		<!-- @endif -->
-		<!-- @if SERVER!='developement' -->
-			<!-- build:js scripts/libs.min.js -->
-			<!-- include: "type": "js", "files": "js/libs/angular.min.js" -->
-			<!-- include: "type": "js", "files": "js/libs/angular-sanitize.min.js" -->
-			<!-- include: "type": "js", "files": "js/libs/angular-route.min.js" -->
-			<!-- include: "type": "js", "files": "js/libs/angular-resource.min.js" -->
-			<!-- endbuild -->
-		<!-- @endif -->
-
-		<!-- build:js scripts/optimized.min.js -->
-		<!-- include: "type": "js", "files": "js/angular-templates.js" -->
-		<!-- include: "type": "js", "files": "js/lms-modules.js" -->
-		<!-- include: "type": "js", "files": "js/lms-routes.js" -->
-		<!-- include: "type": "js", "files": "js/!(libs)/*.js" -->
-		<!-- include: "type": "js", "files": "js/lms.js" -->
-		<!-- endbuild -->
+		<!-- inject:js -->
+		<!-- endinject -->
 
 		<!-- @if LIVERELOAD=true -->
 			<script src="//localhost:5555/livereload.js"></script>

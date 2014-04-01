@@ -1,6 +1,0 @@
-{
-"version": 3,
-"mappings": "AAAA,QAAS;EACR,gBAAgB,EAAE,KAAK;;;;;AAKvB,aAAc;EACb,MAAM,EAAE,IAAI;EACZ,OAAO,EAAE,SAAS;EAClB,SAAS,EAAE,IAAI;EACf,aAAa,EAAE,IAAI;EACnB,WAAW,EAAE,CAAC",
-"sources": ["../../client/sass/project/2_layout_project.scss"],
-"file": "2_layout_project.css"
-}

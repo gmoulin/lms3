@@ -13,10 +13,10 @@ module.exports = function(){
 
 		files : [
 			//third party librairies
-			'public/scripts/libs/angular-*.min.js',
+			'public/js/libs/angular-*.min.js',
 
 			//app code
-			'client/scripts/**/*.js'
+			'client/js/**/*.js'
 		]
 	};
 };

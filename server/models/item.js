@@ -8,9 +8,10 @@ var mongoose = require('mongoose')
 	, Saga = require('./saga.js')
 	, Storage = require('./storage.js')
 	, Person = require('./person.js')
+	,itemSchema
 ;
 
-var itemSchema = new Schema({
+itemSchema = new Schema({
 	_id: {type: ObjectIdSchema, default: function(){ return new ObjectId(); }},
 	added_date: {type: Date, default: Date.now},
 	update_date: {type: Date, default: Date.now},

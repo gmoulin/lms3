@@ -1,6 +1,0 @@
-{
-"version": 3,
-"mappings": "AAAA,SAAU;EACT,gBAAgB,EAAE,IAAI",
-"sources": ["../../client/sass/cosmetic/3_layout_cosmetic.scss"],
-"file": "3_layout_cosmetic.css"
-}

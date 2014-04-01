@@ -1,12 +1,9 @@
-<div class="container home">
-	<div class="row" ng-repeat="group in groups">
-		<div class="col-lg-6 text-center part-link" ng-repeat="part in group">
-			<h1>
-				<a href="#/{{part|lowercase|urlify}}"
-					title="open {{part}} page"
-					class="btn btn-primary btn-lg"
-				>{{ part }}</a>
-			</h1>
-		</div>
+<div ng-repeat="group in groups">
+	<div ng-repeat="part in group">
+		<h1>
+			<a href="#/{{part|lowercase|urlify}}"
+				title="open {{part}} page"
+			>{{ part }}</a>
+		</h1>
 	</div>
 </div>

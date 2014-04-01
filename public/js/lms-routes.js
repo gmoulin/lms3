@@ -8,7 +8,7 @@ angular
 		function( $routeProvider, $locationProvider ){
 			$routeProvider
 				.when('/home', {
-					templateUrl: '../client/views/partials/home.tpl.html',
+					templateUrl: 'partials/home.tpl.html',
 					controller: 'home'
 				})
 				.otherwise({
