@@ -49,7 +49,7 @@ module.exports = function( grunt ){
 
 		open: {
 			jekyll: {
-				path: 'http://localhost:4000'
+				path: 'http://lms3.doc'
 			}
 		}
 	});

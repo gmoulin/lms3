@@ -24,6 +24,26 @@ title: Diary
 		</ol>
 	</p>
 
+	<h3 id="2014-04-01">2014-04-01:</h3>
+	<p>
+		Improve gulp workflow
+		<ul>
+			<li>Order tasks using run-sequence node module</li>
+			<li>Have only one and only one task for init and watch (order problems)</li>
+			<li>Split sass files into libs and site rules, so csslint can only be done on site rules (too much errors running on libs)</li>
+			<li>Use beml to use easier BEM syntax in HTML</li>
+			<li>Rename angular-template.js to lms-templates.js</li>
+			<li>Fix unit tests to reflect new names</li>
+			<li>Keep unit and end to end tests in grunt workflow, gulp is not ready on this part</li>
+			<li>Use a "manual" node server task, no more nodemon as ignored files list is not taken into account (<a href="https://github.com/JacksonGariety/gulp-nodemon/issues/24">issue reported</a>)</li>
+			<li>Use a specific gulp watch for node server</li>
+			<li>Update gh_pages gulp workflow and diary</li>
+			<li>Hook up uncss to remove unused css rules from compiled css, not working at the moment (<a href="https://github.com/ben-eb/gulp-uncss/issues/7">issue reported</a>)</li>
+			<li>Run update on npm and bower</li>
+			<li>Force angular and related librairies to 1.2.15 version</li>
+		</ul>
+	</p>
+
 	<h3 id="2014-03-31">2014-03-31:</h3>
 	<p>
 		Migration to gulp
@@ -34,7 +54,8 @@ title: Diary
 			<li>Migrate from CSSO to BEM</li>
 			<li>Remove bootstrap</li>
 			<li>Remove angular-bootstrap</li>
-			<li>Use beml to use easier BEM syntax in HTML</li>
+			<li>Find the correct plugin to generate templates for angular (angular-templatecache)</li>
+			<li>Added a gulp workflow and diary pages to gh_pages branch</li>
 		</ul>
 	</p>
 </div>

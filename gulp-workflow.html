@@ -8,7 +8,7 @@ title: Gulp workflow
 	</p>
 </div>
 
-<!-- Workflow -->
+<!-- Bases -->
 <div class="doc-section">
 	<div class="page-header">
 		<h1 id="bases">Bases:</h1>
@@ -23,5 +23,94 @@ title: Gulp workflow
 			<li>manage build workflow inside a single task for each environments</li>
 		</ol>
 	</p>
+
+	<h3 id="limitations">Limitations</h3>
+	<p>
+		With Gulp every task is launched in parallel, so when you want to launch task in sequence there are some ways.
+		<br>
+		Easiest found is using node run-sequence module. Another way is to define needed tasks for a task but then the task, if used by a watcher will launch the needed tasks every time, not helping...
+		<br>
+		On unit testing, with grunt it was already a pain, I tried with gulp and the plugins are not up to the task at the moment.
+	</p>
+
+	<h3 id="advantages">Advantages</h3>
+	<p>
+		Once understood and mastered the speed of a gulp workflow is really interesting, such one can choose to even minify and concat css and js for the dev environment.
+		<br>
+		But one of the biggest advantages gulp will have against any other build tool is the lack of temporary files. The files are just passed from one plugin to the other before being written.
+		<br>No temporary files mean a lot more speed as the disk I/O is not blocking the tasks.
+		{% highlight %}
+gulp.task('build-dev', function(){
+	return gulp
+		.src('client/views/index.tpl.html') //use the template
+		.pipe( p.preprocess({ //resolve @if blocks
+			context: { //variables for template parsing
+				LIVERELOAD: true,
+				SERVER: 'developement'
+			}
+		}) )
+		.pipe( p.inject( //fill inject blocks for css and js
+			gulp.src([ //the order is important, in particular for the javascript files
+				'public/css/libs.css',
+				'public/css/styles.css',
+				'public/js/libs/angular.js',
+				'public/js/libs/angular-sanitize.js',
+				'public/js/libs/angular-route.js',
+				'public/js/libs/angular-resource.js',
+				'public/js/lms-templates.js',
+				'public/js/lms-modules.js',
+				'public/js/lms-routes.js',
+				'public/js/!(libs)/*.js',
+				'public/js/lms.js'
+			], {read: false})
+			, { ignorePath: 'public/' }
+		) )
+		.pipe( p.beml() ) //transform beml attributes to css classes
+		.pipe( p.htmlhint({'doctype-first': false}) ) //lint
+		.pipe( p.htmlhint.reporter() ) //lint result
+		.pipe( p['minify-html']( minify_html_options ) ) //minify
+		.pipe( p.rename('index.html') ) //rename
+		.pipe( gulp.dest('public/') ) //write
+	;
+});
+		{% endhighlight %}
+		<br>That makes 6 actions on a single file in one task. With grunt it took several tasks and a temporary file.
+	</p>
+</div>
+<!--/Bases -->
+
+<!-- Workflow -->
+<div class="doc-section">
+	<div class="page-header">
+		<h1 id="workflow">Workflow:</h1>
+	</div>
+
+	<h3 id="developement">Development</h3>
+	<p>
+		{% highlight javascript %}
+gulp.task('dev', function( cb ){
+	runSequence('clean-dev', 'copy-components', ['html2js', 'copy-scripts', 'jshint', 'todo', 'sass-lint'], 'build-dev', cb);
+});
+
+gulp.task('default', function( cb ){
+	runSequence('dev', 'server', 'watch', cb);
+});
+		{% endhighlight %*
+		The "dev" task combine all the tasks for the developement environment in a specific order.
+		<ol>
+			<li>"clean-dev" to remove any files for previous builds, reset bower components used files, ...</li>
+			<li>"copy-components" to move used bower components files (angular, inuit, ...)</li>
+			<li>"html2js" to lint, minify, bem convert and transform every templates in a single angular module</li>
+			<li>"copy-script" to copy all javascript files from client folder to public folder</li>
+			<li>"jshint" to lint all javascript files (client, server, tests, ...)</li>
+			<li>"todo" create a todo and fixme list from javascript files parsing</li>
+			<li>"sass-lint" to compile sass files to css and lint the non librairies code (too much errors)</li>
+			<li>"build-dev" to generate index.html from its template using beml, htmlhint, minify, preprocess and inject</li>
+			<li>"cb" is the callback function, needed by gulp for the workflow</li>
+		</ol>
+		<br>
+		The "default" task launch the "dev" task then the node server and finaly the watch listeners.
+	</p>
 </div>
 <!--/Workflow -->
+
