@@ -39,7 +39,7 @@ title: Gulp workflow
 		<br>
 		But one of the biggest advantages gulp will have against any other build tool is the lack of temporary files. The files are just passed from one plugin to the other before being written.
 		<br>No temporary files mean a lot more speed as the disk I/O is not blocking the tasks.
-		{% highlight %}
+		{% highlight javascript %}
 gulp.task('build-dev', function(){
 	return gulp
 		.src('client/views/index.tpl.html') //use the template
@@ -95,7 +95,7 @@ gulp.task('dev', function( cb ){
 gulp.task('default', function( cb ){
 	runSequence('dev', 'server', 'watch', cb);
 });
-		{% endhighlight %*
+		{% endhighlight %}
 		The "dev" task combine all the tasks for the developement environment in a specific order.
 		<ol>
 			<li>"clean-dev" to remove any files for previous builds, reset bower components used files, ...</li>
