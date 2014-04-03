@@ -11,8 +11,8 @@ var storageSchema = new Schema({
 	_id: {type: ObjectIdSchema, default: function(){ return new ObjectId(); }},
 	room: {type: String, required: true},
 	type: String,
-	column: {type: String, enum: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']},
-	line: {type: Number, min: 0, max: 10}
+	column: {type: String, enum: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', '']},
+	line: {type: Number, min: 0, max: 10, default: 0}
 });
 
 storageSchema.index({room: 1, type: 1, column: 1, line: 1}, {unique: true});

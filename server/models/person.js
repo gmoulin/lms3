@@ -7,6 +7,8 @@ var mongoose = require('mongoose')
 	, ObjectId = mongoose.Types.ObjectId
 ;
 
+//TODO remove comments from import
+
 var personSchema = new Schema({
 	_id: {type: ObjectIdSchema, default: function(){ return new ObjectId(); }},
 	name: {
@@ -14,12 +16,17 @@ var personSchema = new Schema({
 		last: String
 	},
 	site: String,
-	search: String
+	search: String,
+	lastCheckDate: {type: Date, default: Date.now()}
 });
 
 personSchema.virtual('name.full').get(function(){
 	return this.name.first + (this.name.first.length > 0 ? ' ' : '') + this.name.last;
 });
+
+personSchema.path('name.first').validate(function(){
+	return (typeof this.name.first == 'string' && this.name.first.length > 0) || (typeof this.name.last == 'string' && this.name.last.length > 0);
+}, 'Nom requis.');
 
 personSchema.path('site').validate(function( site ){
 	return validator.isURL( site );

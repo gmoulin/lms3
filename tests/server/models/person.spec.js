@@ -116,4 +116,14 @@ describe('Persons', function(){
 			done();
 		});
 	});
+
+	it('validate name', function( done ){
+		var test = new Person({'name.first': '', 'name.last': '', site: 'http://junior.white.com/', search: 'http://search.com/junior/white/'});
+		test.save(function( err, person ){
+			should.exists( err );
+			err.errors.should.have.property('name.first');
+			err.errors['name.first'].message.should.equal('Nom requis.');
+			done();
+		});
+	});
 });

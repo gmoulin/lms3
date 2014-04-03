@@ -7,6 +7,8 @@ var mongoose = require('mongoose')
 	, ObjectId = mongoose.Types.ObjectId
 ;
 
+//TODO remove comments from import
+
 var sagaSchema = new Schema({
 	_id: {type: ObjectIdSchema, default: function(){ return new ObjectId(); }},
 	title: {type: String, required: true, index: {unique: true, dropDups: true}},

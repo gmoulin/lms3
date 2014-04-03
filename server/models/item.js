@@ -8,7 +8,7 @@ var mongoose = require('mongoose')
 	, Saga = require('./saga.js')
 	, Storage = require('./storage.js')
 	, Person = require('./person.js')
-	,itemSchema
+	, itemSchema
 ;
 
 itemSchema = new Schema({
@@ -20,6 +20,8 @@ itemSchema = new Schema({
 	type: {type: String, required: true}, //custom validation, book size, movie mediaType
 	genre: [{type: String, required: true}],
 	saga: {type: ObjectIdSchema, ref: 'Saga'},
+	search: {type: String, required: true},
+	year: Number,
 	loan: {
 		date: Date,
 		name: String
@@ -38,11 +40,9 @@ itemSchema = new Schema({
 		director: [{type: ObjectIdSchema, ref: 'Person'}]
 	},
 	alcohol: {
-		year: Date, //custom check for alcohols
 		maker: [{type: ObjectIdSchema, ref: 'Person'}]
 	},
 	album: {
-		year: Number,
 		band: [{type: ObjectIdSchema, ref: 'Person'}]
 	},
 	tvshow: {
@@ -51,15 +51,14 @@ itemSchema = new Schema({
 			year: Number,
 			length: Number,
 			complete: Boolean
-		}],
-		search: String
+		}]
 	}
 });
 
 itemSchema.path('type').validate(function( type ){
 	var refs = { //category: types
-		'book': ['CD', 'mp3', 'livre'],
-		'movie': ['blu-ray', 'DVD', 'file'],
+		'book': ['mp3', 'paper'],
+		'movie': ['blu-ray', 'DVD', 'file', 'todo'],
 		'TV show': ['blu-ray', 'DVD', 'file'],
 		'album': ['mp3'],
 		'alcohol': ['bottle']
@@ -89,6 +88,11 @@ itemSchema.path('type').validate(function( type ){
 	return valid;
 }, 'Type non valide.');
 
+itemSchema.path('search').validate(function( url ){
+	return validator.isURL( url );
+}, 'Url invalide.');
+
+
 itemSchema.path('book.author').validate(function( author ){
 	if( author.length === 0 && this.category == 'book' ){
 		return false;
@@ -117,6 +121,17 @@ itemSchema.path('alcohol.maker').validate(function( maker ){
 	return true;
 }, 'Au moins un fabriquant est requis pour un vin ou spiritueux.');
 
+itemSchema.path('year').validate(function( year ){
+	if( this.category === 'alcohol' || this.category === 'album' ){
+		if( year !== '' && year !== null && year > 0 && year <= (new Date()).getFullYear() ){
+			return true;
+		} else {
+			return false;
+		}
+	}
+	return true;
+}, 'Année non valide.');
+
 itemSchema.path('album.band').validate(function( band ){
 	if( band.length === 0 && this.category == 'album' ){
 		return false;
@@ -131,20 +146,7 @@ itemSchema.path('tvshow.artist').validate(function( artist ){
 	return true;
 }, 'Au moins un artiste est requis pour une série.');
 
-/*
-itemSchema.path('alcohol.year').validate(function( year ){
-	if( this.category === 'alcohols' ){
-		if( year !== '' && year > 0 && year <= (new Date()).getFullYear() ){
-			return true;
-		} else {
-			return false;
-		}
-	}
-	return true;
-}, 'Année non valide.');
-*/
-
-itemSchema.index({title: 1, category: 1}, {unique: true});
+itemSchema.index({title: 1, category: 1, type: 1}, {unique: true});
 
 module.exports = mongoose.model('Item', itemSchema);
 

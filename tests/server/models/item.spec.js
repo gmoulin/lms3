@@ -14,10 +14,10 @@ describe('Items', function(){
 
 	before(function( done ){
 		mongoose.connect('mongodb://localhost/lms', function(){
-			Saga.remove({title: /test/i}, function(){});
-			Storage.remove({room: /test/i}, function(){});
-			Person.remove({room: /test/i}, function(){});
-			Item.remove({title: /test/i}, function( err ){
+			Saga.remove({title: /^test/i}, function(){});
+			Storage.remove({room: /^test/i}, function(){});
+			Person.remove({room: /^test/i}, function(){});
+			Item.remove({title: /^test/i}, function( err ){
 				if( err ) console.log( err );
 				done();
 			});
@@ -25,15 +25,15 @@ describe('Items', function(){
 	});
 
 	after(function( done ){
-		Saga.remove({title: /test/i}, function(){});
-		Storage.remove({room: /test/i}, function(){});
-		Person.remove({room: /test/i}, function(){});
-		Item.remove({title: /test/i}, function(){});
+		Saga.remove({title: /^test/i}, function(){});
+		Storage.remove({room: /^test/i}, function(){});
+		Person.remove({room: /^test/i}, function(){});
+		Item.remove({title: /^test/i}, function(){});
 		mongoose.disconnect( done );
 	});
 
 	it('search by title - not found', function( done ){
-		Item.find({title: /test/i}, 'title', function( err, items ){
+		Item.find({title: /^test/i}, 'title', function( err, items ){
 			if( err ) return done( err );
 			items.should.be.instanceof( Array ).and.have.lengthOf( 0 );
 			done();
@@ -70,8 +70,10 @@ describe('Items', function(){
 			var one = new Item({
 				title: 'Test - Ashes of Victory',
 				category: 'book',
-				type: 'livre',
+				type: 'paper',
 				genre: ['Military science fiction'],
+				search: 'http://test.com/',
+				year: (new Date()).getFullYear(),
 				saga: saga_id,
 				rating: 5,
 				storage: storage_id
@@ -84,9 +86,11 @@ describe('Items', function(){
 				item.should.be.instanceof( Object );
 				item.title.should.equal('Test - Ashes of Victory');
 				item.category.should.equal('book');
-				item.type.should.equal('livre');
+				item.type.should.equal('paper');
 				item.genre.should.be.instanceof( Array ).and.have.lengthOf( 1 );
 				item.genre[ 0 ].should.equal('Military science fiction');
+				item.search.should.equal('http://test.com/');
+				item.year.should.equal( (new Date()).getFullYear() );
 				item.rating.should.eql( 5 );
 				item.saga.should.equal( saga_id );
 				item.storage.should.equal( storage_id );
@@ -98,7 +102,7 @@ describe('Items', function(){
 	});
 
 	it('search by title', function( done ){
-		Item.findOne({title: /test/i})
+		Item.findOne({title: /^test/i})
 			.populate('saga storage book.author')
 			.exec(function( err, item ){
 				if( err ) return done( err );
@@ -106,9 +110,11 @@ describe('Items', function(){
 				item.should.be.instanceof( Object );
 				item.title.should.equal('Test - Ashes of Victory');
 				item.category.should.equal('book');
-				item.type.should.equal('livre');
+				item.type.should.equal('paper');
 				item.book.author.should.be.instanceof( Array ).and.have.lengthOf( 1 );
 				item.genre[ 0 ].should.equal('Military science fiction');
+				item.search.should.equal('http://test.com/');
+				item.year.should.equal( (new Date()).getFullYear() );
 				item.rating.should.eql( 5 );
 
 				item.saga.title.should.equal('Test - Honor Harrington');
@@ -134,8 +140,10 @@ describe('Items', function(){
 		var test = new Item({
 			title: '',
 			category: 'toto',
-			type: 'livre',
+			type: 'paper',
 			genre: ['Military science fiction'],
+			search: '',
+			year: '',
 			saga: saga_id,
 			rating: 5,
 			storage: storage_id,
@@ -149,6 +157,8 @@ describe('Items', function(){
 			err.errors.title.type.should.equal('required');
 			err.errors.should.have.property('category');
 			err.errors.category.type.should.equal('enum');
+			err.errors.should.have.property('search');
+			err.errors.search.type.should.equal('required');
 			done();
 		});
 	});
@@ -159,6 +169,8 @@ describe('Items', function(){
 			category: 'book',
 			type: 'bottle',
 			genre: ['Military science fiction'],
+			search: 'http://test.com/',
+			year: '',
 			saga: saga_id,
 			rating: 5,
 			storage: storage_id,
@@ -178,8 +190,10 @@ describe('Items', function(){
 		var test = new Item({
 			title: 'Test 3',
 			category: 'book',
-			type: 'livre',
+			type: 'paper',
 			genre: ['Military science fiction'],
+			search: 'http://test.com/',
+			year: '',
 			saga: saga_id,
 			rating: 5,
 			storage: storage_id
@@ -197,6 +211,8 @@ describe('Items', function(){
 			category: 'movie',
 			type: 'DVD',
 			genre: ['Military science fiction'],
+			search: 'http://test.com/',
+			year: '',
 			saga: saga_id,
 			rating: 5,
 			storage: storage_id
@@ -215,12 +231,15 @@ describe('Items', function(){
 			category: 'alcohol',
 			type: 'bottle',
 			genre: ['Military science fiction'],
+			search: 'http://test.com/',
+			year: '',
 			rating: 5,
 			storage: storage_id
 		});
 		test.save(function( err, item ){
 			should.exists( err );
 			err.errors.should.have.property('alcohol.maker');
+			err.errors.should.have.property('year');
 			done();
 		});
 	});
@@ -231,6 +250,8 @@ describe('Items', function(){
 			category: 'album',
 			type: 'mp3',
 			genre: ['Military science fiction'],
+			search: 'http://test.com/',
+			year: '',
 			rating: 5,
 			storage: storage_id
 		});
@@ -247,6 +268,8 @@ describe('Items', function(){
 			category: 'tvshow',
 			type: 'file',
 			genre: ['Military science fiction'],
+			search: 'http://test.com/',
+			year: '',
 			rating: 5,
 			storage: storage_id
 		});
@@ -261,8 +284,10 @@ describe('Items', function(){
 		var test = new Item({
 			title: 'Test - Ashes of Victory',
 			category: 'book',
-			type: 'livre',
+			type: 'paper',
 			genre: ['Military science fiction'],
+			search: 'http://test.com/',
+			year: (new Date()).getFullYear(),
 			saga: saga_id,
 			rating: 5,
 			storage: storage_id
