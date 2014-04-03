@@ -1,6 +1,7 @@
 exclude: [Gemfile, Gemfile.lock, params.json, package.json, node_modules, Gruntfile.js]
 baseurl: '/lms3'
 pygments: true
+markdown: kramdown
 
 # Toggle "Postings are my own" disclaimer in footer
 show_disclaimer: true
