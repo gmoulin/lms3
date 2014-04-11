@@ -4,12 +4,15 @@ var gulp = require('gulp')
 	, runSequence = require('run-sequence')
 	, spawn = require('child_process').spawn
 	, node
+	, inspector
+	, to
+	, server = p.livereload( 5555 )
 	, path = {
-		html2js: ['client/views/**/!(index).tpl.html'],
-		clientjs: 'client/js/**/*.js',
-		serverjs: 'server/**/*.js',
-		basejs: ['server.js', 'Gruntfile.js', 'gulpfile.js'],
-		todo: ['Gruntfile.js', 'gulpfile.js', 'client/js/**/*.js', 'server.js', 'server/**/*.js', 'tests/**/**/*.js']
+		html2js: ['./client/views/**/!(index).tpl.html'],
+		clientjs: './client/js/**/*.js',
+		serverjs: './server/**/*.js',
+		basejs: ['./server.js', './Gruntfile.js', './gulpfile.js'],
+		todo: ['./Gruntfile.js', './gulpfile.js', './client/js/**/*.js', './server.js', './server/**/*.js', './tests/**/**/*.js']
 	}
 	, minify_html_options = {
 		empty: true, //needed, else remove things like ng-view ...
@@ -62,9 +65,9 @@ var gulp = require('gulp')
 gulp.task('clean-dev', function(){
 	return gulp
 		.src([
-			'client/sass/libs/*',
-			'public/{js,css,fonts}/*',
-			'public/**/*.html'
+			'./client/sass/libs/*',
+			'./public/{js,css,fonts}/*',
+			'./public/**/*.html'
 		], { read: false })
 		.pipe( p.clean() )
 	;
@@ -73,18 +76,28 @@ gulp.task('clean-dev', function(){
 gulp.task('copy-angular', function(){
 	return gulp
 		.src([
-			'bower_components/angular/angular.js',
-			'bower_components/angular/angular.min.js',
-			'bower_components/angular/angular.min.js.map',
-			'bower_components/angular-route/angular-route.js',
-			'bower_components/angular-route/angular-route.min.js',
-			'bower_components/angular-route/angular-route.min.js.map',
-			'bower_components/angular-sanitize/angular-sanitize.js',
-			'bower_components/angular-sanitize/angular-sanitize.min.js',
-			'bower_components/angular-sanitize/angular-sanitize.min.js.map',
-			'bower_components/angular-resource/angular-resource.js',
-			'bower_components/angular-resource/angular-resource.min.js',
-			'bower_components/angular-resource/angular-resource.min.js.map'
+			'./bower_components/angular/angular.js',
+			'./bower_components/angular/angular.min.js',
+			'./bower_components/angular/angular.min.js.map',
+			'./bower_components/angular-route/angular-route.js',
+			'./bower_components/angular-route/angular-route.min.js',
+			'./bower_components/angular-route/angular-route.min.js.map',
+			'./bower_components/angular-sanitize/angular-sanitize.js',
+			'./bower_components/angular-sanitize/angular-sanitize.min.js',
+			'./bower_components/angular-sanitize/angular-sanitize.min.js.map',
+			'./bower_components/angular-resource/angular-resource.js',
+			'./bower_components/angular-resource/angular-resource.min.js',
+			'./bower_components/angular-resource/angular-resource.min.js.map'
+		])
+		.pipe( gulp.dest('public/js/libs/') )
+	;
+});
+
+gulp.task('copy-lodash', function(){
+	return gulp
+		.src([
+			'./bower_components/lodash/dist/lodash.js',
+			'./bower_components/lodash/dist/lodash.min.js'
 		])
 		.pipe( gulp.dest('public/js/libs/') )
 	;
@@ -92,47 +105,47 @@ gulp.task('copy-angular', function(){
 
 gulp.task('copy-inuit', function(){
 	return gulp
-		.src(['bower_components/inuit.css/**/*.scss'])
-		.pipe( gulp.dest('client/sass/libs/inuit/') )
+		.src(['./bower_components/inuit.css/**/*.scss'])
+		.pipe( gulp.dest('./client/sass/libs/inuit/') )
 	;
 });
 
 gulp.task('copy-angular-csp', function(){
 	return gulp
-		.src('bower_components/angular/angular-csp.css')
+		.src('./bower_components/angular/angular-csp.css')
 		.pipe( p.rename('_angular-csp.scss') )
-		.pipe( gulp.dest('client/sass/libs/') )
+		.pipe( gulp.dest('./client/sass/libs/') )
 	;
 });
 
 gulp.task('copy-font-awesome-css', function(){
 	return gulp
-		.src('bower_components/font-awesome/css/font-awesome.css')
+		.src('./bower_components/font-awesome/css/font-awesome.css')
 		.pipe( p.rename('_font-awesome.scss') )
-		.pipe( gulp.dest('client/sass/libs/') )
+		.pipe( gulp.dest('./client/sass/libs/') )
 	;
 });
 
 gulp.task('copy-font-awesome-fonts', function(){
 	return gulp
-		.src('bower_components/font-awesome/fonts/*')
-		.pipe( gulp.dest('public/fonts/') )
+		.src('./bower_components/font-awesome/fonts/*')
+		.pipe( gulp.dest('./public/fonts/') )
 	;
 });
 
-gulp.task('copy-components', ['copy-angular', 'copy-angular-csp', 'copy-inuit', 'copy-font-awesome-css', 'copy-font-awesome-fonts']);
+gulp.task('copy-components', ['copy-angular', 'copy-lodash', 'copy-angular-csp', 'copy-inuit', 'copy-font-awesome-css', 'copy-font-awesome-fonts']);
 
 gulp.task('sass', function(){
 	return gulp
-		.src(['client/sass/libs.scss', 'client/sass/styles.scss'])
+		.src(['./client/sass/libs.scss', './client/sass/styles.scss'])
 		.pipe( p['ruby-sass']({style: 'expanded', sourcemap: true}) )
-		.pipe( gulp.dest('public/css/') )
+		.pipe( gulp.dest('./public/css/') )
 	;
 });
 
 gulp.task('csslint', function(){
 	return gulp
-		.src('public/css/styles.css')
+		.src('./public/css/styles.css')
 		.pipe( p.csslint( csslint_rules ) )
 		.pipe( p.csslint.reporter() )
 	;
@@ -150,7 +163,7 @@ gulp.task('html2js', function(){
 			standalone: true
 		}) )
 		.pipe( p.concat('lms-templates.js') )
-		.pipe( gulp.dest('public/js/') )
+		.pipe( gulp.dest('./public/js/') )
 	;
 });
 
@@ -158,7 +171,7 @@ gulp.task('html2js', function(){
 gulp.task('client-js-lint', function(){
 	return gulp
 		.src( path.clientjs )
-		.pipe( p.changed('client/js/') )
+		.pipe( p.changed('./client/js/') )
 		.pipe( p.jshint('/home/gmoulin/gm-vim2/vim/.jshintrc') )
 		.pipe( p.jshint.reporter('default') )
 	;
@@ -176,7 +189,7 @@ gulp.task('base-js-lint', function(){
 gulp.task('server-js-lint', function(){
 	return gulp
 		.src( path.serverjs )
-		.pipe( p.changed('server/') )
+		.pipe( p.changed('./server/') )
 		.pipe( p.jshint('/home/gmoulin/gm-vim2/vim/.jshintrc') )
 		.pipe( p.jshint.reporter('default') )
 	;
@@ -186,8 +199,8 @@ gulp.task('jshint', ['client-js-lint', 'server-js-lint', 'base-js-lint']);
 
 gulp.task('copy-scripts', function(){
 	return gulp
-		.src('client/js/**/*.js')
-		.pipe( gulp.dest('public/js/') )
+		.src('./client/js/**/*.js')
+		.pipe( gulp.dest('./public/js/') )
 	;
 });
 
@@ -201,7 +214,7 @@ gulp.task('todo', function(){
 
 gulp.task('build-dev', function(){
 	return gulp
-		.src('client/views/index.tpl.html')
+		.src('./client/views/index.tpl.html')
 		.pipe( p.preprocess({
 			context: { //variables for template parsing
 				LIVERELOAD: true,
@@ -210,17 +223,18 @@ gulp.task('build-dev', function(){
 		}) )
 		.pipe( p.inject(
 			gulp.src([
-				'public/css/libs.css',
-				'public/css/styles.css',
-				'public/js/libs/angular.js',
-				'public/js/libs/angular-sanitize.js',
-				'public/js/libs/angular-route.js',
-				'public/js/libs/angular-resource.js',
-				'public/js/lms-templates.js',
-				'public/js/lms-modules.js',
-				'public/js/lms-routes.js',
-				'public/js/!(libs)/*.js',
-				'public/js/lms.js'
+				'./public/css/libs.css',
+				'./public/css/styles.css',
+				'./public/js/libs/lodash.js',
+				'./public/js/libs/angular.js',
+				'./public/js/libs/angular-sanitize.js',
+				'./public/js/libs/angular-route.js',
+				'./public/js/libs/angular-resource.js',
+				'./public/js/lms-templates.js',
+				'./public/js/lms-modules.js',
+				'./public/js/lms-routes.js',
+				'./public/js/!(libs)/*.js',
+				'./public/js/lms.js'
 			], {read: false})
 			, { ignorePath: 'public/' }
 		) )
@@ -229,41 +243,38 @@ gulp.task('build-dev', function(){
 		.pipe( p.htmlhint.reporter() )
 		.pipe( p['minify-html']( minify_html_options ) )
 		.pipe( p.rename('index.html') )
-		.pipe( gulp.dest('public/') )
+		.pipe( gulp.dest('./public/') )
 	;
 });
 
-/*gulp.task('nodemon-dev'[>, ['prepare']<], function( cb ){
-	p.nodemon({
-		script: 'server.js',
-		nodeArgs: ['--debug=9999'], //same debug port as node-inspector
-		ignore: [
-			'./!(server)/**',
-			'./Gruntfile.js',
-			'./gulpfile.js'
-		],
-		ext: 'js',
-		delayTime: 1,
-		env: {
-			ENV: 'development',
-			PORT: 3001
-		}
-	});
-
-	cb( null );
-});*/
-
-gulp.task('server', function() {
+gulp.task('server', function( cb ){
+	console.log('reloading node-inspector and node');
 	if( node ){
 		node.kill();
 	}
 
-	node = spawn('node', ['server.js', '--debug=9999'], {stdio: 'inherit', env: { ENV: 'development', PORT: 3001 }});
+	if( inspector ){
+		inspector.kill();
+	}
+
+	inspector = spawn('node-inspector');
+	node = spawn('node', ['--debug', 'server.js'], {stdio: 'inherit', env: { ENV: 'development', PORT: 3001 }});
 	node.on('close', function( code ){
 		if( code === 8 ){
 			gulp.log('Node error detected...');
 		}
 	});
+
+	if( to ){
+		clearTimeout( to );
+	}
+
+	to = setTimeout(function(){
+		console.log('server livereloading');
+		server.changed('./public/index.html');
+	}, 3000);
+
+	cb( null );
 });
 
 // clean up if an error goes unhandled.
@@ -271,11 +282,28 @@ process.on('exit', function(){
 	if( node ){
 		node.kill();
 	}
+
+	if( inspector ){
+		inspector.kill();
+	}
 });
 
 /*gulp.task('grunt-legacy', ['build-dev'], function(){
 	gulp.run('grunt-dev');
 });*/
+
+gulp.task('refresh', function( cb ){
+	if( to ){
+		clearTimeout( to );
+	}
+
+	to = setTimeout(function(){
+		console.log('refresh livereloading');
+		server.changed('./public/index.html');
+	}, 2000);
+
+	cb( null );
+});
 
 gulp.task('watch', function( cb ){
 	gulp.watch(path.html2js, ['html2js']);
@@ -285,20 +313,16 @@ gulp.task('watch', function( cb ){
 	gulp.watch(path.serverjs, ['server-js-lint']);
 	gulp.watch(path.basejs, ['base-js-lint']);
 
-	gulp.watch('client/sass/**/*.scss', ['sass']);
-	gulp.watch('public/css/styles.css', ['csslint']);
+	gulp.watch('./client/sass/**/*.scss', ['sass']);
+	gulp.watch('./public/css/styles.css', ['csslint']);
 
-	gulp.watch('client/js/**/*.js', ['copy-scripts']);
+	gulp.watch('./client/js/**/*.js', ['copy-scripts']);
 
-	gulp.watch(['client/views/index.tpl.html', 'public/js/**/*.js', 'public/css/{styles,libs}.css'], ['build-dev']);
+	gulp.watch(['./client/views/index.tpl.html', './public/js/**/*.js', './public/css/{styles,libs}.css'], function(){
+		runSequence('build-dev', 'refresh');
+	});
 
-	var server = p.livereload( 5555 );
-	gulp.watch('public/**')
-		.on('change', function( file ){
-			server.changed( file.path );
-		});
-
-	gulp.watch(['server.js', 'server/**/**/*.js'], ['server']);
+	gulp.watch(['./server.js', './server/**'], ['server']);
 
 	cb( null );
 });
@@ -320,32 +344,33 @@ gulp.task('default', function( cb ){
 /* ------------------------------------ */
 
 gulp.task('css-minify', function(){
-	return gulp.src(['public/css/libs.css', 'public/css/styles.css'])
+	return gulp.src(['./public/css/libs.css', './public/css/styles.css'])
 		.pipe( p.csso() )
 		.pipe( p.rename('optimized.min.css') )
-		.pipe( gulp.dest('public/css/') )
+		.pipe( gulp.dest('./public/css/') )
 	;
 });
 
 gulp.task('js-libs-minify', function(){
 	return gulp.src([
-			'public/js/libs/angular.min.js',
-			'public/js/libs/angular-sanitize.min.js',
-			'public/js/libs/angular-route.min.js',
-			'public/js/libs/angular-resource.min.js'
+			'./public/js/libs/lodash.min.js',
+			'./public/js/libs/angular.min.js',
+			'./public/js/libs/angular-sanitize.min.js',
+			'./public/js/libs/angular-route.min.js',
+			'./public/js/libs/angular-resource.min.js'
 		])
 		.pipe( p.concat('libs.min.js') )
-		.pipe( gulp.dest('public/js/') )
+		.pipe( gulp.dest('./public/js/') )
 	;
 });
 
 gulp.task('js-main-minify', function(){
 	return gulp.src([
-			'public/js/lms-templates.js',
-			'public/js/lms-modules.js',
-			'public/js/lms-routes.js',
-			'public/js/!(libs)/*.js',
-			'public/js/lms.js'
+			'./public/js/lms-templates.js',
+			'./public/js/lms-modules.js',
+			'./public/js/lms-routes.js',
+			'./public/js/!(libs)/*.js',
+			'./public/js/lms.js'
 		])
 		.pipe( p.uglify({
 			mangle: true,
@@ -358,22 +383,22 @@ gulp.task('js-main-minify', function(){
 			sourceMap: true
 		} ) )
 		.pipe( p.concat('optimized.min.js') )
-		.pipe( gulp.dest('public/js/') )
+		.pipe( gulp.dest('./public/js/') )
 	;
 });
 
 gulp.task('uncss', function(){
 	return gulp
-		.src('public/css/optimized.min.css')
+		.src('./public/css/optimized.min.css')
 		.pipe( p.uncss({
-			html: ['public/index.html', 'client/views/partials/**/*']
+			html: ['./public/index.html', './client/views/partials/**/*']
 		}) )
 	;
 });
 
 gulp.task('csslintmin', function(){
 	return gulp
-		.src('public/css/optimized.min.css')
+		.src('./public/css/optimized.min.css')
 		.pipe( p.csslint( csslint_rules ) )
 		.pipe( p.csslint.reporter() )
 	;
@@ -388,7 +413,7 @@ gulp.task('clean-quality', function(){
 
 gulp.task('build-quality', function(){
 	return gulp
-		.src('client/views/index.tpl.html')
+		.src('./client/views/index.tpl.html')
 		.pipe( p.preprocess({
 			context: { //variables for template parsing
 				LIVERELOAD: false,
@@ -397,24 +422,24 @@ gulp.task('build-quality', function(){
 		}) )
 		.pipe( p.inject(
 			gulp.src([
-				'public/css/optimized.min.css',
-				'public/js/libs.min.js',
-				'public/js/optimized.min.js'
+				'./public/css/optimized.min.css',
+				'./public/js/libs.min.js',
+				'./public/js/optimized.min.js'
 			], {read: false})
-			, { ignorePath: 'public/' }
+			, { ignorePath: './public/' }
 		) )
 		//.pipe( p.beml() )
 		//.pipe( p.htmlhint({'doctype-first': false}) )
 		//.pipe( p.htmlhint.reporter() )
 		//.pipe( p['minify-html']( minify_html_options ) )
 		.pipe( p.rename('index.html') )
-		.pipe( gulp.dest('public/') )
+		.pipe( gulp.dest('./public/') )
 	;
 });
 
 gulp.task('copy-quality', function(){
 	return gulp
-		.src(['public/{js,css}/**/*', 'public/index.html'])
+		.src(['./public/{js,css}/**/*', './public/index.html'])
 		.pipe( gulp.dest('build/quality/') )
 	;
 });
@@ -425,14 +450,14 @@ gulp.task('quality', function( cb ){
 
 gulp.task('clean-production', function(){
 	return gulp
-		.src('build/production/*')
+		.src('./build/production/*')
 		.pipe( p.clean() )
 	;
 });
 
 gulp.task('build-production', function(){
 	return gulp
-		.src('client/views/index.tpl.html')
+		.src('./client/views/index.tpl.html')
 		.pipe( p.preprocess({
 			context: { //variables for template parsing
 				LIVERELOAD: false,
@@ -441,9 +466,9 @@ gulp.task('build-production', function(){
 		}) )
 		.pipe( p.inject(
 			gulp.src([
-				'public/css/optimized.min.css',
-				'public/js/libs.min.js',
-				'public/js/optimized.min.js'
+				'./public/css/optimized.min.css',
+				'./public/js/libs.min.js',
+				'./public/js/optimized.min.js'
 			], {read: false})
 			, { ignorePath: 'public/' }
 		) )
@@ -452,17 +477,17 @@ gulp.task('build-production', function(){
 		.pipe( p.htmlhint.reporter() )
 		.pipe( p['minify-html']( minify_html_options ) )
 		.pipe( p.rename('index.html') )
-		.pipe( gulp.dest('public/') )
+		.pipe( gulp.dest('./public/') )
 	;
 });
 
 gulp.task('copy-production', function(){
 	return gulp
 		.src([
-			'public/{js,css}/**/*',
-			'public/index.html'
+			'./public/{js,css}/**/*',
+			'./public/index.html'
 		])
-		.pipe( gulp.dest('build/production/') )
+		.pipe( gulp.dest('./build/production/') )
 	;
 });
 

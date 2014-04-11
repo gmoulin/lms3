@@ -4,8 +4,6 @@ module.exports = function( grunt ){
 	// load all grunt tasks using the package.json dependencies list
 	require('matchdep').filterDev('grunt-*').forEach( grunt.loadNpmTasks );
 
-	//require('time-grunt')( grunt );
-
 	grunt.initConfig({
 		/**
 		 * dev concurrent process
@@ -49,6 +47,12 @@ module.exports = function( grunt ){
 		open: {
 			tests: {
 				path: 'http://localhost:5001/test-runner.html'
+			},
+			debug: {
+				path: 'http://localhost:8080/debug?port=5858'
+			},
+			site: {
+				path: 'http://lms3.dev'
 			}
 		},
 
@@ -59,7 +63,8 @@ module.exports = function( grunt ){
 			options: {
 				htmlFile: 'test-runner.html',
 				sutFiles: [
-					'public/js/libs/angular.js'
+					'public/js/libs/lodash.js'
+					, 'public/js/libs/angular.js'
 					, 'bower_components/angular-mocks/angular-mocks.js'
 					, 'public/js/libs/angular-route.js'
 					, 'public/js/libs/angular-sanitize.js'

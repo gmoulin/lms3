@@ -14,7 +14,9 @@ var mysql = require('mysql')
 	, mapping = {
 		sagas: {},
 		storages: {},
-		persons: {},
+		artists: {},
+		authors: {},
+		bands: {},
 		albums_bands: {},
 		books_authors: {},
 		movies_artists: {}
@@ -59,7 +61,7 @@ function manageSagas( callback ){
 							return cb( err );
 						}
 
-						if( docs && docs.length > 0 ){
+						if( docs && docs.length === 1 ){
 							//saga known
 							mapping.sagas[ row.sagaID ] = docs[ 0 ]._id;
 
@@ -137,7 +139,7 @@ function manageStorages( callback ){
 							return cb( err );
 						}
 
-						if( docs && docs.length > 0 ){
+						if( docs && docs.length === 1 ){
 							//storage known
 							mapping.storages[ row.storageID ] = docs[ 0 ]._id;
 
@@ -205,7 +207,9 @@ function truncatePersons( callback ){
 			return callback( err );
 		}
 
-		mapping.persons['-1'] = s._id;
+		mapping.artists['-1'] = s._id;
+		mapping.authors['-1'] = s._id;
+		mapping.bands['-1'] = s._id;
 
 		return callback();
 	});
@@ -228,9 +232,9 @@ function manageArtists( callback ){
 							return cb( err );
 						}
 
-						if( docs && docs.length > 0 ){
+						if( docs && docs.length === 1 ){
 							//artist known
-							mapping.persons[ row.artistID ] = docs[ 0 ]._id;
+							mapping.artists[ row.artistID ] = docs[ 0 ]._id;
 
 							return cb();
 
@@ -248,7 +252,7 @@ function manageArtists( callback ){
 									return cb( err );
 								}
 
-								mapping.persons[ row.artistID ] = s._id;
+								mapping.artists[ row.artistID ] = s._id;
 
 								return cb();
 							});
@@ -267,7 +271,7 @@ function manageArtists( callback ){
 							console.log('manageArtists', err);
 							return callback( err );
 						}
-						console.log('artist', 'mysql', rows.length, 'mapping', Object.keys( mapping.persons ).length, 'mongo', docs.length);
+						console.log('artist', 'mysql', rows.length, 'mapping', Object.keys( mapping.artists ).length, 'mongo', docs.length);
 
 						//artists import done
 						return callback();
@@ -295,9 +299,9 @@ function manageAuthors( callback ){
 							return cb( err );
 						}
 
-						if( docs && docs.length > 0 ){
+						if( docs && docs.length === 1 ){
 							//author known
-							mapping.persons[ row.authorID ] = docs[ 0 ]._id;
+							mapping.authors[ row.authorID ] = docs[ 0 ]._id;
 
 							return cb();
 
@@ -315,7 +319,7 @@ function manageAuthors( callback ){
 									return cb( err );
 								}
 
-								mapping.persons[ row.authorID ] = s._id;
+								mapping.authors[ row.authorID ] = s._id;
 
 								return cb();
 							});
@@ -334,7 +338,7 @@ function manageAuthors( callback ){
 							console.log('manageAuthors', err);
 							return callback( err );
 						}
-						console.log('author', 'mysql', rows.length, 'mapping', Object.keys( mapping.persons ).length, 'mongo', docs.length);
+						console.log('author', 'mysql', rows.length, 'mapping', Object.keys( mapping.authors ).length, 'mongo', docs.length);
 
 						//authors import done
 						return callback();
@@ -362,9 +366,9 @@ function manageBands( callback ){
 							return cb( err );
 						}
 
-						if( docs && docs.length > 0 ){
+						if( docs && docs.length === 1 ){
 							//band known
-							mapping.persons[ row.bandID ] = docs[ 0 ]._id;
+							mapping.bands[ row.bandID ] = docs[ 0 ]._id;
 
 							return cb();
 
@@ -387,7 +391,7 @@ function manageBands( callback ){
 									return cb( err );
 								}
 
-								mapping.persons[ row.bandID ] = s._id;
+								mapping.bands[ row.bandID ] = s._id;
 
 								return cb();
 							});
@@ -406,7 +410,7 @@ function manageBands( callback ){
 							console.log('manageBands', err);
 							return callback( err );
 						}
-						console.log('band', 'mysql', rows.length, 'mapping', Object.keys( mapping.persons ).length, 'mongo', docs.length);
+						console.log('band', 'mysql', rows.length, 'mapping', Object.keys( mapping.bands ).length, 'mongo', docs.length);
 
 						//bands import done
 						return callback();
@@ -438,7 +442,7 @@ function albumsBandsLinks( callback ){
 					if( !mapping.albums_bands.hasOwnProperty( row.albumFK ) ){
 						mapping.albums_bands[ row.albumFK ] = [];
 					}
-					mapping.albums_bands[ row.albumFK ].push({ _id: mapping.persons[ row.bandID ] });
+					mapping.albums_bands[ row.albumFK ].push({ _id: mapping.bands[ row.bandID ] });
 
 					return cb();
 				},
@@ -471,7 +475,7 @@ function moviesArtistsLinks( callback ){
 					if( !mapping.movies_artists.hasOwnProperty( row.movieFK ) ){
 						mapping.movies_artists[ row.movieFK ] = [];
 					}
-					mapping.movies_artists[ row.movieFK ].push({ _id: mapping.persons[ row.artistID ] });
+					mapping.movies_artists[ row.movieFK ].push({ _id: mapping.artists[ row.artistID ] });
 
 					return cb();
 				},
@@ -504,7 +508,7 @@ function booksAuthorsLinks( callback ){
 					if( !mapping.books_authors.hasOwnProperty( row.bookFK ) ){
 						mapping.books_authors[ row.bookFK ] = [];
 					}
-					mapping.books_authors[ row.bookFK ].push({ _id: mapping.persons[ row.authorID ] });
+					mapping.books_authors[ row.bookFK ].push({ _id: mapping.authors[ row.authorID ] });
 
 					return cb();
 				},
@@ -540,7 +544,7 @@ function manageAlbums( callback ){
 							return cb( err );
 						}
 
-						if( docs && docs.length > 0 ){
+						if( docs && docs.length === 1 ){
 							//do nothing
 
 							return cb();
@@ -626,7 +630,7 @@ function manageBooks( callback ){
 							return cb( err );
 						}
 
-						if( docs && docs.length > 0 ){
+						if( docs && docs.length === 1 ){
 							//do nothing
 
 							return cb();
@@ -645,6 +649,7 @@ function manageBooks( callback ){
 
 							if( row.sagaID ){
 								tmp.saga = mapping.sagas[ row.sagaID ];
+								tmp.sagaPosition = row.bookSagaPosition;
 							}
 
 							if( row.loanID ){
@@ -711,7 +716,7 @@ function manageMovies( callback ){
 							return cb( err );
 						}
 
-						if( docs && docs.length > 0 ){
+						if( docs && docs.length === 1 ){
 							//do nothing
 
 							return cb();
@@ -725,12 +730,13 @@ function manageMovies( callback ){
 								search: 'http://google.com/#q='+ row.movieTitle.replace(/ /g, '%20'),
 								movie: {
 									artist: mapping.movies_artists[ row.movieID ],
-									director: mapping.persons['-1'] //flagged person, director is a new data
+									director: mapping.artists['-1'] //flagged person, director is a new data
 								}
 							};
 
 							if( row.sagaID ){
 								tmp.saga = mapping.sagas[ row.sagaID ];
+								tmp.sagaPosition = row.movieSagaPosition;
 							}
 
 							if( row.loanID ){

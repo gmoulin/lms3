@@ -26,7 +26,7 @@ var csrfValue = function( req ){
 
 // all environments
 app
-	.set( 'port', process.env.PORT || 3000 )
+	.set( 'port', process.env.PORT || 3001 )
 	.set( 'views', path.join(__dirname, 'public') )
 	.set( 'view options', {layout: false} )
 	.use( express.favicon() )

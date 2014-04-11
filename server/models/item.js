@@ -20,6 +20,7 @@ itemSchema = new Schema({
 	type: {type: String, required: true}, //custom validation, book size, movie mediaType
 	genre: [{type: String, required: true}],
 	saga: {type: ObjectIdSchema, ref: 'Saga'},
+	sagaPosition: {type: Number, default: 0},
 	search: {type: String, required: true},
 	year: Number,
 	loan: {
@@ -29,7 +30,7 @@ itemSchema = new Schema({
 	rating: {type: Number, min: 0, max: 5, default: 0},
 	offeredBy: {
 		name: String,
-		date: {type: Date, default: Date.now}
+		date: {type: Date}
 	},
 	storage: {type: ObjectIdSchema, ref: 'Storage', required: true},
 	book: {

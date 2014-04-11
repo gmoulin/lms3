@@ -1,15 +1,25 @@
 'use strict';
 
-var Item = require('../models/item.js');
+var Item = require('../models/item.js')
+	//, Saga = require('./saga.js')
+	//, Storage = require('./storage.js')
+	, Person = require('../models/person.js')
+;
 
 exports.findAll = function( req, res ){
-	Item.find(function( err, items ){
-		if( err ){
-			res.status( 418 ).send({error: true, msg: 'An error has occurred', desc: err});
-		} else {
-			res.send( items );
-		}
-	});
+	var type = req.params.itemType.replace(/s$/, '');
+	Item.find({ category: type })
+		.populate({ path: 'saga', model: 'Saga' })
+		.populate({ path: 'storage', model: 'Storage' })
+		.populate({ path: 'book.author', model: 'Person' })
+		.exec(function( err, items ){
+			if( err ){
+				res.status( 418 ).send({error: true, msg: 'An error has occurred', desc: err});
+			} else {
+				res.send( items );
+			}
+		})
+	;
 };
 
 exports.find = function( req, res ){

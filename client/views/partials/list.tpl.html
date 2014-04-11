@@ -1,9 +1,55 @@
-<div ng-repeat="item in list">
-	{{ item | json }}
-	<div>
-		<button><i class="fa fa-edit"></i><span>Edit</span></button>
-		<button><i class="fa fa-trash-o"></i><span>Delete</span></button>
-		<button><i class="fa fa-search"></i><span>Saga</span></button>
-		<button><i class="fa fa-search"></i><span>Author</span></button>
+saga :<input type="text" ng-model="search.saga.title">
+<br>
+title: <input type="text" ng-model="search.title">
+<div ng-if="hasFilter">
+	<button ng-click="resetFilter()">Reset</button>
+</div>
+<hr>
+{{search | json}}
+<div ng-if="linked.sagas && linked.sagas.length > 0">
+	<hr>
+	<div ng-repeat="saga in linked.sagas">
+		<a href="{{ saga.url }}" target="_blank"><i class="fa fa-question-circle"></i></a>
+		&nbsp;
+		<span ng-bind-html="saga.title"></span>
+		<br>
+		last checked: {{ saga.lastCheckDate | timeDistance }}
 	</div>
+</div>
+<div ng-if="linked.authors && linked.authors.length > 0">
+	<hr>
+	<div ng-repeat="author in linked.authors">
+		<a ng-if="author.search" href="{{ author.search }}" target="_blank"><i class="fa fa-question-circle"></i></a>
+		&nbsp;
+		<a ng-if="author.site" href="{{ author.site }}" target="_blank"><i class="fa fa-info"></i></a>
+		&nbsp;
+		<span ng-bind-html="[author.name.first, author.name.last].join(' ')"></span>
+		<br>
+		last checked: {{ author.lastCheckDate | timeDistance }}
+	</div>
+</div>
+<hr>
+<div ng-repeat="item in list | orderBy:['saga.title', 'sagaPosition', 'title']">
+	<dl>
+		<dt ng-if="item.saga">Saga</dt>
+		<dd ng-if="item.saga">
+			<button ng-if="item.saga" ng-click="setFilter('saga', item.saga)"><i class="fa fa-search"></i></button>
+			&nbsp;
+			<span ng-bind-html="item.saga.title"></span>
+			&nbsp;
+			<span>{{ item.sagaPosition }} / {{ (list | filter:{saga: item.saga}:true).length }}</span>
+		</dd>
+
+		<dt>Title</dt>
+		<dd>
+			<span ng-bind-html="item.title"></span>
+		</dd>
+
+		<dt>Authors</dt>
+		<dd ng-repeat="author in item.book.author">
+			<button ng-click="setFilter('author', author)"><i class="fa fa-search"></i></button>
+			&nbsp;
+			<span ng-bind-html="[author.name.first, author.name.last].join(' ')" title="last checked: {{ author.lastCheckDate | timeDistance }}"></span>
+		</dd>
+	</dl>
 </div>

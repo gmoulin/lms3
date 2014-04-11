@@ -7,8 +7,6 @@ var mongoose = require('mongoose')
 	, ObjectId = mongoose.Types.ObjectId
 ;
 
-//TODO remove comments from import
-
 var personSchema = new Schema({
 	_id: {type: ObjectIdSchema, default: function(){ return new ObjectId(); }},
 	name: {
@@ -21,7 +19,7 @@ var personSchema = new Schema({
 });
 
 personSchema.virtual('name.full').get(function(){
-	return this.name.first + (this.name.first.length > 0 ? ' ' : '') + this.name.last;
+	return [this.name.first, this.name.last].join(' ');
 });
 
 personSchema.path('name.first').validate(function(){

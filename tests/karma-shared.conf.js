@@ -13,6 +13,7 @@ module.exports = function(){
 
 		files : [
 			//third party librairies
+			'public/js/libs/lodash.min.js',
 			'public/js/libs/angular-*.min.js',
 
 			//app code

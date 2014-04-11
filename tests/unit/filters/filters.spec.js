@@ -60,4 +60,27 @@ describe('Unit: filter group', function(){
 			expect( nullified2 ).to.eql( null );
 		}) );
 	});
+
+	describe('timeDistanceFilter', function(){
+		it('elapsed time', inject(function( timeDistanceFilter ){
+			var t1 = timeDistanceFilter('2014-01-01T00:00:10Z', '2014-01-01T00:00:01Z')
+				, t2 = timeDistanceFilter('2014-01-01T00:01:10Z', '2014-01-01T00:00:01Z')
+				, t3 = timeDistanceFilter('2014-01-01T01:01:10Z', '2014-01-01T00:00:01Z')
+				, t4 = timeDistanceFilter('2014-01-02T01:01:10Z', '2014-01-01T00:00:01Z')
+				, t5 = timeDistanceFilter('2014-02-02T01:01:10Z', '2014-01-01T00:00:01Z')
+				, t6 = timeDistanceFilter('2014-12-02T01:01:10Z', '2014-01-01T00:00:01Z')
+				, t7 = timeDistanceFilter('2015-12-02T01:01:10Z', '2014-01-01T00:00:01Z')
+				, t8 = timeDistanceFilter('2020-12-02T01:01:10Z', '2014-01-01T00:00:01Z')
+			;
+
+			expect( t1 ).to.equal('less than a minute');
+			expect( t2 ).to.equal('1 minute');
+			expect( t3 ).to.equal('about 1 hour');
+			expect( t4 ).to.equal('1 day');
+			expect( t5 ).to.equal('about 1 month');
+			expect( t6 ).to.equal('11 months');
+			expect( t7 ).to.equal('almost 1 year');
+			expect( t8 ).to.equal('almost 6 years');
+		}) );
+	});
 });
