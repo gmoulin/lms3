@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Unit: books controller', function(){
+describe('Unit: list controller', function(){
 	var $httpBackend
 		, scope
 		, items
@@ -8,6 +8,7 @@ describe('Unit: books controller', function(){
 
 	beforeEach(function(){
 		module('lms.services');
+		module('lms.filters');
 		module('lms.controllers');
 	});
 
@@ -21,7 +22,7 @@ describe('Unit: books controller', function(){
 	});
 
 	describe('books', function(){
-		it('should get all books', inject(function( $controller, $rootScope, $routeParams, crud ){
+		it('should get all books', inject(function( $controller, $rootScope, $routeParams, $filter, $location, crud, share ){
 			$httpBackend.whenGET('/rest/books').respond([ {id: 1}, {id: 2} ]);
 
 			$httpBackend.expectGET('/rest/books');
@@ -29,7 +30,7 @@ describe('Unit: books controller', function(){
 			$routeParams.category = 'books';
 
 			scope = $rootScope.$new();
-			var ctrl = $controller('list', {$scope: scope, $routeParams: $routeParams, crud: crud});
+			var ctrl = $controller('list', {$scope: scope, $routeParams: $routeParams, $filter: $filter, $location: $location, crud: crud, share: share});
 
 			$httpBackend.flush();
 
@@ -41,7 +42,31 @@ describe('Unit: books controller', function(){
 			expect( scope.list[0].id ).to.equal( 1 );
 		}) );
 
-		it('should init correctly for filtering', inject(function( $controller, $rootScope, $routeParams, crud ){
+		it('should have no category and init with filter from share', inject(function( $controller, $rootScope, $routeParams, $filter, $location, crud, share ){
+			$httpBackend.whenGET('/rest/items').respond([ {id: 1}, {id: 2} ]);
+
+			$httpBackend.expectGET('/rest/items');
+
+			share.filter = {type: 'saga', value: {_id: '1'}};
+
+			scope = $rootScope.$new();
+			var ctrl = $controller('list', {$scope: scope, $routeParams: $routeParams, $filter: $filter, $location: $location, crud: crud, share: share});
+
+			$httpBackend.flush();
+
+			expect( $routeParams.category ).to.equal('items');
+			expect( scope.category ).to.equal( undefined );
+			expect( scope.noCategory ).to.equal( true );
+			expect( scope.list_types ).to.be.an('array');
+			expect( scope.list_types ).not.to.be.empty;
+			expect( scope.list_types ).to.have.length( 1 );
+			expect( scope.list_types[0] ).to.equal('book');
+
+			expect( scope.search.saga._id ).to.equal('1');
+			expect( share.filter ).to.equal( null );
+		}) );
+
+		it('should init correctly for filtering', inject(function( $controller, $rootScope, $routeParams, $filter, $location, crud, share ){
 			items = [
 				{
 					'title': 'La vengeance de Chanur',
@@ -338,7 +363,7 @@ describe('Unit: books controller', function(){
 			$routeParams.category = 'books';
 
 			scope = $rootScope.$new();
-			var ctrl = $controller('list', {$scope: scope, $routeParams: $routeParams, crud: crud});
+			var ctrl = $controller('list', {$scope: scope, $routeParams: $routeParams, $filter: $filter, $location: $location, crud: crud, share: share});
 
 			$httpBackend.flush();
 			scope.rawList = items;
@@ -459,7 +484,7 @@ describe('Unit: books controller', function(){
 			scope.resetFilter();
 			scope.$apply();
 
-			scope.setFilter('saga', {_id: 1});
+			scope.setFilter('saga', {_id: '1'});
 			scope.$apply();
 			expect( scope.searchFilter( items[ 0 ] ) ).to.equal( false );
 			expect( scope.searchFilter( items[ 1 ] ) ).to.equal( false );
@@ -598,7 +623,7 @@ describe('Unit: books controller', function(){
 			scope.resetFilter();
 			scope.$apply();
 
-			scope.setFilter('author', {_id: 1});
+			scope.setFilter('author', {_id: '1'});
 			scope.$apply();
 			expect( scope.searchFilter( items[ 0 ] ) ).to.equal( false );
 			expect( scope.searchFilter( items[ 1 ] ) ).to.equal( false );
@@ -663,5 +688,49 @@ describe('Unit: books controller', function(){
 			expect( scope.linked ).to.have.ownProperty('artists');
 			expect( scope.linked.artists ).to.have.length( 0 );
 		});
+
+		it('should filter on saga title and title', function(){
+			scope.resetFilter();
+			scope.$apply();
+
+			scope.search.title = items[ 3 ].title;
+			scope.search.saga.title = items[ 3 ].saga.title;
+			scope.$apply();
+			expect( scope.searchFilter( items[ 0 ] ) ).to.equal( false );
+			expect( scope.searchFilter( items[ 1 ] ) ).to.equal( false );
+			expect( scope.searchFilter( items[ 2 ] ) ).to.equal( false );
+			expect( scope.searchFilter( items[ 3 ] ) ).to.equal( true );
+			expect( scope.searchFilter( items[ 4 ] ) ).to.equal( false );
+			expect( scope.list ).to.have.length( 1 );
+			expect( Object.keys(scope.linked) ).to.have.length( 3 );
+			expect( scope.linked ).to.have.ownProperty('sagas');
+			expect( scope.linked.sagas ).to.have.length( 1 );
+			expect( scope.linked.sagas[ 0 ]._id ).to.equal( items[ 3 ].saga._id );
+			expect( scope.linked ).to.have.ownProperty('authors');
+			expect( scope.linked.authors ).to.have.length( 1 );
+			expect( scope.linked.authors[ 0 ]._id ).to.equal( items[ 3 ].book.author[ 0 ]._id );
+			expect( scope.linked ).to.have.ownProperty('artists');
+			expect( scope.linked.artists ).to.have.length( 0 );
+		});
+
+		it('should fill share using detail', inject(function( $controller, $rootScope, $routeParams, $filter, $location, crud, share ){
+			$httpBackend.whenGET('/rest/book/1').respond({id: 1});
+
+			$httpBackend.expectGET('/rest/book/1');
+
+			$routeParams.category = 'book';
+			$routeParams.id = '1';
+
+			scope = $rootScope.$new();
+			var ctrl = $controller('detail', {$scope: scope, $routeParams: $routeParams, $filter: $filter, $location: $location, crud: crud, share: share});
+
+			$httpBackend.flush();
+
+			scope.detail('saga', {_id: '1', title: 'toto'});
+			expect( share.entry ).to.be.an('object');
+			expect( share.entry._id ).to.equal('1');
+			expect( share.entry.title ).to.equal('toto');
+			expect( $location.path() ).to.equal('/detail/1/saga/toto');
+		}) );
 	});
 });

@@ -1,2 +1,51 @@
-<div>DETAIL</div>
-{{ entry | json }}
+<div ng-if="category == 'book'">
+	<dl>
+		<dt>Title</dt>
+		<dd>
+			<span ng-bind-html="entry.title"></span>
+		</dd>
+
+		<dt>Genre</dt>
+		<dd>{{ entry.genre.join(', ') || 'N/A' }}</dd>
+
+		<dt ng-if="entry.saga">Saga</dt>
+		<dd ng-if="entry.saga">
+			<button ng-if="entry.saga" ng-click="setFilter('saga', entry.saga)" title="Filter by this saga"><i class="fa fa-search"></i></button>
+			&nbsp;
+			<a href="{{ entry.saga.url }}" target="_blank" title="Research this saga"><i class="fa fa-question-circle"></i></a>
+			&nbsp;
+			<span ng-bind-html="entry.saga.title"></span> <i class="fa fa-eye" ng-click="detail('saga', entry.saga)" title="Show this saga in detais"></i>
+			<br>
+			last checked: <span title="{{ entry.saga.lastCheckDate | date:'yyyy-MM-dd' }}">{{ entry.saga.lastCheckDate | timeDistance }}</span>
+		</dd>
+
+		<dt>Authors</dt>
+		<dd ng-repeat="author in entry.book.author">
+			<button ng-click="setFilter('author', author)" title="Filter by this author"><i class="fa fa-search"></i></button>
+			&nbsp;
+			<a ng-if="author.search" href="{{ author.search }}" target="_blank" title="Research this author"><i class="fa fa-question-circle"></i></a>
+			&nbsp;
+			<a ng-if="author.site" href="{{ author.site }}" target="_blank" title="Informations on this author"><i class="fa fa-info"></i></a>
+			&nbsp;
+			<span ng-bind-html="[author.name.first, author.name.last].join(' ')"></span>
+			<br>
+			last checked: {{ author.lastCheckDate | timeDistance }}
+		</dd>
+
+		<dt>Storage</dt>
+		<dd>
+			<span ng-if="entry.storage.room != 'aucun'">{{ entry.storage.room }}</span> {{ entry.storage.type }}
+			<span ng-if="entry.storage.column !== ''">- {{ entry.storage.column }}{{ entry.storage.line }}</span>
+		</dd>
+	</dl>
+</div>
+
+<div ng-if="category == 'saga'">
+	<button ng-click="setFilter('saga', entry)" title="Filter by this saga"><i class="fa fa-search"></i></button>
+	&nbsp;
+	<a href="{{ entry.url }}" target="_blank" title="Research this saga"><i class="fa fa-question-circle"></i></a>
+	&nbsp;
+	<span ng-bind-html="entry.title"></span>
+	<br>
+	last checked: <span title="{{ entry.lastCheckDate | date:'yyyy-MM-dd' }}">{{ entry.lastCheckDate | timeDistance }}</span>
+</div>

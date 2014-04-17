@@ -7,10 +7,11 @@ angular
 		'$routeProvider',
 		function( $routeProvider ){
 			$routeProvider
-				.when('/:category', {
+				.when('/list/:category?', {
 					templateUrl: 'partials/list.tpl.html',
 					controller: 'list'
-				});
+				})
+			;
 		}
 	])
 ;
@@ -21,9 +22,12 @@ angular
 		'$scope',
 		'$routeParams',
 		'$filter',
+		'$location',
 		'crud',
-		function( $scope, $routeParams, $filter, crud ){
+		'share',
+		function( $scope, $routeParams, $filter, $location, crud, share ){
 			var searchSkeleton = {
+				category: null,
 				title: '',
 				saga: {
 					_id: null,
@@ -35,30 +39,44 @@ angular
 				}
 			};
 
-			var isReset = false;
 			$scope.rawList = null;
 
 			$scope.linked = {};
 
 			$scope.search = _.clone( searchSkeleton, true );
 			$scope.hasFilter = false;
-			$scope.category = $routeParams.category.toLowerCase();
-			$scope.list = crud[ $routeParams.category.toLowerCase() ]();
+			$scope.noCategory = false;
+
+			if( $routeParams.category ){
+				$scope.category = $routeParams.category.toLowerCase();
+
+			} else {
+				$scope.noCategory = true;
+				$scope.list_types = ['book'];
+				$routeParams.category = 'items';
+			}
+
+			//server request - display will update on $scope.list init
+			crud[ $routeParams.category.toLowerCase() ](
+				function( data ){
+					$scope.list = data;
+				},
+				function( err ){
+					console.log(err);
+				}
+			);
 
 			$scope.$watch('search', function(newValue, oldValue){
-				if( newValue && !isReset ){
+				if( !_.isEqual(searchSkeleton, newValue) ){
 					$scope.hasFilter = true;
 					if( $scope.rawList && $scope.rawList.length > 0 ){
 						$scope.list = $scope.rawList;
 					}
 					manageFilter();
 				}
-				isReset = false;
 			}, true);
 
 			$scope.resetFilter = function(){
-				console.log('resetFilter');
-				isReset = true;
 				$scope.search = _.clone( searchSkeleton, true );
 				$scope.linked = {};
 				$scope.list = $scope.rawList;
@@ -80,69 +98,98 @@ angular
 				$scope.hasFilter = true;
 			};
 
+			if( share.filter ){
+				$scope.setFilter( share.filter.type, share.filter.value );
+				share.filter = null;
+			}
+
 			var manageFilter = function(){
-				console.log('manageFilter');
 				if( $scope.rawList === null && Array.isArray( $scope.list ) && $scope.list.length > 0 ){
-					console.log('rawList set');
 					$scope.rawList = _.clone($scope.list, true);
 				}
 
 				if( $scope.rawList && $scope.rawList.length > 0 ){
-					console.log('filtering');
 					$scope.list = $filter('filter')($scope.rawList, $scope.searchFilter);
-					getLinked();
+
+					if( $scope.list.length > 0 ){
+						getLinked();
+					}
 				}
 			};
 
 			//in $scope for unit testing
 			$scope.searchFilter = function( item ){
-				var i, l, author;
+				var i, l, author, found;
+
+				if( !_.isEmpty( $scope.search.category )
+					&& item.category != $scope.search.category
+				){
+					return false;
+				}
+
+				if( (!_.isEmpty( $scope.search.saga.title ) || !_.isEmpty( $scope.search.saga._id ))
+					&& _.isEmpty( item.saga )
+				){
+					return false;
+				}
 
 				if( !_.isEmpty( $scope.search.saga.title )
-					&& item.saga
-					&& item.saga.title.indexOf( $scope.search.saga.title ) != -1
+					&& item.saga.title.indexOf( $scope.search.saga.title ) == -1
 				){
-					return true;
+					return false;
 				}
 
 				if( !_.isEmpty( $scope.search.saga._id )
-					&& item.saga
-					&& item.saga._id == $scope.search.saga._id
+					&& item.saga._id != $scope.search.saga._id
 				){
-					return true;
+					return false;
 				}
 
 				if( !_.isEmpty( $scope.search.title )
-					&& item.title.indexOf( $scope.search.title ) != -1
+					&& item.title.indexOf( $scope.search.title ) == -1
 				){
-					return true;
+					return false;
 				}
 
-				if( !_.isEmpty( $scope.search.author.name )
-					&& item.book.author.length > 0
+				if( (!_.isEmpty( $scope.search.author.name ) || !_.isEmpty( $scope.search.author._id ))
+					&& item.book.author.length === 0
 				){
+					return false;
+				}
+
+				if( !_.isEmpty( $scope.search.author.name ) ){
+					found = false;
 					for( i = 0, l = item.book.author.length; i < l; i++ ){
 						author = item.book.author[ i ];
 
 						if( [author.name.first, author.name.last].join(' ').indexOf( $scope.search.author.name ) != -1 ){
-							return true;
+							found = true;
+							break;
 						}
+					}
+
+					if( !found ){
+						return false;
 					}
 				}
 
-				if( !_.isEmpty( $scope.search.author._id )
-					&& item.book.author.length > 0
-				){
+				if( !_.isEmpty( $scope.search.author._id ) ){
+					found = false;
 					for( i = 0, l = item.book.author.length; i < l; i++ ){
 						author = item.book.author[ i ];
 
 						if( item.book.author[ i ]._id == $scope.search.author._id ){
-							return true;
+							found = true;
+							break;
 						}
+					}
+
+					if( !found ){
+						return false;
 					}
 				}
 
-				return false;
+				return true;
 			};
 
 			var getLinked = function(){
@@ -150,9 +197,18 @@ angular
 					return;
 				}
 
-				$scope.linked.sagas = _.uniq( _.pluck($scope.list, 'saga'), '_id' );
+				if( $scope.list.length > 99 ){
+					return;
+				}
+
+				$scope.linked.sagas = _.uniq( _.compact( _.pluck($scope.list, 'saga') ), '_id' );
 				$scope.linked.authors = _.uniq( _.flatten(_.pluck(_.pluck($scope.list, 'book'), 'author')), '_id' );
 				$scope.linked.artists = _.uniq( _.flatten(_.pluck(_.pluck($scope.list, 'movie'), 'artist')), '_id' );
+			};
+
+			$scope.detail = function( type, entry ){
+				share.entry = entry;
+				$location.path( '/detail/'+ entry._id +'/'+ $filter('urlify')( type ) +'/'+ encodeURIComponent( $filter('urlify')(entry.title) ) );
 			};
 		}
 	])

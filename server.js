@@ -39,7 +39,7 @@ app
 	.use( express.cookieSession() )
 	.use( express.csrf({value: csrfValue}) )
 	.use(function( req, res, next ){
-		res.cookie('XSRF-TOKEN', req.session._csrf);
+		res.cookie('XSRF-TOKEN', req.csrfToken());
 		next();
 	})
 	.disable( 'x-powered-by' ) //no app framework display in responses header
@@ -62,21 +62,23 @@ var ngIndex = function(req, res){
 	res.sendfile( path.join(__dirname, 'public', 'index.html') );
 };
 
+//mirrors angular routes
 app.get('/', ngIndex);
 app.get('/home', ngIndex);
-app.get('/books', ngIndex);
-app.get('/movies', ngIndex);
-app.get('/music', ngIndex);
+app.get('/list/:category?', ngIndex);
+app.get('/detail/:id/:category/:title?', ngIndex);
 
 // rest
-var items = require('./server/routes/list.js')
-	, types = ['books', 'movies']
+var lists = require('./server/routes/list.js')
+	, details = require('./server/routes/detail.js')
+	, forms = require('./server/routes/form.js')
+	, list_types = ['books', 'items']
+	, types = ['book', 'saga']
 ;
 
-app.get('/rest/:itemType('+ types.join('|') +')', items.findAll);
-app.get('/rest/:itemType('+ types.join('|') +')/:id(\\d+)', items.find);
-app.get('/rest/:itemType('+ types.join('|') +')/:id(\\d+)/:op', items.actionById);
-app.get('/rest/:itemType('+ types.join('|') +')/:op', items.actionAll);
+app.get('/rest/:itemType('+ list_types.join('|') +')', lists.findAll);
+app.get('/rest/:itemType('+ types.join('|') +')/:id', details.find);
+app.get('/rest/:itemType('+ types.join('|') +')/:id/:op', forms.actionById);
 
 http.createServer( app ).listen(app.get('port'), function(){
 	console.log('Express server listening on port ' + app.get('port'));

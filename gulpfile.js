@@ -11,8 +11,7 @@ var gulp = require('gulp')
 		html2js: ['./client/views/**/!(index).tpl.html'],
 		clientjs: './client/js/**/*.js',
 		serverjs: './server/**/*.js',
-		basejs: ['./server.js', './Gruntfile.js', './gulpfile.js'],
-		todo: ['./Gruntfile.js', './gulpfile.js', './client/js/**/*.js', './server.js', './server/**/*.js', './tests/**/**/*.js']
+		basejs: ['./server.js', './Gruntfile.js', './gulpfile.js']
 	}
 	, minify_html_options = {
 		empty: true, //needed, else remove things like ng-view ...
@@ -204,14 +203,6 @@ gulp.task('copy-scripts', function(){
 	;
 });
 
-gulp.task('todo', function(){
-	return gulp
-		.src( path.todo )
-		.pipe( p.todo() )
-		.pipe( gulp.dest('./') )
-	;
-});
-
 gulp.task('build-dev', function(){
 	return gulp
 		.src('./client/views/index.tpl.html')
@@ -307,7 +298,6 @@ gulp.task('refresh', function( cb ){
 
 gulp.task('watch', function( cb ){
 	gulp.watch(path.html2js, ['html2js']);
-	gulp.watch(path.todo, ['todo']);
 
 	gulp.watch(path.clientjs, ['client-js-lint']);
 	gulp.watch(path.serverjs, ['server-js-lint']);
@@ -328,7 +318,7 @@ gulp.task('watch', function( cb ){
 });
 
 gulp.task('dev', function( cb ){
-	runSequence('clean-dev', 'copy-components', ['html2js', 'copy-scripts', 'jshint', 'todo', 'sass'], ['csslint', 'build-dev'], cb);
+	runSequence('clean-dev', 'copy-components', ['html2js', 'copy-scripts', 'jshint', 'sass'], ['csslint', 'build-dev'], cb);
 });
 
 gulp.task('default', function( cb ){
@@ -445,7 +435,7 @@ gulp.task('copy-quality', function(){
 });
 
 gulp.task('quality', function( cb ){
-	runSequence(['clean-dev', 'clean-quality'], 'copy-components', ['html2js', 'copy-scripts', 'jshint', 'todo', 'sass'], ['css-minify', 'js-libs-minify', 'js-main-minify'], 'build-quality', /*'uncss', 'csslintmin',*/ 'copy-quality', cb);
+	runSequence(['clean-dev', 'clean-quality'], 'copy-components', ['html2js', 'copy-scripts', 'jshint', 'sass'], ['css-minify', 'js-libs-minify', 'js-main-minify'], 'build-quality', /*'uncss', 'csslintmin',*/ 'copy-quality', cb);
 });
 
 gulp.task('clean-production', function(){
@@ -492,5 +482,5 @@ gulp.task('copy-production', function(){
 });
 
 gulp.task('production', function( cb ){
-	runSequence(['clean-dev', 'clean-production'], 'copy-components', ['html2js', 'copy-scripts', 'jshint', 'todo', 'sass'], 'build-production', /*'uncss', 'csslintmin',*/ 'copy-production', cb);
+	runSequence(['clean-dev', 'clean-production'], 'copy-components', ['html2js', 'copy-scripts', 'jshint', 'sass'], 'build-production', /*'uncss', 'csslintmin',*/ 'copy-production', cb);
 });

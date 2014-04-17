@@ -71,8 +71,11 @@ describe("Unit: lms module", function(){
 				expect( $route.routes['/home'].controller ).to.equal('home');
 				expect( $route.routes['/home'].templateUrl ).to.equal('partials/home.tpl.html');
 
-				expect( $route.routes['/:category'].controller ).to.equal('list');
-				expect( $route.routes['/:category'].templateUrl ).to.equal('partials/list.tpl.html');
+				expect( $route.routes['/list/:category?'].controller ).to.equal('list');
+				expect( $route.routes['/list/:category?'].templateUrl ).to.equal('partials/list.tpl.html');
+
+				expect( $route.routes['/detail/:id/:category/:title?'].controller ).to.equal('detail');
+				expect( $route.routes['/detail/:id/:category/:title?'].templateUrl ).to.equal('partials/detail.tpl.html');
 			});
 		});
 	});

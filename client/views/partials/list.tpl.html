@@ -1,31 +1,37 @@
+<h1 ng-if="!noCategory">{{ category }}</h1>
+<hr ng-if="!noCategory">
+<div ng-if="noCategory">
+	category :
+	<select ng-model="search.category">
+		<option ng-repeat="type in list_types" value="{{ type }}">{{ type }}s</option>
+	</select>
+</div>
 saga :<input type="text" ng-model="search.saga.title">
 <br>
 title: <input type="text" ng-model="search.title">
 <div ng-if="hasFilter">
 	<button ng-click="resetFilter()">Reset</button>
 </div>
-<hr>
-{{search | json}}
-<div ng-if="linked.sagas && linked.sagas.length > 0">
+<div ng-if="linked.sagas && linked.sagas.length > 0 && linked.sagas.length < 10">
 	<hr>
 	<div ng-repeat="saga in linked.sagas">
-		<a href="{{ saga.url }}" target="_blank"><i class="fa fa-question-circle"></i></a>
+		<a href="{{ saga.url }}" target="_blank" title="research this saga"><i class="fa fa-question-circle"></i></a>
 		&nbsp;
-		<span ng-bind-html="saga.title"></span>
+		<span ng-bind-html="saga.title"></span> <i class="fa fa-eye" ng-click="detail('saga', saga)" title="Show this saga in details"></i>
 		<br>
-		last checked: {{ saga.lastCheckDate | timeDistance }}
+		last checked: <span title="{{ saga.lastCheckDate | date:'yyyy-MM-dd' }}">{{ saga.lastCheckDate | timeDistance }}</span>
 	</div>
 </div>
-<div ng-if="linked.authors && linked.authors.length > 0">
+<div ng-if="linked.authors && linked.authors.length > 0 && linked.authors.length < 10">
 	<hr>
 	<div ng-repeat="author in linked.authors">
-		<a ng-if="author.search" href="{{ author.search }}" target="_blank"><i class="fa fa-question-circle"></i></a>
+		<a ng-if="author.search" href="{{ author.search }}" target="_blank" title="research this author"><i class="fa fa-question-circle"></i></a>
 		&nbsp;
-		<a ng-if="author.site" href="{{ author.site }}" target="_blank"><i class="fa fa-info"></i></a>
+		<a ng-if="author.site" href="{{ author.site }}" target="_blank" title="informations on this author"><i class="fa fa-info"></i></a>
 		&nbsp;
 		<span ng-bind-html="[author.name.first, author.name.last].join(' ')"></span>
 		<br>
-		last checked: {{ author.lastCheckDate | timeDistance }}
+		last checked: <span title="{{ saga.lastCheckDate | date:'yyyy-MM-dd' }}">{{ author.lastCheckDate | timeDistance }}</span>
 	</div>
 </div>
 <hr>
@@ -33,9 +39,11 @@ title: <input type="text" ng-model="search.title">
 	<dl>
 		<dt ng-if="item.saga">Saga</dt>
 		<dd ng-if="item.saga">
-			<button ng-if="item.saga" ng-click="setFilter('saga', item.saga)"><i class="fa fa-search"></i></button>
+			<button ng-if="item.saga" ng-click="setFilter('saga', item.saga)" title="Filter by this saga"><i class="fa fa-search"></i></button>
 			&nbsp;
-			<span ng-bind-html="item.saga.title"></span>
+			<span ng-bind-html="item.saga.title" title="last checked: {{ item.saga.lastCheckDate | date:'yyyy-MM-dd' }}, {{ item.saga.lastCheckDate | timeDistance }}"></span>
+			&nbsp;
+			<button ng-click="detail('saga', item.saga)" title="Show this author in details"><i class="fa fa-eye"></i></button>
 			&nbsp;
 			<span>{{ item.sagaPosition }} / {{ (list | filter:{saga: item.saga}:true).length }}</span>
 		</dd>
@@ -43,13 +51,15 @@ title: <input type="text" ng-model="search.title">
 		<dt>Title</dt>
 		<dd>
 			<span ng-bind-html="item.title"></span>
+			&nbsp;
+			<button ng-click="detail('book', item)" title="Show this book in details"><i class="fa fa-eye"></i></button>
 		</dd>
 
 		<dt>Authors</dt>
 		<dd ng-repeat="author in item.book.author">
-			<button ng-click="setFilter('author', author)"><i class="fa fa-search"></i></button>
+			<button ng-click="setFilter('author', author)" title="Filter by this author"><i class="fa fa-search"></i></button>
 			&nbsp;
-			<span ng-bind-html="[author.name.first, author.name.last].join(' ')" title="last checked: {{ author.lastCheckDate | timeDistance }}"></span>
+			<span ng-bind-html="[author.name.first, author.name.last].join(' ')" title="last checked: {{ author.lastCheckDate | date:'yyyy-MM-dd' }}, {{ author.lastCheckDate | timeDistance }}"></span>
 		</dd>
 	</dl>
 </div>

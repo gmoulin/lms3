@@ -71,6 +71,13 @@ describe('Unit: filter group', function(){
 				, t6 = timeDistanceFilter('2014-12-02T01:01:10Z', '2014-01-01T00:00:01Z')
 				, t7 = timeDistanceFilter('2015-12-02T01:01:10Z', '2014-01-01T00:00:01Z')
 				, t8 = timeDistanceFilter('2020-12-02T01:01:10Z', '2014-01-01T00:00:01Z')
+				, t9 = timeDistanceFilter('2014-01-01T00:02:10Z', '2014-01-01T00:00:01Z')
+				, t10 = timeDistanceFilter('2015-02-01T00:00:01Z', '2014-01-01T00:00:01Z')
+				, t11 = timeDistanceFilter('2015-07-01T00:00:01Z', '2014-01-01T00:00:01Z')
+				, t12 = timeDistanceFilter('2016-01-01T00:00:01Z', '2014-01-01T00:00:01Z')
+				, t13 = timeDistanceFilter('2018-01-01T00:00:01Z', '2014-01-01T00:00:01Z')
+				, t14 = timeDistanceFilter('2014-01-01T00:00:01Z', '2020-03-01T00:00:01Z')
+				, t15 = timeDistanceFilter('2014-01-01T00:00:01Z')
 			;
 
 			expect( t1 ).to.equal('less than a minute');
@@ -81,6 +88,13 @@ describe('Unit: filter group', function(){
 			expect( t6 ).to.equal('11 months');
 			expect( t7 ).to.equal('almost 1 year');
 			expect( t8 ).to.equal('almost 6 years');
+			expect( t9 ).to.equal('2 minutes');
+			expect( t10 ).to.equal('about 1 year');
+			expect( t11 ).to.equal('over 1 year');
+			expect( t12 ).to.equal('about 2 years');
+			expect( t13 ).to.equal('about 4 years');
+			expect( t14 ).to.equal('about 6 years');
+			expect( t15 ).not.to.equal('2014-01-01T00:00:01Z');
 		}) );
 	});
 });

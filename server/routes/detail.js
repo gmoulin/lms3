@@ -8,12 +8,12 @@ var Item = require('../models/item.js')
 
 exports.find = function( req, res ){
 	var type = req.params.itemType
-		id = req.params.id
+		, id = req.params.id
 	;
 
 	switch( type ){
 		case 'book':
-			Item.find({ category: type, _id: id })
+			Item.findOne({ category: type, _id: id })
 				.populate({ path: 'saga', model: 'Saga' })
 				.populate({ path: 'storage', model: 'Storage' })
 				.populate({ path: 'book.author', model: 'Person' })
@@ -27,7 +27,7 @@ exports.find = function( req, res ){
 			;
 			break;
 		case 'saga':
-			Saga.find({ _id: id })
+			Saga.findOne({ _id: id })
 				.exec(function( err, saga ){
 					if( err ){
 						res.status( 418 ).send({error: true, msg: 'An error has occurred', desc: err});

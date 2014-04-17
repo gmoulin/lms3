@@ -26,16 +26,16 @@ angular
 		'crud',
 		'share',
 		function( $scope, $routeParams, $filter, $location, crud, share ){
-			var id = $routeParams.id
-				, category = $routeParams.category
-			;
+			var id = $routeParams.id;
+
+			$scope.category = $routeParams.category;
 
 			if( share.entry && share.entry._id == id ){
 				$scope.entry = share.entry;
 
 			} else {
 				crud.get(
-					{itemType: category, id: id},
+					{itemType: $scope.category, id: id},
 					function( data ){ //success
 						$scope.entry = data;
 					},
@@ -43,6 +43,17 @@ angular
 						$scope.errMsg = err;
 					}
 				);
+			}
+
+			$scope.detail = function( type, entry ){
+				share.entry = entry;
+				$location.path( '/detail/'+ entry._id +'/'+ $filter('urlify')( type ) +'/'+ encodeURIComponent( $filter('urlify')(entry.title) ) );
+			};
+
+			$scope.setFilter = function( type, value ){
+				share.filter = {type: type, value: value};
+
+				$location.path('/list');
 			}
 		}
 	])

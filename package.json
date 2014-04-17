@@ -65,7 +65,6 @@
     "gulp-preprocess": "^1.0.1",
     "gulp-rename": "^1.2.0",
     "gulp-ruby-sass": "^0.4.1",
-    "gulp-todo": "^0.1.6",
     "gulp-uglify": "^0.2.1",
     "gulp-uncss": "^0.4.1",
     "karma": "~0.10.8",

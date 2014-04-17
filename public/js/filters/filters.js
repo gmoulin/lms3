@@ -102,7 +102,7 @@ angular.module('lms.filters', [])
 					}
 
 					var minutesWithLeapOffset = distanceInMinutes;
-					if( fromYear > toYear ){
+					if( fromYear < toYear ){
 						var leapYears = 0;
 						for( var i = fromYear; i <= toYear; i++ ){
 							if( isLeapYear(i) ){
