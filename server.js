@@ -7,6 +7,15 @@
 var express = require('express')
 	, http = require('http')
 	, path = require('path')
+	, favicon = require('static-favicon')
+	, bodyParser = require('body-parser')
+	, compress = require('compression')
+	, cookieParser = require('cookie-parser')
+	, session = require('express-session')
+	, methodOverride = require('method-override')
+	, csrf = require('csurf')
+	, logger = require('morgan')
+	, errorHandler = require('errorhandler')
 	//, media = require('./server/media')
 ;
 
@@ -15,47 +24,25 @@ mongoose.connect('mongodb://localhost/lms');
 
 var app = express();
 
-var csrfValue = function( req ){
-	var token = (req.body && req.body._csrf)
-		|| (req.query && req.query._csrf)
-		|| req.headers['x-csrf-token']
-		|| req.headers['x-xsrf-token']
-	;
-	return token;
-};
-
 // all environments
 app
 	.set( 'port', process.env.PORT || 3001 )
 	.set( 'views', path.join(__dirname, 'public') )
 	.set( 'view options', {layout: false} )
-	.use( express.favicon() )
-	.use( express.logger('dev') )
-	.use( express.bodyParser() )
-	.use( express.methodOverride() )
-	.use( app.router )
+	.use( favicon() )
+	.use( logger('dev') )
+	.use( bodyParser() )
+	.use( methodOverride() )
 	.use( express.static( path.join(__dirname, 'public') ) )
-	.use( express.cookieParser('lms3_4_fun') )
-	.use( express.cookieSession() )
-	.use( express.csrf({value: csrfValue}) )
-	.use(function( req, res, next ){
-		res.cookie('XSRF-TOKEN', req.csrfToken());
-		next();
-	})
+	.use( cookieParser() )
+	.use( session({ secret: '1m5e', key: 'sessionId', cookie: { secure: true } }) )
 	.disable( 'x-powered-by' ) //no app framework display in responses header
-	.use( express.session({
-		secret: '1m5e',
-		key: 'sessionId',
-		cookie: {
-			httpOnly: true,
-			secure: true
-		}
-	}) )
 ;
 
-app.configure(process.env.ENV || 'development', function(){
-	app.use( express.errorHandler() );
-});
+var env = process.env.ENV || 'development';
+if( env == 'development' ){
+	app.use( errorHandler() );
+}
 
 // angular routes
 var ngIndex = function(req, res){
@@ -63,10 +50,10 @@ var ngIndex = function(req, res){
 };
 
 //mirrors angular routes
-app.get('/', ngIndex);
-app.get('/home', ngIndex);
-app.get('/list/:category?', ngIndex);
-app.get('/detail/:id/:category/:title?', ngIndex);
+app.route('/').get( ngIndex );
+app.route('/home').get( ngIndex );
+app.route('/list/:category?').get( ngIndex );
+app.route('/detail/:id/:category/:title?').get( ngIndex );
 
 // rest
 var lists = require('./server/routes/list.js')
@@ -76,9 +63,16 @@ var lists = require('./server/routes/list.js')
 	, types = ['book', 'saga']
 ;
 
-app.get('/rest/:itemType('+ list_types.join('|') +')', lists.findAll);
-app.get('/rest/:itemType('+ types.join('|') +')/:id', details.find);
-app.get('/rest/:itemType('+ types.join('|') +')/:id/:op', forms.actionById);
+app.route('/rest/:itemType('+ list_types.join('|') +')')
+	.get( lists.findAll )
+	.post( forms.create )
+;
+
+app.route('/rest/:itemType('+ types.join('|') +')/:id')
+	.get( details.find )
+	.put( forms.update )
+	.delete( forms.delete )
+;
 
 http.createServer( app ).listen(app.get('port'), function(){
 	console.log('Express server listening on port ' + app.get('port'));

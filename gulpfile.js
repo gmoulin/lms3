@@ -252,7 +252,7 @@ gulp.task('server', function( cb ){
 	node = spawn('node', ['--debug', 'server.js'], {stdio: 'inherit', env: { ENV: 'development', PORT: 3001 }});
 	node.on('close', function( code ){
 		if( code === 8 ){
-			gulp.log('Node error detected...');
+			console.log('Node error detected...');
 		}
 	});
 

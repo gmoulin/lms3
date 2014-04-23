@@ -7,37 +7,128 @@ var Item = require('../models/item.js')
 ;
 
 
-exports.actionById = function( req, res ){
-	var action = req.params.op
-		, itemType = req.params.itemType
-		, id = req.params.id
-		, item
+exports.create = function( req, res ){
+	var type = req.params.itemType
+		, item = req.body
 	;
 
-	switch( action ){
-		case 'add':
-			item = req.body;
-			console.log('Adding '+ itemType +': '+ JSON.stringify( item ));
-			new Item( item ).save(function( err, item, numberAffected ){
+	console.log('Adding '+ itemType +': '+ JSON.stringify( item ));
+
+	switch( type ){
+		case 'book':
+			new Item( item ).save(function( err, item ){
 				if( err ){
 					res.status( 418 ).send({error: true, msg: 'An error has occurred', desc: err});
 				} else {
 					res.send( item );
 				}
 			});
-
 			break;
-
-		case 'update':
-			//TODO
+		case 'saga':
+			new Saga( item ).save(function( err, saga ){
+				if( err ){
+					res.status( 418 ).send({error: true, msg: 'An error has occurred', desc: err});
+				} else {
+					res.send( saga );
+				}
+			});
 			break;
-
-		case 'delete':
-			//TODO
-			break;
-
 		default:
-			res.status( 418 ).send({error: true, msg: 'Unknown action'});
+			res.status( 418 ).send({error: true, msg: 'Unknown type', desc: null});
+			break;
+	}
+};
+
+exports.update = function( req, res ){
+	var type = req.params.itemType
+		, id = req.params.id
+		, body = req.body
+	;
+
+	console.log('Updating '+ type +' - '+ id +': '+ JSON.stringify( body ));
+
+	switch( type ){
+		case 'book':
+			Item.findById( id, function( err, item ){
+				if( err ){
+					res.status( 418 ).send({error: true, msg: 'An error has occurred', desc: err});
+				}
+
+				item = _.merge(item, body);
+
+				item.save(function( err, item ){
+					if( err ){
+						res.status( 418 ).send({error: true, msg: 'An error has occurred', desc: err});
+					} else {
+						res.send( item );
+					}
+				});
+			});
+			break;
+		case 'saga':
+			Saga.findById( id, function( err, saga ){
+				if( err ){
+					res.status( 418 ).send({error: true, msg: 'An error has occurred', desc: err});
+				}
+
+				saga = _.merge(saga, body);
+
+				saga.save(function( err, saga ){
+					if( err ){
+						res.status( 418 ).send({error: true, msg: 'An error has occurred', desc: err});
+					} else {
+						res.send( saga );
+					}
+				});
+			});
+			break;
+		default:
+			res.status( 418 ).send({error: true, msg: 'Unknown type', desc: null});
+			break;
+	}
+};
+
+exports.delete = function( req, res ){
+	var type = req.params.itemType
+		, id = req.params.id
+	;
+
+	console.log('Deleting '+ type +' - '+ id);
+
+	switch( type ){
+		case 'book':
+			Item.findById( id, function( err, item ){
+				if( err ){
+					res.status( 418 ).send({error: true, msg: 'An error has occurred', desc: err});
+				}
+
+				item.delete(function( err ){
+					if( err ){
+						res.status( 418 ).send({error: true, msg: 'An error has occurred', desc: err});
+					} else {
+						res.send('ok');
+					}
+				});
+			});
+			break;
+		case 'saga':
+			Saga.findById( id, function( err, saga ){
+				if( err ){
+					res.status( 418 ).send({error: true, msg: 'An error has occurred', desc: err});
+				}
+
+				saga.delete(function( err ){
+					if( err ){
+						res.status( 418 ).send({error: true, msg: 'An error has occurred', desc: err});
+					} else {
+						res.send('ok');
+					}
+				});
+			});
+			break;
+		default:
+			res.status( 418 ).send({error: true, msg: 'Unknown type', desc: null});
+			break;
 	}
 };
 
